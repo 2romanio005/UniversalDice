@@ -5,7 +5,10 @@
 
 class Dice{
   Dice(int numberFaces){
-     _pathsToImages.length = numberFaces;
+    _pathsToImages = [];
+    for(int i = 0; i < numberFaces; i++){
+      _pathsToImages.add("abc");
+    }
   }
 
   bool get state{

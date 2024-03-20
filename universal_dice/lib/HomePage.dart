@@ -5,11 +5,15 @@ import 'package:universal_dice/Widgets/HomePageView.dart';
 
 import 'package:universal_dice/Decoration/colors.dart';
 
+import 'package:universal_dice/Widgets/DiceChooser.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
   _HomePage createState() => _HomePage();
+
+
 }
 
 class _HomePage extends State<HomePage> {
@@ -17,8 +21,24 @@ class _HomePage extends State<HomePage> {
     setState(() {});
   }
 
+  late DiceChooser drawer;
+
+  @override
+  void initState(){
+    super.initState();
+    drawer = DiceChooser(
+      onSelect: redraw,
+      onDelete: redraw,
+      onAdd: () {
+        //editingModeController.enableEditingMode();
+        redraw();
+      },
+    );
+  }
+
   void openDrawer(void Function() open) {
-    if (editingModeController.isNotEditMode) {
+    open();
+    /*if (editingModeController.isNotEditMode) {
       open();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -27,7 +47,7 @@ class _HomePage extends State<HomePage> {
         dismissDirection: DismissDirection.none,
         content: Text("Сначала сохраните стихотворение", textAlign: TextAlign.center),
       ));
-    }
+    }*/
   }
 
   @override
@@ -55,16 +75,9 @@ class _HomePage extends State<HomePage> {
         ),
       ),
 
-      drawer: PoemChooser(
-        onSelect: redraw,
-        onDelete: redraw,
-        onAdd: () {
-          editingModeController.enableEditingMode();
-          redraw();
-        },
-      ),
+      drawer: drawer,
 
-      body: HomePageView(), // не добавлять const а то всё перестаёт обновляться
+      body: Text("test"),//HomePageView(), // не добавлять const а то всё перестаёт обновляться
     );
   }
 }

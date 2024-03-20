@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:universal_dice/Decoration/colors.dart';
 import 'package:universal_dice/Decoration/styles.dart';
+import 'package:universal_dice/Decoration/icons.dart';
 
 import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroup.dart';
@@ -10,15 +11,19 @@ import 'package:universal_dice/Data/DiceGroupList.dart';
 import 'package:universal_dice/Widgets/ConfirmationBox.dart';
 
 class DiceChooser extends StatefulWidget {
-  const DiceChooser({super.key, required this.onSelect, required this.onDelete, required this.onAdd});
+  DiceChooser({super.key, required this.onSelect, required this.onDelete, required this.onAdd});
 
   final void Function() onSelect;
   final void Function() onDelete;
   final void Function() onAdd;
 
+  final List<bool> _displayedDictGroup = List<bool>.filled(diceGroupList.length, false, growable: true);
+
   @override
   _DiceChooser createState() => _DiceChooser();
 }
+
+class Item {}
 
 class _DiceChooser extends State<DiceChooser> {
   @override
@@ -51,50 +56,119 @@ class _DiceChooser extends State<DiceChooser> {
   Widget _buildDictGroupList() {
     return Expanded(
       child: SingleChildScrollView(
-          child: ExpansionPanelList(
-            expansionCallback: (int index, bool isExpanded) {
-              setState(() {
-                diceGroupList[index].invertState();
-              });
-            },
-            children: diceGroupList.map<ExpansionPanel>((DiceGroup dictGroup) {
-              return ExpansionPanel(
-                isExpanded: dictGroup.state,
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return ListTile(
-                    title: Text(dictGroup.name),
-                  );
-                },
-                body: _buildDictList(dictGroup),
-              );
-            }).toList(),
-          ),
+        child: ExpansionPanelList(
+          expansionCallback: (int index, bool isExpanded) {
+            setState(() {
+              widget._displayedDictGroup[index] = !widget._displayedDictGroup[index];
+            });
+          },
+          children: List<ExpansionPanel>.generate(diceGroupList.length, (index) {
+            DiceGroup diceGroup = diceGroupList[index];
+            return ExpansionPanel(
+              canTapOnHeader: true,
+              isExpanded: widget._displayedDictGroup[index],
+              headerBuilder: (BuildContext context, bool isExpanded) {
+                return ListTile(
+                  title: Text(diceGroup.name, textAlign: TextAlign.center),
+                  titleTextStyle: Theme.of(context).textTheme.titleMedium,
+                  leading: IconButton(
+                    style: buttonStyleOFF,
+                    onPressed: () async {
+                      await confirmationBox(
+                          context: context,
+                          title: 'Удалить группу кубиков?',
+                          text: "Группа \"${diceGroup.name}\" будет удалена со всем содержимым.",
+                          textOK: 'Удалить группу',
+                          textOFF: 'Отмена',
+                          functionOK: () {
+                            setState(() {
+                              diceGroupList.removeDiceGroupAt(index);
+                              widget._displayedDictGroup.removeAt(index);
+                            });
+
+                            widget.onDelete();
+                          });
+                    },
+                    icon: const Icon(iconButtonDeleteDiceGroup),
+                  ),
+                  trailing: IconButton(
+                    onPressed: () => setState(() {
+                      diceGroup.invertState();
+                      if (diceGroup.state) {
+                        widget._displayedDictGroup[index] = true;
+                      }
+                    }),
+                    icon: Icon(diceGroup.state ? (iconRadioButtonChecked) : (iconRadioButtonUnchecked)),
+                  ),
+                );
+              },
+              body: _buildDictList(diceGroup), //Expanded(child: Text("lol")),
+            );
+          }),
         ),
+      ),
     );
   }
 
-  Widget _buildDictList(DiceGroup dictGroup) {
-    return Container(
-      color: ColorBackground,
-      child: ListView.builder(
-          padding: const EdgeInsets.only(top: 5),
-          itemCount: dictGroup.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              title: Text((dictGroup[index].numberFaces).toString(), textAlign: TextAlign.center),
+  Widget _buildDictList(DiceGroup diceGroup) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: List<Widget>.generate(
+            diceGroup.length,
+            (int index) => ListTile(
+              title: Text((diceGroup[index].numberFaces).toString(), textAlign: TextAlign.center),
               titleTextStyle: Theme.of(context).textTheme.titleSmall,
-              trailing: const Icon(Icons.delete),
-              leading: Icon(dictGroup[index].state ? (Icons.radio_button_checked) : (Icons.radio_button_unchecked)),
-              // FIXME возмонжо не будет менятьса иконка
-              selected: dictGroup[index].state,
+              leading: IconButton(
+                style: buttonStyleOFF,
+                onPressed: () async {
+                  await confirmationBox(
+                      context: context,
+                      title: 'Удалить кубик?',
+                      text: "Кубик с ${diceGroup[index].numberFaces} гранями будет удалён.",
+                      textOK: 'Удалить',
+                      textOFF: 'Отмена',
+                      functionOK: () {
+                        setState(() {
+                          diceGroup.removeDiceAt(index);
+                        });
+
+                        widget.onDelete();
+                      });
+                },
+                icon: const Icon(iconButtonDeleteDice),
+              ),
+              trailing: Icon(diceGroup[index].state ? (iconRadioButtonChecked) : (iconRadioButtonUnchecked)),
+              selected: diceGroup[index].state,
               onTap: () {
                 setState(() {
-                  dictGroup[index].invertState();
+                  diceGroup[index].invertState();
                 });
                 widget.onSelect();
               },
-            );
-          }),
+            ),
+          ) +
+          [
+            TextButton(
+              style: buttonStyleOK.merge(
+                IconButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                ),
+              ),
+              child: ListTile(
+                title: const Text("Новый кубик", textAlign: TextAlign.center),
+                titleTextStyle: Theme.of(context).textTheme.titleSmall,
+                trailing: const Icon(iconButtonAddDice, color: ColorButtonForeground),
+                leading: const Icon(iconButtonAddDice, color: ColorButtonForeground),
+              ),
+              onPressed: () {
+                setState(() {
+                  diceGroup.pushDice(Dice(5)); // TODO создание нового кубика
+                });
+
+                widget.onAdd();
+              },
+            ),
+          ],
     );
   }
 
@@ -102,40 +176,26 @@ class _DiceChooser extends State<DiceChooser> {
     return Container(
       padding: const EdgeInsets.only(bottom: 5),
       color: ColorBackground,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          IconButton(
-            style: buttonStyleOK,
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              setState(() {
-                //diceGroupList; // TODO добавить новую группу
-              });
-              widget.onAdd();
-            },
+      child: TextButton(
+        style: buttonStyleOK.merge(
+          IconButton.styleFrom(
+            padding: EdgeInsets.zero,
           ),
-          IconButton(
-            style: buttonStyleOFF,
-            icon: const Icon(Icons.delete_forever_sharp),
-            onPressed: () async {
-              await confirmationBox(
-                  context: context,
-                  title: 'Удалить все стихотворения?',
-                  text: "Все стихотворения будут удалены.",
-                  textOK: 'Удалить все',
-                  textOFF: 'Отмена',
-                  functionOK: () {
-                    setState(() {
-                      diceGroupList.clear();  // TODO добавить заглушку
-                    });
+        ),
+        child: ListTile(
+          title: const Text("Новая группа", textAlign: TextAlign.center),
+          titleTextStyle: Theme.of(context).textTheme.titleSmall,
+          trailing: const Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
+          leading: const Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
+        ),
+        onPressed: () {
+          setState(() {
+            diceGroupList.addDiceGroup(DiceGroup(name: "New group", diceList: [])); // TODO создание новой группы
+            widget._displayedDictGroup.add(true);
+          });
 
-                    widget.onDelete();
-                    //Navigator.pop(context);  // закрытие окна выбора стиха
-                  });
-            },
-          ),
-        ],
+          widget.onAdd();
+        },
       ),
     );
   }

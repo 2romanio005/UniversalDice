@@ -18,6 +18,12 @@ class DiceGroup {
     return _diceList.length;
   }
 
+  void removeDiceAt(int index){
+    _diceList.removeAt(index);
+  }
+  void pushDice(Dice dice){
+    _diceList.add(dice);
+  }
 
   bool get state {
     for (Dice dice in _diceList) {
@@ -28,11 +34,12 @@ class DiceGroup {
     return false;
   }
 
-  set state(newState) {
+  set state(bool newState) {
     for (Dice dice in _diceList) {
-      dice.state = newState();
+      dice.state = newState;
     }
   }
+
 
   void invertState() {
     state = !state;

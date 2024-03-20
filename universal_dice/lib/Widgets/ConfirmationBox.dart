@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:universal_dice/Decoration/colors.dart';
 import 'package:universal_dice/Decoration/styles.dart';
 
 Future<void> confirmationBox({

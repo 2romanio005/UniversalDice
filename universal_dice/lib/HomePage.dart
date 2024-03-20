@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:universal_dice/Decoration/styles.dart';
 import 'dart:math';
 
 import 'package:universal_dice/Widgets/HomePageView.dart';
-
-import 'package:universal_dice/Decoration/colors.dart';
 
 import 'package:universal_dice/Widgets/DiceChooser.dart';
 
@@ -53,7 +52,6 @@ class _HomePage extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorBackground,
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
@@ -68,7 +66,7 @@ class _HomePage extends State<HomePage> {
             "Universal Dice",
             style: TextStyle(
               fontFamily: "Oswald",
-              color: ColorHeader,
+              color: colorScheme.primary,
               fontWeight: FontWeight.bold,
             ),
           ),

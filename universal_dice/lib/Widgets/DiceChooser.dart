@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:universal_dice/Decoration/colors.dart';
 import 'package:universal_dice/Decoration/styles.dart';
 import 'package:universal_dice/Decoration/icons.dart';
 
@@ -22,8 +21,6 @@ class DiceChooser extends StatefulWidget {
   @override
   _DiceChooser createState() => _DiceChooser();
 }
-
-class Item {}
 
 class _DiceChooser extends State<DiceChooser> {
   @override
@@ -72,6 +69,7 @@ class _DiceChooser extends State<DiceChooser> {
                   title: Text(diceGroup.name, textAlign: TextAlign.center),
                   titleTextStyle: Theme.of(context).textTheme.titleMedium,
                   leading: IconButton(
+                    constraints: BoxConstraints(),
                     style: buttonStyleOFF,
                     onPressed: () async {
                       await confirmationBox(
@@ -98,7 +96,15 @@ class _DiceChooser extends State<DiceChooser> {
                         widget._displayedDictGroup[index] = true;
                       }
                     }),
-                    icon: Icon(diceGroup.state ? (iconRadioButtonChecked) : (iconRadioButtonUnchecked)),
+                    icon: diceGroup.state
+                        ? Icon(
+                            iconRadioButtonChecked,
+                            color: Theme.of(context).colorScheme.primary,
+                          )
+                        : Icon(
+                            iconRadioButtonUnchecked,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                   ),
                 );
               },
@@ -137,7 +143,15 @@ class _DiceChooser extends State<DiceChooser> {
                 },
                 icon: const Icon(iconButtonDeleteDice),
               ),
-              trailing: Icon(diceGroup[index].state ? (iconRadioButtonChecked) : (iconRadioButtonUnchecked)),
+              trailing: diceGroup[index].state
+                  ? Icon(
+                      iconRadioButtonChecked,
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  : Icon(
+                      iconRadioButtonUnchecked,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
               selected: diceGroup[index].state,
               onTap: () {
                 setState(() {
@@ -157,8 +171,8 @@ class _DiceChooser extends State<DiceChooser> {
               child: ListTile(
                 title: const Text("Новый кубик", textAlign: TextAlign.center),
                 titleTextStyle: Theme.of(context).textTheme.titleSmall,
-                trailing: const Icon(iconButtonAddDice, color: ColorButtonForeground),
-                leading: const Icon(iconButtonAddDice, color: ColorButtonForeground),
+                trailing: Icon(iconButtonAddDice, color: ColorButtonForeground),
+                leading: Icon(iconButtonAddDice, color: ColorButtonForeground),
               ),
               onPressed: () {
                 setState(() {
@@ -175,7 +189,7 @@ class _DiceChooser extends State<DiceChooser> {
   Widget _buildingFooter() {
     return Container(
       padding: const EdgeInsets.only(bottom: 5),
-      color: ColorBackground,
+      // color: ColorBackground,
       child: TextButton(
         style: buttonStyleOK.merge(
           IconButton.styleFrom(
@@ -185,8 +199,8 @@ class _DiceChooser extends State<DiceChooser> {
         child: ListTile(
           title: const Text("Новая группа", textAlign: TextAlign.center),
           titleTextStyle: Theme.of(context).textTheme.titleSmall,
-          trailing: const Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
-          leading: const Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
+          trailing: Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
+          leading: Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
         ),
         onPressed: () {
           setState(() {

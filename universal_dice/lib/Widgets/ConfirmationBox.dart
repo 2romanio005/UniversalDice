@@ -20,14 +20,13 @@ Future<void> confirmationBox({
           insetPadding: EdgeInsets.zero,
           actionsAlignment: MainAxisAlignment.spaceAround,
           title: Text(title, textAlign: TextAlign.center),
-          titleTextStyle: Theme.of(context).textTheme.labelLarge,
+          titleTextStyle: Theme.of(context).textTheme.titleMedium,
           content: Text(text),
           contentTextStyle: Theme.of(context).textTheme.labelMedium,
           actions: [
             ElevatedButton(
               style: buttonStyleOFF,
-              child:
-                  Text(textOFF, style: Theme.of(context).textTheme.labelSmall),
+              child: Text(textOFF, style: Theme.of(context).textTheme.titleSmall),
               onPressed: () {
                 functionOFF!();
                 Navigator.of(context).pop();
@@ -35,8 +34,7 @@ Future<void> confirmationBox({
             ),
             ElevatedButton(
               style: buttonStyleOK,
-              child:
-                  Text(textOK, style: Theme.of(context).textTheme.labelSmall),
+              child: Text(textOK, style: Theme.of(context).textTheme.titleSmall),
               onPressed: () {
                 functionOK!();
                 Navigator.of(context).pop();

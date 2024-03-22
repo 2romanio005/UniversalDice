@@ -6,6 +6,12 @@ class DiceGroup {
     _diceList = diceList;
   }
 
+  DiceGroup copy(){
+    DiceGroup copy = DiceGroup(name: name, diceList: (_diceList.map((Dice dice) => dice.copy())).toList());
+    return copy;
+  }
+
+
   String get name {
     return _name;
   }

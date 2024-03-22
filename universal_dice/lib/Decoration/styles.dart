@@ -109,4 +109,5 @@ ButtonStyle buttonStyleDefault = IconButton.styleFrom(
   backgroundColor: ColorButtonBackground,
   // hoverColor: ColorButtonHover,
   foregroundColor: ColorButtonForeground,
+  highlightColor: colorScheme.surfaceVariant,
 );

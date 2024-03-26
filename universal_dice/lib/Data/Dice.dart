@@ -7,8 +7,14 @@ import 'package:universal_dice/Decoration/styles.dart';
 
 class Dice {
   Dice(int numberFaces) {
-    _pathsToImages = List<File?>.filled(numberFaces, null);
+    _pathsToImages = List<File?>.filled(numberFaces, null, growable: true);
   }
+
+  // Dice shallowCopy(){
+  //   Dice shallowCopy = Dice(_pathsToImages.length);
+  //   // не создавать копии фотографий
+  //   return shallowCopy;
+  // }
 
   Dice copy() {
     Dice copy = Dice(_pathsToImages.length);
@@ -31,26 +37,33 @@ class Dice {
     return _pathsToImages.length;
   }
 
-  Widget getFace(double dimension, [int? index]) {
+  set numberFaces (int newNumberFaces){
+    _pathsToImages.length = newNumberFaces;
+  }
+
+  Widget getFace({required double dimension, int? index, EdgeInsetsGeometry padding = EdgeInsets.zero}) {
     index ??= numberFaces - 1;
-    return SizedBox.square(
-        dimension: dimension,
-        child: Container(
-            padding: EdgeInsets.all(dimension / 20.0),
-            color: Colors.white,
-            child: _pathsToImages[index] != null
-                ? Image.file(_pathsToImages[0]!)
-                : FittedBox(
-                    fit: BoxFit.contain,
-                    child: Text(
-                      (index + 1).toString(),
-                      textAlign: TextAlign.center,
-                      style: textTheme.titleSmall?.merge(const TextStyle(
-                        height: 1.0,
-                        color: Colors.black,
-                      )),
-                    ),
-                  )));
+    return Container(
+      padding: padding,
+      child: SizedBox.square(
+          dimension: dimension,
+          child: Container(
+              padding: EdgeInsets.all(dimension / 20.0),
+              color: Colors.white,
+              child: _pathsToImages[index] != null
+                  ? Image.file(_pathsToImages[0]!)
+                  : FittedBox(
+                      fit: BoxFit.contain,
+                      child: Text(
+                        (index + 1).toString(),
+                        textAlign: TextAlign.center,
+                        style: textTheme.titleSmall?.merge(const TextStyle(
+                          height: 1.0,
+                          color: Colors.black,
+                        )),
+                      ),
+                    ))),
+    );
   }
 
   late List<File?> _pathsToImages;

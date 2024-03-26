@@ -11,8 +11,9 @@ ColorScheme colorScheme = ColorScheme.fromSeed(
   onSurfaceVariant: const Color.fromARGB(255, 0, 255, 255),
   onSurface: const Color.fromARGB(255, 200, 235, 219),
   secondary: const Color.fromARGB(255, 84, 199, 149), //54, 181, 67),
+  // surfaceTint :Colors.red,
   // onSurface: Colors.red,
-  // onSurfaceVariant: Colors.yellow,
+  // surfaceVariant: Colors.yellow,
   // inverseSurface: Colors.pink,
 );
 

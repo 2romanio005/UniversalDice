@@ -19,3 +19,6 @@ const IconData iconButtonDeleteDice = Icons.delete_outline;
 
 const IconData iconButtonAddDiceGroup = Icons.add_circle;
 const IconData iconButtonAddDice = Icons.add;
+
+
+const IconData iconButtonChangeNumberDiceFaces = Icons.check_circle;

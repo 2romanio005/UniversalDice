@@ -8,6 +8,7 @@ import 'package:universal_dice/Data/DiceGroup.dart';
 import 'package:universal_dice/Data/DiceGroupList.dart';
 
 import 'package:universal_dice/Widgets/ConfirmationBox.dart';
+import 'package:universal_dice/Widgets/EditingDiceView.dart';
 
 class DiceChooser extends StatefulWidget {
   DiceChooser({super.key, required this.onSelect, required this.onDelete, required this.onAdd});
@@ -87,8 +88,9 @@ class _DiceChooser extends State<DiceChooser> {
                           icon: Icon(iconButtonEditDiceGroup, color: ColorButtonForeground),
                           text: "Редактировать",
                           buttonStyle: buttonStyleDefault,
-                          onPressed: () {
+                          onPressed: () async {
                             Navigator.pop(context);
+
                             widget.onSelect();
                           }),
                       _buildingMoreMenuElement(
@@ -111,8 +113,8 @@ class _DiceChooser extends State<DiceChooser> {
                         onPressed: () async {
                           await confirmationBox(
                               context: context,
-                              title: 'Удалить группу кубиков?',
-                              text: "Группа \"${diceGroup.name}\" будет удалена со всем содержимым.",
+                              titleText: 'Удалить группу кубиков?',
+                              contentText: "Группа \"${diceGroup.name}\" будет удалена со всем содержимым.",
                               textOK: 'Удалить группу',
                               textOFF: 'Отмена',
                               functionOK: () {
@@ -164,7 +166,7 @@ class _DiceChooser extends State<DiceChooser> {
                 (int index) => ListTile(
                   title: Container(
                     alignment: Alignment.center,
-                    child: diceGroup[index].getFace(Theme.of(context).textTheme.titleSmall!.fontSize!),
+                    child: diceGroup[index].getFace(dimension: Theme.of(context).textTheme.titleSmall!.fontSize!),
                   ),
                   leading: PopupMenuButton<int>(
                     position: PopupMenuPosition.under,
@@ -175,8 +177,11 @@ class _DiceChooser extends State<DiceChooser> {
                           icon: Icon(iconButtonEditDice, color: ColorButtonForeground),
                           text: "Редактировать",
                           buttonStyle: buttonStyleDefault,
-                          onPressed: () {
+                          onPressed: () async {
                             Navigator.pop(context);
+
+                            await showEditingDiceView(context, diceGroup[index]);
+
                             widget.onSelect();
                           }),
                       _buildingMoreMenuElement(
@@ -199,8 +204,8 @@ class _DiceChooser extends State<DiceChooser> {
                         onPressed: () async {
                           await confirmationBox(
                               context: context,
-                              title: 'Удалить кубик?',
-                              text: "Кубик с ${diceGroup[index].numberFaces} гранями будет удалён.",
+                              titleText: 'Удалить кубик?',
+                              contentText: "Кубик с ${diceGroup[index].numberFaces} гранями будет удалён.",
                               textOK: 'Удалить',
                               textOFF: 'Отмена',
                               functionOK: () {
@@ -248,7 +253,7 @@ class _DiceChooser extends State<DiceChooser> {
                   ),
                   onPressed: () {
                     setState(() {
-                      diceGroup.pushDice(Dice(500)); // TODO создание нового кубика
+                      diceGroup.pushDice(Dice(5)); // TODO создание нового кубика
                     });
 
                     widget.onAdd();

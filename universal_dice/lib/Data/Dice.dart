@@ -37,8 +37,13 @@ class Dice {
     return _pathsToImages.length;
   }
 
-  set numberFaces (int newNumberFaces){
+  set numberFaces(int newNumberFaces) {
     _pathsToImages.length = newNumberFaces;
+  }
+
+  Future<void> setFaceFile(int index, File? file) async {
+    /// FIXE удалять предудущий файл, и копировать этот на его место
+    _pathsToImages[index] = file;
   }
 
   Widget getFace({required double dimension, int? index, EdgeInsetsGeometry padding = EdgeInsets.zero}) {
@@ -51,7 +56,7 @@ class Dice {
               padding: EdgeInsets.all(dimension / 20.0),
               color: Colors.white,
               child: _pathsToImages[index] != null
-                  ? Image.file(_pathsToImages[0]!)
+                  ? Image.file(_pathsToImages[index]!, width: dimension, height: dimension)
                   : FittedBox(
                       fit: BoxFit.contain,
                       child: Text(
@@ -65,6 +70,8 @@ class Dice {
                     ))),
     );
   }
+
+
 
   late List<File?> _pathsToImages;
 

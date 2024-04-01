@@ -191,7 +191,7 @@ class _DiceChooser extends State<DiceChooser> {
                         onPressed: () {
                           Navigator.pop(context);
                           setState(() {
-                            diceGroup.pushDice(diceGroup[index].copy());
+                            diceGroup.addDice(diceGroup[index].copy());
                           });
 
                           widget.onAdd();
@@ -253,7 +253,7 @@ class _DiceChooser extends State<DiceChooser> {
                   ),
                   onPressed: () {
                     setState(() {
-                      diceGroup.pushDice(Dice(5)); // TODO создание нового кубика
+                      diceGroup.addDice(Dice(5)); // TODO создание нового кубика
                     });
 
                     widget.onAdd();

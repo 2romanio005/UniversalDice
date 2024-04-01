@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:universal_dice/Decoration/icons.dart';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
+import 'dart:io';
 
 import 'package:universal_dice/Decoration/icons.dart';
 import 'package:universal_dice/Decoration/styles.dart';
@@ -23,6 +27,25 @@ Future<Dice?> showEditingDiceView(BuildContext context, Dice dice) async {
 
                 double daceFaceDimension = MediaQuery.of(context).size.width / 2 - 60;
                 double daceFacePadding = daceFaceDimension / 10;
+
+                Widget buildDiceFace (int index, [EdgeInsetsGeometry? padding]) {
+                  return GestureDetector(
+                    onTap: () async {
+                      XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+                      if (image != null) {
+                        await resultDice.setFaceFile(index, File(image.path));
+
+                        redraw((){});
+                      }
+                    },
+                    child: resultDice.getFace(
+                      dimension: daceFaceDimension,
+                      padding: padding ?? EdgeInsets.only(bottom: daceFacePadding),
+                      index: index,
+                    ),
+                  );
+                }
 
                 return AlertDialog(
                   insetPadding: EdgeInsets.zero,
@@ -85,25 +108,11 @@ Future<Dice?> showEditingDiceView(BuildContext context, Dice dice) async {
                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: (index * 2 + 1 < resultDice.numberFaces)
                                               ? [
-                                                  resultDice.getFace(
-                                                    dimension: daceFaceDimension,
-                                                    padding: EdgeInsets.only(bottom: daceFacePadding),
-                                                    //padding: EdgeInsets.fromLTRB(daceFacePadding, 0, daceFacePadding / 2, daceFacePadding),
-                                                    index: index * 2,
-                                                  ),
-                                                  resultDice.getFace(
-                                                    dimension: daceFaceDimension,
-                                                    padding: EdgeInsets.only(bottom: daceFacePadding),
-                                                    //padding: EdgeInsets.fromLTRB(daceFacePadding / 2, 0, daceFacePadding, daceFacePadding),
-                                                    index: index * 2 + 1,
-                                                  ),
+                                                  buildDiceFace(index * 2),
+                                                  buildDiceFace(index * 2 + 1),
                                                 ]
                                               : [
-                                                  resultDice.getFace(
-                                                    dimension: daceFaceDimension,
-                                                    padding: EdgeInsets.only(bottom: daceFacePadding),
-                                                    index: index * 2,
-                                                  ),
+                                                  buildDiceFace(index * 2),
                                                 ],
                                         ),
                                       ),

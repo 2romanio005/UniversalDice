@@ -3,6 +3,12 @@ import 'package:universal_dice/HomePage.dart';
 
 import 'package:universal_dice/Decoration/styles.dart';
 
+import 'package:universal_dice/Data/DiceGroupList.dart';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
+import 'dart:io';
+
 class FutureBuilderHome extends StatefulWidget {
   const FutureBuilderHome({super.key});
 
@@ -13,11 +19,31 @@ class FutureBuilderHome extends StatefulWidget {
 // класс для ожидания загрузки стихов из памяти (можно грузить что угодно до основного экрана)
 class _FutureBuilderHome extends State<FutureBuilderHome> {
   Future<bool> _loading() async {
+
+    var directory = await getApplicationDocumentsDirectory();
+
+    //print("lol ${directory.listSync(recursive: true).toList().toString()}");
+
+    try {
+      File? f = await File("/data/user/0/com.example.universal_dice/app_flutter/2PERkcXFh0Y.jpg");
+      print(f.path);
+      if(!f.existsSync()){
+        print("null");
+      }
+      await f.delete();
+      print("d");
+    }catch(err){
+      print(err);
+    }
+
     //print("start:");
     //poemList = await PoemList.create(); // загрузка предыдущих стихов
     //print("prefin: ${poemList.selectedPoem.title}");
     //await Future.delayed(Duration(seconds: 5));
     //print("fin: ${poemList.selectedPoem.title}");
+
+    diceGroupList = await DiceGroupList.readFromFiles();
+
     return true;
   }
 

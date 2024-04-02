@@ -113,7 +113,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                         buttonStyle: buttonStyleOK,
                         onPressed: () {
                           Navigator.pop(context);
-                          widget.duplicateDiceGroup_duplicateDisplayedDictGroup(index).then((_) {
+                          widget.duplicateDiceGroup_addDisplayedDictGroup(index).then((_) {
                             setState(() {});
                             widget.onChange();
                           });

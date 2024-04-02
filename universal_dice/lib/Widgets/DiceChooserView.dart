@@ -9,6 +9,7 @@ import 'package:universal_dice/Data/DiceGroupList.dart';
 
 import 'package:universal_dice/Widgets/ConfirmationBox.dart';
 import 'package:universal_dice/Widgets/EditingDice.dart';
+import 'package:universal_dice/Widgets/EditingDiceGroup.dart';
 
 class DiceChooserView extends StatefulWidget {
   DiceChooserView({super.key, required this.onSelect, required this.onDelete, required this.onChange});
@@ -19,13 +20,13 @@ class DiceChooserView extends StatefulWidget {
 
   final List<bool> _displayedDictGroup = List<bool>.filled(diceGroupList.length, false, growable: true);
 
-  Future<void> addStandardGroup_addDisplayedDictGroup(bool displayedState) {
+  Future<void> addStandardGroup_addDisplayedDictGroup([bool displayedState = true]) {
     _displayedDictGroup.add(displayedState);
     return diceGroupList.addStandardGroup();
   }
 
-  Future<void> duplicateDiceGroup_duplicateDisplayedDictGroup(int index) {
-    _displayedDictGroup.add(_displayedDictGroup[index]);
+  Future<void> duplicateDiceGroup_addDisplayedDictGroup(int index, [bool displayedState = true]) {
+    _displayedDictGroup.add(displayedState);
     return diceGroupList.duplicateDiceGroup(index);
   }
 
@@ -98,13 +99,13 @@ class _DiceChooserView extends State<DiceChooserView> {
                           text: "Редактировать",
                           buttonStyle: buttonStyleDefault,
                           onPressed: () {
-                            {
-                              if (true) {
+                            showEditingDiceGroup(context, diceGroup).then((status) {
+                              if (status) {
                                 Navigator.pop(context);
                                 setState(() {});
                                 widget.onChange();
                               }
-                            }
+                            });
                           }),
                       _buildingMoreMenuElement(
                         icon: const Icon(iconButtonDuplicateDiceGroup, color: ColorButtonPressedOK),
@@ -173,12 +174,12 @@ class _DiceChooserView extends State<DiceChooserView> {
         padding: const EdgeInsets.only(left: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: List<Widget>.generate(
-                diceGroup.length,
-                (int index) => ListTile(
+          children: List<Widget>.generate(diceGroup.length, (int index) {
+                Dice dice = diceGroup[index];
+                return ListTile(
                   title: Container(
                     alignment: Alignment.center,
-                    child: diceGroup[index].getFace(dimension: Theme.of(context).textTheme.titleSmall!.fontSize!),
+                    child: dice.getFace(dimension: Theme.of(context).textTheme.titleSmall!.fontSize!),
                   ),
                   leading: PopupMenuButton<int>(
                     position: PopupMenuPosition.under,
@@ -218,7 +219,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                           showConfirmationBox(
                               context: context,
                               titleText: 'Удалить кубик?',
-                              contentText: "Кубик с ${diceGroup[index].numberFaces} гранями будет удалён.",
+                              contentText: "Кубик с ${dice.numberFaces} гранями будет удалён.",
                               textOK: 'Удалить',
                               textOFF: 'Отмена',
                               functionOK: () {
@@ -232,7 +233,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                       ),
                     ],
                   ),
-                  trailing: diceGroup[index].state
+                  trailing: dice.state
                       ? Icon(
                           iconRadioButtonChecked,
                           color: Theme.of(context).colorScheme.primary,
@@ -241,15 +242,15 @@ class _DiceChooserView extends State<DiceChooserView> {
                           iconRadioButtonUnchecked,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
-                  selected: diceGroup[index].state,
+                  selected: dice.state,
                   onTap: () {
                     setState(() {
-                      diceGroup[index].invertState();
+                      dice.invertState();
                     });
                     widget.onSelect();
                   },
-                ),
-              ) +
+                );
+              }) +
               [
                 TextButton(
                   style: buttonStyleOK.merge(
@@ -309,7 +310,7 @@ class _DiceChooserView extends State<DiceChooserView> {
           leading: Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
         ),
         onPressed: () {
-          widget.addStandardGroup_addDisplayedDictGroup(true).then((_) {
+          widget.addStandardGroup_addDisplayedDictGroup().then((_) {
             setState(() {});
             widget.onChange();
           });

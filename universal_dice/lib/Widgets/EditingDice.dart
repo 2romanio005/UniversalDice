@@ -13,8 +13,8 @@ import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroup.dart';
 
 Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int diceIndex) {
-  Future<void> functionOK() => diceGroup.removeDiceAt();
-  Future<void> functionOFF() => diceGroup.removeDiceAt(diceIndex);
+  Future<void> functionOK() => diceGroup.removeDiceAt(diceIndex);
+  Future<void> functionOFF() => diceGroup.removeDiceAt();
 
   return diceGroup.duplicateDice(diceIndex).then((newDice) => showDialog<bool?>(
           context: context,
@@ -56,7 +56,6 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                       Expanded(
                         child: SingleChildScrollView(
                           child: Column(
-                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Row(
                                 children: [
@@ -97,7 +96,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                                     canTapOnHeader: true,
                                     isExpanded: displayedFaces,
                                     headerBuilder: (BuildContext context, bool isExpanded) {
-                                      return Text("Поменять изображения на гранях");
+                                      return Text("Изменить изображения на гранях");
                                     },
                                     body: Column(
                                       children: List<Widget>.generate(
@@ -138,6 +137,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                       style: buttonStyleOK,
                       child: Text("Сохранить", style: Theme.of(context).textTheme.titleSmall),
                       onPressed: () {
+                        print("OK");
                         functionOK().then((_) => Navigator.pop(context, true));
                         //functionOK!();
                       },
@@ -148,6 +148,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
             );
           }).then((status) {
         if (status == null) {
+          print("error");
           return functionOFF().then((_) => false);
         }
         return status;

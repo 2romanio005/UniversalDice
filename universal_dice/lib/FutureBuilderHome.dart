@@ -20,11 +20,11 @@ class FutureBuilderHome extends StatefulWidget {
 class _FutureBuilderHome extends State<FutureBuilderHome> {
   Future<bool> _loading() async {
 
-    var directory = await getApplicationDocumentsDirectory();
+    //var directory = await getApplicationDocumentsDirectory();
 
     //print("lol ${directory.listSync(recursive: true).toList().toString()}");
 
-    try {
+/*    try {
       File? f = await File("/data/user/0/com.example.universal_dice/app_flutter/2PERkcXFh0Y.jpg");
       print(f.path);
       if(!f.existsSync()){
@@ -34,7 +34,7 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
       print("d");
     }catch(err){
       print(err);
-    }
+    }*/
 
     //print("start:");
     //poemList = await PoemList.create(); // загрузка предыдущих стихов
@@ -42,7 +42,13 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
     //await Future.delayed(Duration(seconds: 5));
     //print("fin: ${poemList.selectedPoem.title}");
 
-    diceGroupList = await DiceGroupList.readFromFiles();
+    Directory dir = await getApplicationDocumentsDirectory();
+    await for (final file in dir.list(recursive: true)) {
+      print(file.path);
+    }
+    print("===================");
+    diceGroupList = await DiceGroupList.creatingFromFiles();
+    print("loaded");
 
     return true;
   }
@@ -55,12 +61,13 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
       style: Theme.of(context).textTheme.displayMedium!,
       textAlign: TextAlign.center,
       child: FutureBuilder<bool>(
-        future: future, // a previously-obtained Future<String> or null
+        future: future,
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          Widget children;
+          Widget children = HomePage();
           if (snapshot.hasData) {
             children = HomePage();
           } else if (snapshot.hasError) {
+            print("err");
             children = Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -73,7 +80,7 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: Text('Ошибка: ${snapshot.error}',
-                        style: TextStyle(color: Colors.red)),
+                        style: TextStyle(color: Colors.red, fontSize: 24.0)),
                   ),
                 ],
               ),
@@ -97,7 +104,7 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
               ),
             );
           }
-          return children;
+          return children; //children;
         },
       ),
     );

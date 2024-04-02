@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:universal_dice/Widgets/HomePageView.dart';
 
-import 'package:universal_dice/Widgets/DiceChooser.dart';
+import 'package:universal_dice/Widgets/DiceChooserView.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,15 +23,15 @@ class _HomePage extends State<HomePage> {
     setState(() {});
   }
 
-  late DiceChooser drawer;
+  late DiceChooserView drawer;
 
   @override
   void initState() {
     super.initState();
-    drawer = DiceChooser(
+    drawer = DiceChooserView(
       onSelect: redraw,
       onDelete: redraw,
-      onAdd: () {
+      onChange: () {
         //editingModeController.enableEditingMode();
         redraw();
       },

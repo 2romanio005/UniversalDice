@@ -10,36 +10,34 @@ import 'package:universal_dice/Decoration/icons.dart';
 import 'package:universal_dice/Decoration/styles.dart';
 
 import 'package:universal_dice/Data/Dice.dart';
+import 'package:universal_dice/Data/DiceGroup.dart';
 
-Future<Dice?> showEditingDiceView(BuildContext context, Dice dice) async {
-  Dice resultDice = dice.copy();
+Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int diceIndex) {
+  Future<void> functionOK() => diceGroup.removeDiceAt();
+  Future<void> functionOFF() => diceGroup.removeDiceAt(diceIndex);
 
-  await showDialog<bool>(
+  return diceGroup.duplicateDice(diceIndex).then((newDice) => showDialog<bool?>(
           context: context,
           builder: (BuildContext context) {
             final controller = TextEditingController();
-            controller.text = resultDice.numberFaces.toString();
+            controller.text = newDice.numberFaces.toString();
 
-            bool displayedFace = true;
+            bool displayedFaces = true;
             return StatefulBuilder(
               builder: (context, redraw) {
                 // controller.addListener(() => print("c"));
 
-                double daceFaceDimension = MediaQuery.of(context).size.width / 2 - 60;
-                double daceFacePadding = daceFaceDimension / 10;
+                final double daceFaceDimension = MediaQuery.of(context).size.width / 2 - 60;
+                final double daceFacePadding = daceFaceDimension / 10;
 
-                Widget buildDiceFace (int index, [EdgeInsetsGeometry? padding]) {
+                Widget buildDiceFace(int index, [EdgeInsetsGeometry? padding]) {
                   return GestureDetector(
-                    onTap: () async {
-                      XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-                      if (image != null) {
-                        await resultDice.setFaceFile(index, File(image.path));
-
-                        redraw((){});
-                      }
+                    onTap: () {
+                      ImagePicker().pickImage(source: ImageSource.gallery).then(
+                            (image) => newDice.setFaceFile(index, image == null ? null : File(image.path)).then((_) => redraw(() {})),
+                          );
                     },
-                    child: resultDice.getFace(
+                    child: newDice.getFace(
                       dimension: daceFaceDimension,
                       padding: padding ?? EdgeInsets.only(bottom: daceFacePadding),
                       index: index,
@@ -82,7 +80,7 @@ Future<Dice?> showEditingDiceView(BuildContext context, Dice dice) async {
                                       style: buttonStyleOK,
                                       icon: const Icon(iconButtonChangeNumberDiceFaces),
                                       onPressed: () {
-                                        redraw(() => resultDice.numberFaces = int.parse(controller.text));
+                                        redraw(() => newDice.numberFaces = int.parse(controller.text));
                                       },
                                     ),
                                   )
@@ -91,22 +89,22 @@ Future<Dice?> showEditingDiceView(BuildContext context, Dice dice) async {
                               ExpansionPanelList(
                                 expansionCallback: (int index, bool isExpanded) {
                                   redraw(() {
-                                    displayedFace = !displayedFace;
+                                    displayedFaces = !displayedFaces;
                                   });
                                 },
                                 children: [
                                   ExpansionPanel(
                                     canTapOnHeader: true,
-                                    isExpanded: displayedFace,
+                                    isExpanded: displayedFaces,
                                     headerBuilder: (BuildContext context, bool isExpanded) {
                                       return Text("Поменять изображения на гранях");
                                     },
                                     body: Column(
                                       children: List<Widget>.generate(
-                                        (resultDice.numberFaces + 1) ~/ 2,
+                                        (newDice.numberFaces + 1) ~/ 2,
                                         (int index) => Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: (index * 2 + 1 < resultDice.numberFaces)
+                                          children: (index * 2 + 1 < newDice.numberFaces)
                                               ? [
                                                   buildDiceFace(index * 2),
                                                   buildDiceFace(index * 2 + 1),
@@ -132,22 +130,26 @@ Future<Dice?> showEditingDiceView(BuildContext context, Dice dice) async {
                       style: buttonStyleOFF,
                       child: Text("Отмена", style: Theme.of(context).textTheme.titleSmall),
                       onPressed: () {
+                        functionOFF().then((_) => Navigator.pop(context, false));
                         //functionOFF!();
-                        Navigator.pop(context, false);
                       },
                     ),
                     ElevatedButton(
                       style: buttonStyleOK,
                       child: Text("Сохранить", style: Theme.of(context).textTheme.titleSmall),
                       onPressed: () {
+                        functionOK().then((_) => Navigator.pop(context, true));
                         //functionOK!();
-                        Navigator.pop(context, true);
                       },
                     ),
                   ],
                 );
               },
             );
-          }) ??
-      false;
+          }).then((status) {
+        if (status == null) {
+          return functionOFF().then((_) => false);
+        }
+        return status;
+      }));
 }

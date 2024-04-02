@@ -8,32 +8,37 @@ import 'package:universal_dice/Data/DiceGroup.dart';
 import 'package:universal_dice/Data/DiceGroupList.dart';
 
 import 'package:universal_dice/Widgets/ConfirmationBox.dart';
-import 'package:universal_dice/Widgets/EditingDiceView.dart';
+import 'package:universal_dice/Widgets/EditingDice.dart';
 
-class DiceChooser extends StatefulWidget {
-  DiceChooser({super.key, required this.onSelect, required this.onDelete, required this.onAdd});
+class DiceChooserView extends StatefulWidget {
+  DiceChooserView({super.key, required this.onSelect, required this.onDelete, required this.onChange});
 
   final void Function() onSelect;
   final void Function() onDelete;
-  final void Function() onAdd;
+  final void Function() onChange;
 
   final List<bool> _displayedDictGroup = List<bool>.filled(diceGroupList.length, false, growable: true);
 
-  void push_diceGroupList_displayedDictGroup(DiceGroup diceGroup, bool displayedState) {
-    diceGroupList.addDiceGroup(diceGroup);
+  Future<void> addStandardGroup_addDisplayedDictGroup(bool displayedState) {
     _displayedDictGroup.add(displayedState);
+    return diceGroupList.addStandardGroup();
   }
 
-  void remove_diceGroupList_displayedDictGroup(int index) {
-    diceGroupList.removeDiceGroupAt(index);
+  Future<void> duplicateDiceGroup_duplicateDisplayedDictGroup(int index) {
+    _displayedDictGroup.add(_displayedDictGroup[index]);
+    return diceGroupList.duplicateDiceGroup(index);
+  }
+
+  Future<void> removeDiceGroupAt_removeDisplayedDictGroupAt(int index) {
     _displayedDictGroup.removeAt(index);
+    return diceGroupList.removeDiceGroupAt(index);
   }
 
   @override
-  _DiceChooser createState() => _DiceChooser();
+  _DiceChooserView createState() => _DiceChooserView();
 }
 
-class _DiceChooser extends State<DiceChooser> {
+class _DiceChooserView extends State<DiceChooserView> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -68,6 +73,10 @@ class _DiceChooser extends State<DiceChooser> {
           expansionCallback: (int index, bool isExpanded) {
             setState(() {
               widget._displayedDictGroup[index] = !widget._displayedDictGroup[index];
+
+              /*for(int i = 0; i < diceGroupList.length; i++){
+                print("i = $i: ${diceGroupList[i].name}");
+              }*/
             });
           },
           children: List<ExpansionPanel>.generate(diceGroupList.length, (index) {
@@ -88,10 +97,14 @@ class _DiceChooser extends State<DiceChooser> {
                           icon: Icon(iconButtonEditDiceGroup, color: ColorButtonForeground),
                           text: "Редактировать",
                           buttonStyle: buttonStyleDefault,
-                          onPressed: () async {
-                            Navigator.pop(context);
-
-                            widget.onSelect();
+                          onPressed: () {
+                            {
+                              if (true) {
+                                Navigator.pop(context);
+                                setState(() {});
+                                widget.onChange();
+                              }
+                            }
                           }),
                       _buildingMoreMenuElement(
                         icon: const Icon(iconButtonDuplicateDiceGroup, color: ColorButtonPressedOK),
@@ -99,43 +112,35 @@ class _DiceChooser extends State<DiceChooser> {
                         buttonStyle: buttonStyleOK,
                         onPressed: () {
                           Navigator.pop(context);
-                          setState(() {
-                            widget.push_diceGroupList_displayedDictGroup(diceGroupList[index].copy(), true);
+                          widget.duplicateDiceGroup_duplicateDisplayedDictGroup(index).then((_) {
+                            setState(() {});
+                            widget.onChange();
                           });
-
-                          widget.onAdd();
                         },
                       ),
                       _buildingMoreMenuElement(
                         icon: const Icon(iconButtonDeleteDiceGroup, color: ColorButtonPressedOFF),
                         text: "Удалить",
                         buttonStyle: buttonStyleOFF,
-                        onPressed: () async {
-                          await confirmationBox(
+                        onPressed: () {
+                          showConfirmationBox(
                               context: context,
                               titleText: 'Удалить группу кубиков?',
                               contentText: "Группа \"${diceGroup.name}\" будет удалена со всем содержимым.",
                               textOK: 'Удалить группу',
                               textOFF: 'Отмена',
                               functionOK: () {
-                                Navigator.pop(context);
-                                setState(() {
-                                  widget.remove_diceGroupList_displayedDictGroup(index);
+                                widget.removeDiceGroupAt_removeDisplayedDictGroupAt(index).then((_) {
+                                  Navigator.pop(context);
+                                  setState(() {});
+                                  widget.onDelete();
                                 });
-
-                                widget.onDelete();
                               });
                         },
                       ),
                     ],
                   ),
                   trailing: IconButton(
-                    onPressed: () => setState(() {
-                      diceGroup.invertState();
-                      if (diceGroup.state) {
-                        widget._displayedDictGroup[index] = true;
-                      }
-                    }),
                     icon: diceGroup.state
                         ? Icon(
                             iconRadioButtonChecked,
@@ -145,6 +150,13 @@ class _DiceChooser extends State<DiceChooser> {
                             iconRadioButtonUnchecked,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
+                    onPressed: () => setState(() {
+                      diceGroup.invertState();
+                      if (diceGroup.state) {
+                        widget._displayedDictGroup[index] = true;
+                      }
+                      widget.onSelect();
+                    }),
                   ),
                 );
               },
@@ -177,12 +189,14 @@ class _DiceChooser extends State<DiceChooser> {
                           icon: Icon(iconButtonEditDice, color: ColorButtonForeground),
                           text: "Редактировать",
                           buttonStyle: buttonStyleDefault,
-                          onPressed: () async {
-                            Navigator.pop(context);
-
-                            await showEditingDiceView(context, diceGroup[index]);
-
-                            widget.onSelect();
+                          onPressed: () {
+                            showEditingDice(context, diceGroup, index).then((status) {
+                              if (status) {
+                                Navigator.pop(context);
+                                setState(() {});
+                                widget.onChange();
+                              }
+                            });
                           }),
                       _buildingMoreMenuElement(
                         icon: const Icon(iconButtonDuplicateDice, color: ColorButtonPressedOK),
@@ -190,31 +204,29 @@ class _DiceChooser extends State<DiceChooser> {
                         buttonStyle: buttonStyleOK,
                         onPressed: () {
                           Navigator.pop(context);
-                          setState(() {
-                            diceGroup.addDice(diceGroup[index].copy());
+                          diceGroup.duplicateDice(index).then((_) {
+                            setState(() {});
+                            widget.onChange();
                           });
-
-                          widget.onAdd();
                         },
                       ),
                       _buildingMoreMenuElement(
                         icon: const Icon(iconButtonDeleteDice, color: ColorButtonPressedOFF),
                         text: "Удалить",
                         buttonStyle: buttonStyleOFF,
-                        onPressed: () async {
-                          await confirmationBox(
+                        onPressed: () {
+                          showConfirmationBox(
                               context: context,
                               titleText: 'Удалить кубик?',
                               contentText: "Кубик с ${diceGroup[index].numberFaces} гранями будет удалён.",
                               textOK: 'Удалить',
                               textOFF: 'Отмена',
                               functionOK: () {
-                                Navigator.pop(context);
-                                setState(() {
-                                  diceGroup.removeDiceAt(index);
+                                diceGroup.removeDiceAt(index).then((_) {
+                                  Navigator.pop(context);
+                                  setState(() {});
+                                  widget.onDelete();
                                 });
-
-                                widget.onDelete();
                               });
                         },
                       ),
@@ -252,11 +264,10 @@ class _DiceChooser extends State<DiceChooser> {
                     leading: Icon(iconButtonAddDice, color: ColorButtonForeground),
                   ),
                   onPressed: () {
-                    setState(() {
-                      diceGroup.addDice(Dice(5)); // TODO создание нового кубика
+                    diceGroup.addStandardDice().then((_) {
+                      setState(() {});
+                      widget.onChange();
                     });
-
-                    widget.onAdd();
                   },
                 ),
               ],
@@ -298,11 +309,10 @@ class _DiceChooser extends State<DiceChooser> {
           leading: Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
         ),
         onPressed: () {
-          setState(() {
-            widget.push_diceGroupList_displayedDictGroup(DiceGroup(name: "New group", diceList: []), true); // TODO создание новой группы
+          widget.addStandardGroup_addDisplayedDictGroup(true).then((_) {
+            setState(() {});
+            widget.onChange();
           });
-
-          widget.onAdd();
         },
       ),
     );

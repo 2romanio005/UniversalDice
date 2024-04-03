@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:universal_dice/Decoration/styles.dart';
 import 'dart:math';
 
+import 'package:universal_dice/Decoration/styles.dart';
+
 import 'package:universal_dice/Widgets/HomePageView.dart';
-
 import 'package:universal_dice/Widgets/DiceChooserView.dart';
-
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
-import 'dart:io';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -32,7 +27,6 @@ class _HomePage extends State<HomePage> {
       onSelect: redraw,
       onDelete: redraw,
       onChange: () {
-        //editingModeController.enableEditingMode();
         redraw();
       },
     );
@@ -66,7 +60,7 @@ class _HomePage extends State<HomePage> {
         title: FittedBox(
           fit: BoxFit.fitWidth,
           child: Text(
-            "Universal Dice",
+            "Универсальные игральные кости",
             style: TextStyle(
               fontFamily: "Oswald",
               color: colorScheme.primary,
@@ -78,65 +72,7 @@ class _HomePage extends State<HomePage> {
 
       drawer: drawer,
 
-      //body: Text("test"),//HomePageView(), // не добавлять const а то всё перестаёт обновляться
-      body:
-      Column(
-        children: [
-          IconButton(
-              onPressed: () {
-                setState(() {});
-              },
-              icon: Icon(Icons.abc)),
-          f
-              ? IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () async {
-              if(await ff()) {
-                setState(() {});
-              }
-            },
-          )
-              : Image.file(File(pat)),
-        ],
-      ),
-
+      body: HomePageView(), // не добавлять const а то всё перестаёт обновляться
     );
   }
 }
-
-String pat = "";
-
-Future<bool> ff() async {
-  XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-  if (image == null) return false;
-
-  // Step 3: Get directory where we can duplicate selected file.
-  var d = await getApplicationDocumentsDirectory();
-  final String duplicateFilePath = d.path;
-
-// Step 4: Copy the file to a application document directory.
-  final fileName = basename(image.path);
-  pat = "$duplicateFilePath/$fileName";
-  await image.saveTo(pat);
-
-  final List<FileSystemEntity> entities = await d.list(recursive: false).toList();
-  final Iterable<File> files = entities.whereType<File>();
-
-  for (File file in files) {
-    print("File!!! " + file.path);
-  }
-  f = false;
-return true;
-/*  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('test_image', localImage.path)
-
-// Step 2: Loading image by using the path that we saved earlier. We can create a file using path
-//         and can use FileImage provider for loading image from file.
-  CircleAvatar(
-      backgroundImage: FileImage(File(prefs.getString('test_image')),
-  radius: 50,
-  backgroundColor: Colors.white)*/
-}
-
-bool f = true;

@@ -19,29 +19,6 @@ class FutureBuilderHome extends StatefulWidget {
 // класс для ожидания загрузки стихов из памяти (можно грузить что угодно до основного экрана)
 class _FutureBuilderHome extends State<FutureBuilderHome> {
   Future<bool> _loading() async {
-
-    //var directory = await getApplicationDocumentsDirectory();
-
-    //print("lol ${directory.listSync(recursive: true).toList().toString()}");
-
-/*    try {
-      File? f = await File("/data/user/0/com.example.universal_dice/app_flutter/2PERkcXFh0Y.jpg");
-      print(f.path);
-      if(!f.existsSync()){
-        print("null");
-      }
-      await f.delete();
-      print("d");
-    }catch(err){
-      print(err);
-    }*/
-
-    //print("start:");
-    //poemList = await PoemList.create(); // загрузка предыдущих стихов
-    //print("prefin: ${poemList.selectedPoem.title}");
-    //await Future.delayed(Duration(seconds: 5));
-    //print("fin: ${poemList.selectedPoem.title}");
-
     Directory dir = await getApplicationDocumentsDirectory();
     await for (final file in dir.list(recursive: true)) {
       print(file.path);
@@ -63,11 +40,10 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
       child: FutureBuilder<bool>(
         future: future,
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          Widget children = HomePage();
+          Widget children = const HomePage();
           if (snapshot.hasData) {
-            children = HomePage();
+            children = const HomePage();
           } else if (snapshot.hasError) {
-            print("err");
             children = Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -86,11 +62,11 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
               ),
             );
           } else {
-            children = Center(
+            children = const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(
+                  SizedBox(
                     width: 60,
                     height: 60,
                     child: CircularProgressIndicator(),

@@ -1,5 +1,8 @@
-//import 'package:path/path.dart';
+import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
+
+import 'package:universal_dice/Decoration/styles.dart';
 
 import 'package:universal_dice/Functions/FileReading.dart';
 
@@ -110,12 +113,30 @@ class DiceGroup {
     return _diceList[index];
   }
 
+  List<Dice> get allSelectedDice {
+    List<Dice> resultAllSelectedDice = List<Dice>.empty(growable: true);
+    for (Dice dice in _diceList) {
+      if (dice.state) {
+        resultAllSelectedDice.add(dice);
+      }
+    }
+    return resultAllSelectedDice;
+  }
+
   int get length {
     return _diceList.length;
   }
 
   String get name {
     return _name;
+  }
+
+  Widget get nameWidget {
+    return Text(
+      name,
+      textAlign: TextAlign.center,
+      style: textTheme.titleMedium,
+    );
   }
 
   set name(String newName) {

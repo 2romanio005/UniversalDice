@@ -1,6 +1,4 @@
 import 'package:path_provider/path_provider.dart';
-
-//import 'package:path/path.dart';
 import 'dart:io';
 
 import 'package:universal_dice/Functions/FileReading.dart';
@@ -61,15 +59,23 @@ class DiceGroupList {
     });
   }
 
-  Future<void> duplicateDiceGroup(int index) {
+  Future<DiceGroup> duplicateDiceGroup(int index) {
     String newPath = _getPathToNewDiceGroup();
     return copyDirectory(_diceGroupList[index].directory.path, newPath).then((_) {
-      return DiceGroup.creatingFromFiles(Directory(newPath)).then((diceGroup) => _diceGroupList.add(diceGroup));
+      return DiceGroup.creatingFromFiles(Directory(newPath)).then((diceGroup) {
+        _diceGroupList.add(diceGroup);
+        return diceGroup;
+      });
     });
   }
 
-  Future<void> addStandardGroup() {
-    return Directory(_getPathToNewDiceGroup()).create().then((dir) => DiceGroup.creatingStandard(dir).then((diceGroup) => _diceGroupList.add(diceGroup)));
+  Future<DiceGroup> addStandardGroup() {
+    return Directory(_getPathToNewDiceGroup()).create().then((dir) => DiceGroup.creatingStandard(dir).then(
+          (diceGroup) {
+            _diceGroupList.add(diceGroup);
+            return diceGroup;
+          },
+        ));
   }
 
   Future<void> removeDiceGroupAt([int? index]) {
@@ -85,12 +91,33 @@ class DiceGroupList {
     return _diceGroupList[index];
   }
 
+  List<OneSelectedDiceGroup> get allSelectedDiceGroup {
+    List<OneSelectedDiceGroup> resultAllSelectedDiceGroup = List<OneSelectedDiceGroup>.empty(growable: true);
+    for (DiceGroup diceGroup in _diceGroupList) {
+      List<Dice> allSelectedDice = diceGroup.allSelectedDice;
+      if (allSelectedDice.isNotEmpty) {
+        resultAllSelectedDiceGroup.add(OneSelectedDiceGroup(
+          diceGroup: diceGroup,
+          allDice: allSelectedDice,
+        ));
+      }
+    }
+    return resultAllSelectedDiceGroup;
+  }
+
   int get length {
     return _diceGroupList.length;
   }
 
   late List<DiceGroup> _diceGroupList;
   final Directory _dirThisDiceGroupList;
+}
+
+class OneSelectedDiceGroup {
+  OneSelectedDiceGroup({required this.diceGroup, required this.allDice});
+
+  DiceGroup diceGroup;
+  List<Dice> allDice;
 }
 
 late DiceGroupList diceGroupList;

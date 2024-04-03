@@ -24,8 +24,8 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
               builder: (context, redraw) {
                 // controller.addListener(() => print("c"));
 
-                final double daceFaceDimension = MediaQuery.of(context).size.width / 2 - 60;
-                final double daceFacePadding = daceFaceDimension / 10;
+                final double diceFaceDimension = MediaQuery.of(context).size.width / 2 - 60;
+                final double diceFacePadding = diceFaceDimension / 10;
 
                 Widget buildDiceFace(int index, [EdgeInsetsGeometry? padding]) {
                   return GestureDetector(
@@ -35,8 +35,8 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                           );
                     },
                     child: newDice.getFace(
-                      dimension: daceFaceDimension,
-                      padding: padding ?? EdgeInsets.only(bottom: daceFacePadding),
+                      dimension: diceFaceDimension,
+                      padding: padding ?? EdgeInsets.only(bottom: diceFacePadding),
                       index: index,
                     ),
                   );

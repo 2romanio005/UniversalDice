@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:universal_dice/Functions/FileReading.dart';
 
@@ -90,42 +91,49 @@ class Dice {
     return _dirThisDice;
   }
 
-  Future<void> setFaceFile(int index, [File? sampleFile]) {
+  Future<void> setFaceFile(int index, [File? sampleFile]) async {
+    if (_pathsToImages[index] != null) {
+      await _pathsToImages[index]!.delete();
+    }
+
     if (sampleFile == null) {
-      if (_pathsToImages[index] != null) {
-        return _pathsToImages[index]!.delete().then((_) => _pathsToImages[index] = null);
-      }
+      return Future(() => _pathsToImages[index] = null);
     } else {
-      print("image from ${sampleFile.path}");
-      print("image to ${_dirThisDice.path}/$index.${sampleFile.path.split('.').last}");
       return sampleFile.copy("${_dirThisDice.path}/$index.${sampleFile.path.split('.').last}").then((file) => _pathsToImages[index] = file);
     }
-    return Future(() => null);
+
   }
 
   Widget getFace({required double dimension, int? index, EdgeInsetsGeometry padding = EdgeInsets.zero}) {
     index ??= numberFaces - 1;
     return Container(
       padding: padding,
+      //color: Colors.red,
       child: SizedBox.square(
-          dimension: dimension,
-          child: Container(
-              padding: EdgeInsets.all(dimension / 20.0),
-              color: Colors.white,
-              child: index != -1 && _pathsToImages[index] != null
-                  ? Image.file(_pathsToImages[index]!, width: dimension, height: dimension)
-                  : FittedBox(
-                      fit: BoxFit.contain,
-                      child: Text(
-                        (index + 1).toString(),
-                        textAlign: TextAlign.center,
-                        style: textTheme.titleSmall?.merge(const TextStyle(
-                          height: 1.0,
-                          color: Colors.black,
-                        )),
-                      ),
-                    ))),
+        dimension: dimension,
+        child: index != -1 && _pathsToImages[index] != null
+            ? Image.file(_pathsToImages[index]!, width: dimension, height: dimension)
+            : Container(
+                padding: EdgeInsets.all(dimension / 20.0),
+                color: colorsDiceFaceBackground[index == -1 ? 0 : index % 6],
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Text(
+                    (index + 1).toString(),
+                    textAlign: TextAlign.center,
+                    style: textTheme.titleSmall?.merge(const TextStyle(
+                      height: 1.0,
+                      color: Colors.black,
+                    )),
+                  ),
+                ),
+              ),
+      ),
     );
+  }
+
+  int get randFaceIndex{
+    return Random().nextInt(numberFaces);
   }
 
   int get numberFaces {

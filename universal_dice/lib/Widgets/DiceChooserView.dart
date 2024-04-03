@@ -20,12 +20,12 @@ class DiceChooserView extends StatefulWidget {
 
   final List<bool> _displayedDictGroup = List<bool>.filled(diceGroupList.length, false, growable: true);
 
-  Future<void> addStandardGroup_addDisplayedDictGroup([bool displayedState = true]) {
+  Future<DiceGroup> addStandardGroup_addDisplayedDictGroup([bool displayedState = true]) {
     _displayedDictGroup.add(displayedState);
     return diceGroupList.addStandardGroup();
   }
 
-  Future<void> duplicateDiceGroup_addDisplayedDictGroup(int index, [bool displayedState = true]) {
+  Future<DiceGroup> duplicateDiceGroup_addDisplayedDictGroup(int index, [bool displayedState = true]) {
     _displayedDictGroup.add(displayedState);
     return diceGroupList.duplicateDiceGroup(index);
   }
@@ -74,10 +74,6 @@ class _DiceChooserView extends State<DiceChooserView> {
           expansionCallback: (int index, bool isExpanded) {
             setState(() {
               widget._displayedDictGroup[index] = !widget._displayedDictGroup[index];
-
-              /*for(int i = 0; i < diceGroupList.length; i++){
-                print("i = $i: ${diceGroupList[i].name}");
-              }*/
             });
           },
           children: List<ExpansionPanel>.generate(diceGroupList.length, (index) {
@@ -87,8 +83,7 @@ class _DiceChooserView extends State<DiceChooserView> {
               isExpanded: widget._displayedDictGroup[index],
               headerBuilder: (BuildContext context, bool isExpanded) {
                 return ListTile(
-                  title: Text(diceGroup.name, textAlign: TextAlign.center),
-                  titleTextStyle: Theme.of(context).textTheme.titleMedium,
+                  title: diceGroup.nameWidget,
                   leading: PopupMenuButton<int>(
                     position: PopupMenuPosition.under,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
@@ -103,7 +98,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                               if (status) {
                                 Navigator.pop(context);
                                 setState(() {});
-                                widget.onChange();
+                                if (diceGroup.state) {
+                                  widget.onChange();
+                                }
                               }
                             });
                           }),
@@ -113,9 +110,11 @@ class _DiceChooserView extends State<DiceChooserView> {
                         buttonStyle: buttonStyleOK,
                         onPressed: () {
                           Navigator.pop(context);
-                          widget.duplicateDiceGroup_addDisplayedDictGroup(index).then((_) {
+                          widget.duplicateDiceGroup_addDisplayedDictGroup(index).then((diceGroup) {
                             setState(() {});
-                            widget.onChange();
+                            if (diceGroup.state) {
+                              widget.onChange();
+                            }
                           });
                         },
                       ),
@@ -195,7 +194,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                               if (status) {
                                 Navigator.pop(context);
                                 setState(() {});
-                                widget.onChange();
+                                if (diceGroup[index].state) {
+                                  widget.onChange();
+                                }
                               }
                             });
                           }),
@@ -205,9 +206,11 @@ class _DiceChooserView extends State<DiceChooserView> {
                         buttonStyle: buttonStyleOK,
                         onPressed: () {
                           Navigator.pop(context);
-                          diceGroup.duplicateDice(index).then((_) {
+                          diceGroup.duplicateDice(index).then((dice) {
                             setState(() {});
-                            widget.onChange();
+                            if (dice.state) {
+                              widget.onChange();
+                            }
                           });
                         },
                       ),
@@ -259,15 +262,20 @@ class _DiceChooserView extends State<DiceChooserView> {
                     ),
                   ),
                   child: ListTile(
-                    title: Text("Новый кубик", textAlign: TextAlign.center),
+                    title: const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text("Новый кубик", textAlign: TextAlign.center),
+                    ),
                     titleTextStyle: Theme.of(context).textTheme.titleSmall?.merge(TextStyle(color: ColorButtonForeground)),
                     trailing: Icon(iconButtonAddDice, color: ColorButtonForeground),
                     leading: Icon(iconButtonAddDice, color: ColorButtonForeground),
                   ),
                   onPressed: () {
-                    diceGroup.addStandardDice().then((_) {
+                    diceGroup.addStandardDice().then((dice) {
                       setState(() {});
-                      widget.onChange();
+                      if (dice.state) {
+                        widget.onChange();
+                      }
                     });
                   },
                 ),
@@ -304,15 +312,20 @@ class _DiceChooserView extends State<DiceChooserView> {
           ),
         ),
         child: ListTile(
-          title: const Text("Новая группа", textAlign: TextAlign.center),
+          title: const FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text("Новая группа", textAlign: TextAlign.center),
+          ),
           titleTextStyle: Theme.of(context).textTheme.titleSmall?.merge(TextStyle(color: ColorButtonForeground)),
           trailing: Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
           leading: Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
         ),
         onPressed: () {
-          widget.addStandardGroup_addDisplayedDictGroup().then((_) {
+          widget.addStandardGroup_addDisplayedDictGroup().then((diceGroup) {
             setState(() {});
-            widget.onChange();
+            if (diceGroup.state) {
+              widget.onChange();
+            }
           });
         },
       ),

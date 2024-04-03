@@ -83,9 +83,12 @@ ThemeData mainTheme = ThemeData(
 
 // цвета для кнопок
 Color ColorButtonBackground = colorScheme.surface; // задний фон
+//const ColorButtonBackgroundDefault = Color.fromARGB(255, 23, 37, 16);
 Color ColorButtonForeground = colorScheme.onSurfaceVariant; // сама иконка или текс
 const Color ColorButtonPressedOK = Color.fromARGB(255, 0, 180, 0); // при нажатии на кнопку "да"
 const Color ColorButtonPressedOFF = Color.fromARGB(255, 220, 0, 0); // при нажатии на кнопку "нет"
+
+const Color ColorButtonBackgroundOnMainPageView = Color.fromARGB(255, 39, 59, 29);
 
 
 /// кнопка несогласия (краснеет)
@@ -105,10 +108,22 @@ ButtonStyle buttonStyleOK = IconButton.styleFrom(
   highlightColor: ColorButtonPressedOK,
 );
 
-/// обычная кнопка (сереет)
+/// обычная кнопка
 ButtonStyle buttonStyleDefault = IconButton.styleFrom(
   backgroundColor: ColorButtonBackground,
   // hoverColor: ColorButtonHover,
   foregroundColor: ColorButtonForeground,
   highlightColor: colorScheme.surfaceVariant,
 );
+
+
+
+/// цвета заднего фона у цифр на кубике по умолчанию
+const colorsDiceFaceBackground = [
+  Color.fromARGB(255, 255, 0, 0),
+  Color.fromARGB(255, 0, 255, 0),
+  Color.fromARGB(255, 0, 0, 255),
+  Color.fromARGB(255, 255, 255, 0),
+  Color.fromARGB(255, 255, 0, 255),
+  Color.fromARGB(255, 0, 255, 255),
+];

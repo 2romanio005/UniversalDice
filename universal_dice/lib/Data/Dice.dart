@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+
 // import 'package:image/image.dart' as image;
 //import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'dart:math';
@@ -101,7 +102,7 @@ class Dice {
     if (sampleFile == null) {
       return Future(() => _pathsToImages[index] = null);
     } else {
-        //FlutterImageCompress.compressAssetImage(sampleFile.path);
+      //FlutterImageCompress.compressAssetImage(sampleFile.path);
       // image.Image img = image.decodeImage(sampleFile.readAsBytesSync())!;
       // img = image.copyResize(img, width: 20);
       // File("${_dirThisDice.path}/$index.${sampleFile.path.split('.').last}").writeAsBytesSync(image.encodePng(img));
@@ -121,6 +122,13 @@ class Dice {
                 _pathsToImages[index]!,
                 width: dimension,
                 height: dimension,
+                frameBuilder: ((context, child, frame, wasSynchronouslyLoaded) {
+                  if (wasSynchronouslyLoaded) return child;
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: frame != null ? child : const CircularProgressIndicator(strokeWidth: 6),
+                  );
+                }),
               )
             : Container(
                 padding: EdgeInsets.all(dimension / 20.0),
@@ -141,7 +149,7 @@ class Dice {
     );
   }
 
-  bool isFaceImage(int index){
+  bool isFaceImage(int index) {
     return _pathsToImages[index] != null;
   }
 

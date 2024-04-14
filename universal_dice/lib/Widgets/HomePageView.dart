@@ -15,24 +15,29 @@ class HomePageView extends StatefulWidget {
 class _HomePageView extends State<HomePageView> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(child: _buildSelectedDiceGroupList()),
-        Container(
-          padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-          child: TextButton(
-            style: buttonStyleDefault.merge(
-              IconButton.styleFrom(backgroundColor: ColorButtonBackgroundOnMainPageView),
-            ),
-            onPressed: () {
-              setState(() {});
-            },
-            child: const FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Text("Бросить все игральные кости"),
-            ),
-          ),
-        )
+        Column(
+          children: [
+            Expanded(child: _buildSelectedDiceGroupList()),
+            Container(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: TextButton(
+                style: buttonStyleDefault.merge(
+                  IconButton.styleFrom(backgroundColor: ColorButtonBackgroundOnMainPageView),
+                ),
+                onPressed: () {
+                  setState(() {});
+                },
+                child: const FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text("Бросить все игральные кости"),
+                ),
+              ),
+            )
+          ],
+        ),
       ],
     );
   }

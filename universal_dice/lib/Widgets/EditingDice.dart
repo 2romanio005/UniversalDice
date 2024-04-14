@@ -10,19 +10,32 @@ import 'package:universal_dice/Decoration/styles.dart';
 import 'package:universal_dice/Data/DiceGroup.dart';
 
 Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int diceIndex) {
-  Future<void> functionOK() => diceGroup.removeDiceAt(diceIndex);
+  late int activeNumberFaces;
+
+  Future<void> functionOK() {
+    diceGroup[diceGroup.length - 1].numberFaces = activeNumberFaces;
+    return diceGroup.removeDiceAt(diceIndex);
+  }
+
   Future<void> functionOFF() => diceGroup.removeDiceAt();
 
   return diceGroup.duplicateDice(diceIndex).then((newDice) => showDialog<bool?>(
           context: context,
           builder: (BuildContext context) {
+            activeNumberFaces = newDice.numberFaces;
             final controller = TextEditingController();
-            controller.text = newDice.numberFaces.toString();
+            controller.text = activeNumberFaces.toString();
 
             bool displayedFaces = true;
             return StatefulBuilder(
               builder: (context, redraw) {
                 // controller.addListener(() => print("c"));
+                controller.addListener(() => redraw(() {
+                      activeNumberFaces = int.parse(controller.text);
+                      if (activeNumberFaces > newDice.numberFaces) {
+                        newDice.numberFaces = activeNumberFaces;
+                      }
+                    }));
 
                 final double diceFaceDimension = MediaQuery.of(context).size.width / 2 - 60;
                 final double diceFacePadding = diceFaceDimension / 10;
@@ -30,9 +43,13 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                 Widget buildDiceFace(int index, [EdgeInsetsGeometry? padding]) {
                   return GestureDetector(
                     onTap: () {
-                      ImagePicker().pickImage(source: ImageSource.gallery).then(
-                            (image) => newDice.setFaceFile(index, image == null ? null : File(image.path)).then((_) => redraw(() {})),
-                          );
+                      if (newDice.isFaceImage(index)) {
+                        newDice.setFaceFile(index, null).then((_) => redraw(() {}));
+                      } else {
+                        ImagePicker().pickImage(source: ImageSource.gallery).then(
+                              (image) => newDice.setFaceFile(index, image == null ? null : File(image.path)).then((_) => redraw(() {})),
+                            );
+                      }
                     },
                     child: newDice.getFace(
                       dimension: diceFaceDimension,
@@ -71,15 +88,6 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    child: IconButton(
-                                      style: buttonStyleOK,
-                                      icon: const Icon(iconButtonChangeNumberDiceFaces),
-                                      onPressed: () {
-                                        redraw(() => newDice.numberFaces = int.parse(controller.text));
-                                      },
-                                    ),
-                                  )
                                 ],
                               ),
                               ExpansionPanelList(
@@ -97,10 +105,10 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                                     },
                                     body: Column(
                                       children: List<Widget>.generate(
-                                        (newDice.numberFaces + 1) ~/ 2,
+                                        (activeNumberFaces + 1) ~/ 2,
                                         (int index) => Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: (index * 2 + 1 < newDice.numberFaces)
+                                          children: (index * 2 + 1 < activeNumberFaces)
                                               ? [
                                                   buildDiceFace(index * 2),
                                                   buildDiceFace(index * 2 + 1),

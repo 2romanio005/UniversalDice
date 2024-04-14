@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+// import 'package:image/image.dart' as image;
+//import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'dart:math';
 
 import 'package:universal_dice/Functions/FileReading.dart';
@@ -99,9 +101,12 @@ class Dice {
     if (sampleFile == null) {
       return Future(() => _pathsToImages[index] = null);
     } else {
+        //FlutterImageCompress.compressAssetImage(sampleFile.path);
+      // image.Image img = image.decodeImage(sampleFile.readAsBytesSync())!;
+      // img = image.copyResize(img, width: 20);
+      // File("${_dirThisDice.path}/$index.${sampleFile.path.split('.').last}").writeAsBytesSync(image.encodePng(img));
       return sampleFile.copy("${_dirThisDice.path}/$index.${sampleFile.path.split('.').last}").then((file) => _pathsToImages[index] = file);
     }
-
   }
 
   Widget getFace({required double dimension, int? index, EdgeInsetsGeometry padding = EdgeInsets.zero}) {
@@ -112,10 +117,14 @@ class Dice {
       child: SizedBox.square(
         dimension: dimension,
         child: index != -1 && _pathsToImages[index] != null
-            ? Image.file(_pathsToImages[index]!, width: dimension, height: dimension)
+            ? Image.file(
+                _pathsToImages[index]!,
+                width: dimension,
+                height: dimension,
+              )
             : Container(
                 padding: EdgeInsets.all(dimension / 20.0),
-                color: colorsDiceFaceBackground[index == -1 ? 0 : index % 6],
+                color: colorsDiceFaceBackground[index % 6],
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: Text(
@@ -132,7 +141,11 @@ class Dice {
     );
   }
 
-  int get randFaceIndex{
+  bool isFaceImage(int index){
+    return _pathsToImages[index] != null;
+  }
+
+  int get randFaceIndex {
     return Random().nextInt(numberFaces);
   }
 

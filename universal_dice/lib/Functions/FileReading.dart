@@ -14,7 +14,7 @@ int? getNumberFromFileName(String path) {
 Future<void> copyDirectory(String from, String to) async {
   if (from == to) {
     return;
-  } 
+  }
   // print("from $from");
   // print("to $to");
 

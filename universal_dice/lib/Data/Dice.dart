@@ -15,7 +15,9 @@ class Dice {
   Dice._(Directory directory) : _dirThisDice = directory {
     _state = false;
     _pathsToImages = List<File?>.empty(growable: true);
-    //_pathsToImages = List<File?>.filled(numberFaces, null, growable: true);
+
+    //_pathsToImages = List<File?>.filled(numberFaces, nu
+    // ll, growable: true);
   }
 
   /// конструктор стандартного кубика
@@ -124,7 +126,7 @@ class Dice {
                 height: dimension,
                 frameBuilder: ((context, child, frame, wasSynchronouslyLoaded) {
                   if (wasSynchronouslyLoaded) return child;
-                  return AnimatedSwitcher(
+                    return AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     child: frame != null ? child : const CircularProgressIndicator(strokeWidth: 6),
                   );
@@ -153,8 +155,8 @@ class Dice {
     return _pathsToImages[index] != null;
   }
 
-  int get randFaceIndex {
-    return Random().nextInt(numberFaces);
+  void generateRandFaceIndex() {
+    lastRandFaceIndex = Random().nextInt(numberFaces);
   }
 
   int get numberFaces {
@@ -190,6 +192,8 @@ class Dice {
   late List<File?> _pathsToImages;
   late bool _state;
   final Directory _dirThisDice;
+
+  int? lastRandFaceIndex;
 }
 
 enum _AccordanceSettings {

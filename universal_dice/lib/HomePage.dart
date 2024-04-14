@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:universal_dice/Decoration/styles.dart';
 
 import 'package:universal_dice/Widgets/HomePageView.dart';
+import 'package:universal_dice/Data/DiceGroupList.dart';
 import 'package:universal_dice/Widgets/DiceChooserView.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,27 +24,13 @@ class _HomePage extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    drawer = DiceChooserView(
-      onSelect: redraw,
-      onDelete: redraw,
-      onChange: () {
-        redraw();
-      },
+      drawer = DiceChooserView(
+      whenChangingTheSelected: redraw,
     );
   }
 
   void openDrawer(void Function() open) {
     open();
-    /*if (editingModeController.isNotEditMode) {
-      open();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        showCloseIcon: true,
-        duration: Duration(milliseconds: 500),
-        dismissDirection: DismissDirection.none,
-        content: Text("Сначала сохраните стихотворение", textAlign: TextAlign.center),
-      ));
-    }*/
   }
 
   @override
@@ -72,7 +59,7 @@ class _HomePage extends State<HomePage> {
 
       drawer: drawer,
 
-      body: HomePageView(), // не добавлять const а то всё перестаёт обновляться
+      body: HomePageView(allSelectedDiceGroup: diceGroupList.allSelectedDiceGroup),
     );
   }
 }

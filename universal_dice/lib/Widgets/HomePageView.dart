@@ -6,10 +6,14 @@ import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroupList.dart';
 
 class HomePageView extends StatefulWidget {
-  const HomePageView({super.key});
+  HomePageView({super.key, required this.allSelectedDiceGroup}){
+    print("ffff");
+  }
 
   @override
   State<StatefulWidget> createState() => _HomePageView();
+
+  List<OneSelectedDiceGroup> allSelectedDiceGroup;
 }
 
 class _HomePageView extends State<HomePageView> {
@@ -28,6 +32,11 @@ class _HomePageView extends State<HomePageView> {
                   IconButton.styleFrom(backgroundColor: ColorButtonBackgroundOnMainPageView),
                 ),
                 onPressed: () {
+                  for (OneSelectedDiceGroup selectedDiceGroup in widget.allSelectedDiceGroup){
+                    for (Dice dice in selectedDiceGroup.allDice){
+                      dice.generateRandFaceIndex();
+                    }
+                  }
                   setState(() {});
                 },
                 child: const FittedBox(
@@ -43,13 +52,11 @@ class _HomePageView extends State<HomePageView> {
   }
 
   Widget _buildSelectedDiceGroupList() {
-    List<OneSelectedDiceGroup> allSelectedDiceGroup = diceGroupList.allSelectedDiceGroup;
-
     return SingleChildScrollView(
       child: Column(
         children: List<Widget>.generate(
-          allSelectedDiceGroup.length,
-          (index) => _buildSelectedDiceGroup(allSelectedDiceGroup[index]),
+          widget.allSelectedDiceGroup.length,
+          (index) => _buildSelectedDiceGroup(widget.allSelectedDiceGroup[index]),
         ),
       ),
     );
@@ -67,12 +74,12 @@ class _HomePageView extends State<HomePageView> {
   Widget _buildSelectedDiceList(List<Dice> allSelectedDice) {
     double diceFaceDimension = MediaQuery.of(context).size.width / 2;
     final double diceFacePadding = diceFaceDimension / 20;
-    diceFaceDimension -= diceFacePadding * 2;
+    diceFaceDimension -= diceFacePadding * 3;
 
     Widget buildDiceFace(Dice dice, [EdgeInsetsGeometry? padding]) {
       return dice.getFace(
         dimension: diceFaceDimension,
-        index: dice.randFaceIndex,
+        index: dice.lastRandFaceIndex,
         padding: padding ?? EdgeInsets.only(bottom: diceFacePadding),
       );
     }
@@ -84,7 +91,7 @@ class _HomePageView extends State<HomePageView> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: (index * 2 + 1 < allSelectedDice.length)
               ? [
-                  buildDiceFace(allSelectedDice[index]),
+                  buildDiceFace(allSelectedDice[index], EdgeInsets.fromLTRB(0, 0, diceFacePadding, diceFacePadding)),
                   buildDiceFace(allSelectedDice[index * 2 + 1]),
                 ]
               : [

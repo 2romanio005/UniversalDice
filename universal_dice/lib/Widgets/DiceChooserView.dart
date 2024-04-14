@@ -11,9 +11,12 @@ import 'package:universal_dice/Widgets/ConfirmationBox.dart';
 import 'package:universal_dice/Widgets/EditingDice.dart';
 import 'package:universal_dice/Widgets/EditingDiceGroup.dart';
 
-class DiceChooserView extends StatefulWidget {
-  DiceChooserView({super.key, required this.onSelect, required this.onDelete, required this.onChange});
+void _constVoidFunction(){}
 
+class DiceChooserView extends StatefulWidget {
+  DiceChooserView({super.key, this.whenChangingTheSelected = _constVoidFunction, this.onSelect = _constVoidFunction, this.onDelete = _constVoidFunction, this.onChange = _constVoidFunction});
+
+  final void Function() whenChangingTheSelected;
   final void Function() onSelect;
   final void Function() onDelete;
   final void Function() onChange;
@@ -30,7 +33,7 @@ class DiceChooserView extends StatefulWidget {
     return diceGroupList.duplicateDiceGroup(index);
   }
 
-  Future<void> removeDiceGroupAt_removeDisplayedDictGroupAt(int index) {
+  Future<bool> removeDiceGroupAt_removeDisplayedDictGroupAt(int index) {
     _displayedDictGroup.removeAt(index);
     return diceGroupList.removeDiceGroupAt(index);
   }
@@ -99,8 +102,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                                 Navigator.pop(context);
                                 setState(() {});
                                 if (diceGroup.state) {
-                                  widget.onChange();
+                                  widget.whenChangingTheSelected();
                                 }
+                                widget.onChange();
                               }
                             });
                           }),
@@ -113,8 +117,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                           widget.duplicateDiceGroup_addDisplayedDictGroup(index).then((diceGroup) {
                             setState(() {});
                             if (diceGroup.state) {
-                              widget.onChange();
+                              widget.whenChangingTheSelected();
                             }
+                            widget.onChange();
                           });
                         },
                       ),
@@ -130,10 +135,13 @@ class _DiceChooserView extends State<DiceChooserView> {
                               textOK: 'Удалить группу',
                               textOFF: 'Отмена',
                               functionOK: () {
-                                widget.removeDiceGroupAt_removeDisplayedDictGroupAt(index).then((_) {
+                                widget.removeDiceGroupAt_removeDisplayedDictGroupAt(index).then((state) {
                                   Navigator.pop(context);
                                   setState(() {});
                                   widget.onDelete();
+                                  if (state) {
+                                    widget.whenChangingTheSelected();
+                                  }
                                 });
                               });
                         },
@@ -156,6 +164,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                         widget._displayedDictGroup[index] = true;
                       }
                       widget.onSelect();
+                      widget.whenChangingTheSelected();
                     }),
                   ),
                 );
@@ -195,8 +204,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                                 Navigator.pop(context);
                                 setState(() {});
                                 if (diceGroup[index].state) {
-                                  widget.onChange();
+                                  widget.whenChangingTheSelected();
                                 }
+                                widget.onChange();
                               }
                             });
                           }),
@@ -209,8 +219,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                           diceGroup.duplicateDice(index).then((dice) {
                             setState(() {});
                             if (dice.state) {
-                              widget.onChange();
+                              widget.whenChangingTheSelected();
                             }
+                            widget.onChange();
                           });
                         },
                       ),
@@ -226,10 +237,13 @@ class _DiceChooserView extends State<DiceChooserView> {
                               textOK: 'Удалить',
                               textOFF: 'Отмена',
                               functionOK: () {
-                                diceGroup.removeDiceAt(index).then((_) {
+                                diceGroup.removeDiceAt(index).then((state) {
                                   Navigator.pop(context);
                                   setState(() {});
                                   widget.onDelete();
+                                  if (state) {
+                                    widget.whenChangingTheSelected();
+                                  }
                                 });
                               });
                         },
@@ -251,6 +265,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                       dice.invertState();
                     });
                     widget.onSelect();
+                    widget.whenChangingTheSelected();
                   },
                 );
               }) +
@@ -274,8 +289,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                     diceGroup.addStandardDice().then((dice) {
                       setState(() {});
                       if (dice.state) {
-                        widget.onChange();
+                        widget.whenChangingTheSelected();
                       }
+                      widget.onChange();
                     });
                   },
                 ),
@@ -324,8 +340,9 @@ class _DiceChooserView extends State<DiceChooserView> {
           widget.addStandardGroup_addDisplayedDictGroup().then((diceGroup) {
             setState(() {});
             if (diceGroup.state) {
-              widget.onChange();
+              widget.whenChangingTheSelected();
             }
+            widget.onChange();
           });
         },
       ),

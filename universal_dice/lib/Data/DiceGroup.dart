@@ -96,9 +96,13 @@ class DiceGroup {
         }));
   }
 
-  Future<void> removeDiceAt([int? index]) {
+  Future<bool> removeDiceAt([int? index]) {
     index ??= _diceList.length - 1;
-    return _diceList[index].directory.delete(recursive: true).then((_) => _diceList.removeAt(index!));
+    return _diceList[index].directory.delete(recursive: true).then((_) {
+      bool res = _diceList[index!].state;
+      _diceList.removeAt(index!);
+      return res;
+    });
   }
 
   String _getPathToNewDice() {

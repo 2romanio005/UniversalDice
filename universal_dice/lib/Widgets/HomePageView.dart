@@ -7,7 +7,11 @@ import 'package:universal_dice/Data/DiceGroupList.dart';
 
 class HomePageView extends StatefulWidget {
   HomePageView({super.key, required this.allSelectedDiceGroup}){
-    print("ffff");
+    for (OneSelectedDiceGroup selectedDiceGroup in allSelectedDiceGroup){
+      for (Dice dice in selectedDiceGroup.allDice){
+        dice.lastRandFaceIndex = null;
+      }
+    }
   }
 
   @override
@@ -28,9 +32,7 @@ class _HomePageView extends State<HomePageView> {
             Container(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
               child: TextButton(
-                style: buttonStyleDefault.merge(
-                  IconButton.styleFrom(backgroundColor: ColorButtonBackgroundOnMainPageView),
-                ),
+                style: IconButton.styleFrom(backgroundColor: ColorButtonBackgroundOnMainPageView).merge(buttonStyleDefault),
                 onPressed: () {
                   for (OneSelectedDiceGroup selectedDiceGroup in widget.allSelectedDiceGroup){
                     for (Dice dice in selectedDiceGroup.allDice){
@@ -74,7 +76,7 @@ class _HomePageView extends State<HomePageView> {
   Widget _buildSelectedDiceList(List<Dice> allSelectedDice) {
     double diceFaceDimension = MediaQuery.of(context).size.width / 2;
     final double diceFacePadding = diceFaceDimension / 20;
-    diceFaceDimension -= diceFacePadding * 3;
+    diceFaceDimension -= diceFacePadding;
 
     Widget buildDiceFace(Dice dice, [EdgeInsetsGeometry? padding]) {
       return dice.getFace(
@@ -91,7 +93,7 @@ class _HomePageView extends State<HomePageView> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: (index * 2 + 1 < allSelectedDice.length)
               ? [
-                  buildDiceFace(allSelectedDice[index], EdgeInsets.fromLTRB(0, 0, diceFacePadding, diceFacePadding)),
+                  buildDiceFace(allSelectedDice[index * 2], EdgeInsets.fromLTRB(0, 0, diceFacePadding, diceFacePadding)),
                   buildDiceFace(allSelectedDice[index * 2 + 1]),
                 ]
               : [

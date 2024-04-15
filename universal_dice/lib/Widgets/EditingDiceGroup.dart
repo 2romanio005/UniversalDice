@@ -22,17 +22,22 @@ Future<bool> showEditingDiceGroup(BuildContext context, DiceGroup diceGroup) {
           actionsAlignment: MainAxisAlignment.spaceAround,
           title: Text("Редактирование группы", textAlign: TextAlign.center),
           titleTextStyle: Theme.of(context).textTheme.titleLarge,
-          content: Row(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Expanded(child: Text("Название группы")),
-              Expanded(
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  controller: controller,
-                  decoration: const InputDecoration(
-                    hintText: "Напишите название",
-                  ),
-                ),
+              const Text("Название группы:"),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      controller: controller,
+                      decoration: const InputDecoration(
+                        hintText: "Напишите название",
+                      ),
+                    ),
+                  )
+                ],
               ),
             ],
           ),

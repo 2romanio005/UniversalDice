@@ -6,9 +6,9 @@ import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroupList.dart';
 
 class HomePageView extends StatefulWidget {
-  HomePageView({super.key, required this.allSelectedDiceGroup}){
-    for (OneSelectedDiceGroup selectedDiceGroup in allSelectedDiceGroup){
-      for (Dice dice in selectedDiceGroup.allDice){
+  HomePageView({super.key, required this.allSelectedDiceGroup}) {
+    for (OneSelectedDiceGroup selectedDiceGroup in allSelectedDiceGroup) {
+      for (Dice dice in selectedDiceGroup.allDice) {
         dice.lastRandFaceIndex = null;
       }
     }
@@ -23,14 +23,24 @@ class HomePageView extends StatefulWidget {
 class _HomePageView extends State<HomePageView> {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    const double padding = 20;
+    return widget.allSelectedDiceGroup.isEmpty
+        ?
+    const Padding(
+      padding: EdgeInsets.fromLTRB(padding, 100, padding, 0),
+      child: Text(
+        "Выберите какие кубики кидать, нажав на кнопку в верхнем (правом или левом) углу.",
+        textAlign: TextAlign.center,
+      ),
+    ) :
+    Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Column(
           children: [
             Expanded(child: _buildSelectedDiceGroupList()),
             Container(
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 12),
               child: TextButton(
                 style: buttonStyleDefaultInverted,
                 onPressed: () {

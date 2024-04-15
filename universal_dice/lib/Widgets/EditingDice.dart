@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:math';
 
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -59,11 +60,12 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                   );
                 }
 
+                const int maxDisplayedNumberFaces = 300;
                 return AlertDialog(
                   insetPadding: EdgeInsets.zero,
                   // backgroundColor: Theme.of(context).colorScheme.surface,
                   actionsAlignment: MainAxisAlignment.spaceAround,
-                  title: Text("Редактирование кубика", textAlign: TextAlign.center),
+                  title: const Text("Редактирование кубика", textAlign: TextAlign.center),
                   titleTextStyle: Theme.of(context).textTheme.titleLarge,
                   content: Column(
                     children: [
@@ -72,10 +74,11 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                           child: Column(
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  const Expanded(flex: 5, child: Text("Количество граней")),
+                                  const Expanded(flex: 2, child: Text("Количество граней")),
                                   Expanded(
-                                    flex: 2,
+                                    flex: 1,
                                     child: TextField(
                                       textAlign: TextAlign.center,
                                       controller: controller,
@@ -83,13 +86,29 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                                       inputFormatters: <TextInputFormatter>[
                                         FilteringTextInputFormatter.digitsOnly,
                                       ],
-                                      decoration: const InputDecoration(
-                                        hintText: "Напишите количество граней",
+                                      decoration: InputDecoration(
+                                        hintStyle: const TextStyle(
+                                          //fontFamily: "Consolas",
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                        hintText: "Было ${newDice.numberFaces}",
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
+                              const Padding(padding: EdgeInsets.only(bottom: 10)),
+                              Row(
+                                  children: activeNumberFaces > maxDisplayedNumberFaces
+                                      ? [
+                                          const Text(
+                                            "Грани после $maxDisplayedNumberFaces не отображаются.",
+                                            style: TextStyle(color: Colors.yellow),
+                                          ),
+                                        ]
+                                      : []),
+                              const Padding(padding: EdgeInsets.only(bottom: 10)),
                               ExpansionPanelList(
                                 expansionCallback: (int index, bool isExpanded) {
                                   redraw(() {
@@ -101,11 +120,11 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                                     canTapOnHeader: true,
                                     isExpanded: displayedFaces,
                                     headerBuilder: (BuildContext context, bool isExpanded) {
-                                      return Text("Изменить изображения на гранях");
+                                      return const Text("Изменить изображения на гранях");
                                     },
                                     body: Column(
                                       children: List<Widget>.generate(
-                                        (activeNumberFaces + 1) ~/ 2,
+                                        min((activeNumberFaces + 1), maxDisplayedNumberFaces) ~/ 2,
                                         (int index) => Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: (index * 2 + 1 < activeNumberFaces)

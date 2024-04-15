@@ -122,21 +122,6 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
           );
         },
       );
-      // return TweenAnimationBuilder(
-      //   tween: tween,
-      //   duration: duration,
-      //   builder: (){
-      //
-      //   },
-      // );
-      // return RotationTransition(
-      //   turns: _animation,
-      //   child: dice.getFace(
-      //     dimension: diceFaceDimension,
-      //     index: dice.lastRandFaceIndex,
-      //     padding: padding ?? EdgeInsets.only(bottom: diceFacePadding),
-      //   ),
-      // );
     }
 
     return Column(

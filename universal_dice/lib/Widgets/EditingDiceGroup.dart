@@ -20,7 +20,7 @@ Future<bool> showEditingDiceGroup(BuildContext context, DiceGroup diceGroup) {
           insetPadding: EdgeInsets.zero,
           // backgroundColor: Theme.of(context).colorScheme.surface,
           actionsAlignment: MainAxisAlignment.spaceAround,
-          title: Text("Редактирование группы", textAlign: TextAlign.center),
+          title: const Text("Редактирование группы", textAlign: TextAlign.center),
           titleTextStyle: Theme.of(context).textTheme.titleLarge,
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -32,8 +32,13 @@ Future<bool> showEditingDiceGroup(BuildContext context, DiceGroup diceGroup) {
                     child: TextField(
                       textAlign: TextAlign.center,
                       controller: controller,
-                      decoration: const InputDecoration(
-                        hintText: "Напишите название",
+                      decoration: InputDecoration(
+                        hintText: "Было: ${diceGroup.name}",
+                        hintStyle: const TextStyle(
+                          //fontFamily: "Consolas",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
                     ),
                   )

@@ -92,7 +92,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                                           fontSize: 18,
                                           fontWeight: FontWeight.w300,
                                         ),
-                                        hintText: "Было ${newDice.numberFaces}",
+                                        hintText: "Было: ${newDice.numberFaces}",
                                       ),
                                     ),
                                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 import 'package:universal_dice/Decoration/styles.dart';
 import 'package:universal_dice/Decoration/icons.dart';
@@ -11,7 +12,7 @@ import 'package:universal_dice/Widgets/ConfirmationBox.dart';
 import 'package:universal_dice/Widgets/EditingDice.dart';
 import 'package:universal_dice/Widgets/EditingDiceGroup.dart';
 
-void _constVoidFunction(){}
+void _constVoidFunction() {}
 
 class DiceChooserView extends StatefulWidget {
   DiceChooserView({super.key, this.whenChangingTheSelected = _constVoidFunction, this.onSelect = _constVoidFunction, this.onDelete = _constVoidFunction, this.onChange = _constVoidFunction});
@@ -39,7 +40,7 @@ class DiceChooserView extends StatefulWidget {
   }
 
   @override
-  _DiceChooserView createState() => _DiceChooserView();
+  State<DiceChooserView> createState() => _DiceChooserView();
 }
 
 class _DiceChooserView extends State<DiceChooserView> {
@@ -160,9 +161,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                           ),
                     onPressed: () => setState(() {
                       diceGroup.invertState();
-                      if (diceGroup.state) {
-                        widget._displayedDictGroup[index] = true;
-                      }
+                      // if (diceGroup.state) {
+                      //   widget._displayedDictGroup[index] = true;
+                      // }
                       widget.onSelect();
                       widget.whenChangingTheSelected();
                     }),
@@ -184,10 +185,40 @@ class _DiceChooserView extends State<DiceChooserView> {
           mainAxisSize: MainAxisSize.min,
           children: List<Widget>.generate(diceGroup.length, (int index) {
                 Dice dice = diceGroup[index];
+
+                Widget drawDiceFace([int? index]) {
+                  double padding = Theme.of(context).textTheme.titleSmall!.fontSize! / 10;
+                  return dice.getFace(
+                    index: index,
+                    dimension: Theme.of(context).textTheme.titleSmall!.fontSize! * 6 / 5,
+                    padding: EdgeInsets.fromLTRB(padding, 0, padding, 0),
+                  );
+                }
+
                 return ListTile(
-                  title: Container(
-                    alignment: Alignment.center,
-                    child: dice.getFace(dimension: Theme.of(context).textTheme.titleSmall!.fontSize!),
+                  title: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: dice.numberFaces <= 6
+                          ? List<Widget>.generate(
+                              max(dice.numberFaces, 1),
+                              drawDiceFace,
+                            )
+                          : [
+                              drawDiceFace(0),
+                              drawDiceFace(1),
+                              Text(
+                                " ... ",
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
+                              drawDiceFace(dice.numberFaces - 2),
+                              drawDiceFace()
+                            ],
+                    ),
                   ),
                   leading: PopupMenuButton<int>(
                     position: PopupMenuPosition.under,

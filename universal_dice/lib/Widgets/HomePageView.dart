@@ -28,8 +28,14 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
-    _animation = Tween<double>(begin: 0, end: pi * 4).animate(_controller);
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 3000));
+    _animation = Tween<double>(begin: 0, end: pi * 2).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.elasticOut,
+      ),
+    );
+    _controller.forward(from: 0);
   }
 
   @override
@@ -103,6 +109,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
       return AnimatedBuilder(
         animation: _animation,
         builder: (context, child) {
+          print(_animation.value);
           return Transform.rotate(
             angle: _animation.value,
             child: Container(

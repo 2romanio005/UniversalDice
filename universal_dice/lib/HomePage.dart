@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:universal_dice/Decoration/styles.dart';
+import 'package:universal_dice/Decoration/icons.dart';
 
 import 'package:universal_dice/Widgets/HomePageView.dart';
 import 'package:universal_dice/Data/DiceGroupList.dart';
@@ -24,7 +25,7 @@ class _HomePage extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-      drawer = DiceChooserView(
+    drawer = DiceChooserView(
       whenChangingTheSelected: redraw,
     );
   }
@@ -39,10 +40,23 @@ class _HomePage extends State<HomePage> {
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(Icons.list),
+            padding: const EdgeInsets.all(16),
+            style: buttonStyleDefaultInverted,
+            icon: const Icon(iconButtonDrawer),
             onPressed: () => openDrawer(() => Scaffold.of(context).openDrawer()),
           ),
         ),
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              padding: const EdgeInsets.all(16),
+              style: buttonStyleDefaultInverted,
+              icon: const Icon(iconButtonDrawer),
+              onPressed: () => openDrawer(() => Scaffold.of(context).openEndDrawer()),
+              //tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            ),
+          ),
+        ],
         centerTitle: true,
         title: FittedBox(
           fit: BoxFit.fitWidth,
@@ -56,9 +70,8 @@ class _HomePage extends State<HomePage> {
           ),
         ),
       ),
-
       drawer: drawer,
-
+      endDrawer: drawer,
       body: HomePageView(allSelectedDiceGroup: diceGroupList.allSelectedDiceGroup),
     );
   }

@@ -32,7 +32,7 @@ class _HomePageView extends State<HomePageView> {
             Container(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
               child: TextButton(
-                style: IconButton.styleFrom(backgroundColor: ColorButtonBackgroundOnMainPageView).merge(buttonStyleDefault),
+                style: buttonStyleDefaultInverted,
                 onPressed: () {
                   for (OneSelectedDiceGroup selectedDiceGroup in widget.allSelectedDiceGroup){
                     for (Dice dice in selectedDiceGroup.allDice){

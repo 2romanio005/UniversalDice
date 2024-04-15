@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'dart:math';
 
 // import 'package:image/image.dart' as image;
 //import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'dart:math';
 
 import 'package:universal_dice/Functions/FileReading.dart';
 
@@ -21,7 +21,7 @@ class Dice {
   }
 
   /// конструктор стандартного кубика
-  static Future<Dice> creatingStandard(Directory dirThisDice) {
+  static Future<Dice> creatingNewDice(Directory dirThisDice) {
     Dice resultDice = Dice._(dirThisDice);
 
     resultDice._pathsToImages.length = 6;
@@ -43,7 +43,7 @@ class Dice {
     return File("${_dirThisDice.path}/$nameSettingsFile").readAsLines().then((listSettings) {
       _pathsToImages.length = int.parse(listSettings[_AccordanceSettings.numberFaces.index]);
       _state = listSettings[_AccordanceSettings.state.index] == '1';
-      print("${_dirThisDice.path} DiceLenth ${_pathsToImages.length} state ${_state}");
+      print("${_dirThisDice.path} DiceLength ${_pathsToImages.length} state ${_state}");
     }, onError: (err) {
       print(err);
     });
@@ -126,7 +126,7 @@ class Dice {
                 height: dimension,
                 frameBuilder: ((context, child, frame, wasSynchronouslyLoaded) {
                   if (wasSynchronouslyLoaded) return child;
-                    return AnimatedSwitcher(
+                  return AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     child: frame != null ? child : const CircularProgressIndicator(strokeWidth: 6),
                   );
@@ -156,7 +156,7 @@ class Dice {
   }
 
   void generateRandFaceIndex() {
-    lastRandFaceIndex = Random().nextInt(numberFaces);
+    lastRandFaceIndex = numberFaces > 0 ? Random().nextInt(numberFaces) : -1;
   }
 
   int get numberFaces {

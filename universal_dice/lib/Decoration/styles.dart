@@ -85,10 +85,11 @@ ThemeData mainTheme = ThemeData(
 Color ColorButtonBackground = colorScheme.surface; // задний фон
 //const ColorButtonBackgroundDefault = Color.fromARGB(255, 23, 37, 16);
 Color ColorButtonForeground = colorScheme.onSurfaceVariant; // сама иконка или текс
+const Color ColorButtonBackgroundInverted = Color.fromARGB(255, 39, 59, 29);
+
 const Color ColorButtonPressedOK = Color.fromARGB(255, 0, 180, 0); // при нажатии на кнопку "да"
 const Color ColorButtonPressedOFF = Color.fromARGB(255, 220, 0, 0); // при нажатии на кнопку "нет"
-
-const Color ColorButtonBackgroundOnMainPageView = Color.fromARGB(255, 39, 59, 29);
+Color ColorButtonPressedDefault = colorScheme.surfaceVariant;
 
 
 /// кнопка несогласия (краснеет)
@@ -113,7 +114,15 @@ ButtonStyle buttonStyleDefault = IconButton.styleFrom(
   backgroundColor: ColorButtonBackground,
   // hoverColor: ColorButtonHover,
   foregroundColor: ColorButtonForeground,
-  highlightColor: colorScheme.surfaceVariant,
+  highlightColor: ColorButtonPressedDefault,
+);
+
+/// обычная кнопка с другим задним фоном
+ButtonStyle buttonStyleDefaultInverted = IconButton.styleFrom(
+  backgroundColor: ColorButtonBackgroundInverted,
+  // hoverColor: ColorButtonHover,
+  foregroundColor: ColorButtonForeground,
+  highlightColor: ColorButtonPressedDefault,
 );
 
 

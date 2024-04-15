@@ -17,8 +17,8 @@ class DiceGroup {
   }
 
   /// конструктор стандартной группы
-  static Future<DiceGroup> creatingStandard(Directory directory) {
-    DiceGroup resultDiceGroup = DiceGroup._(name: "Новая группа", directory: directory);
+  static Future<DiceGroup> creatingNewDiceGroup(Directory dirThisDiceGroup) {
+    DiceGroup resultDiceGroup = DiceGroup._(name: "Группа ${(getNumberFromFileName(dirThisDiceGroup.path) ?? 0) + 1}", directory: dirThisDiceGroup);
     //print("1 ${directory.path}");
     return resultDiceGroup._writeSettings().then((_) => resultDiceGroup);
   }
@@ -90,7 +90,7 @@ class DiceGroup {
   }
 
   Future<Dice> addStandardDice() {
-    return Directory(_getPathToNewDice()).create().then((dir) => Dice.creatingStandard(dir).then((dice) {
+    return Directory(_getPathToNewDice()).create().then((dir) => Dice.creatingNewDice(dir).then((dice) {
           _diceList.add(dice);
           return _diceList.last;
         }));

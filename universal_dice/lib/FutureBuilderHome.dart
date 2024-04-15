@@ -24,7 +24,21 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
       print(file.path);
     }
     print("===================");
+
     diceGroupList = await DiceGroupList.creatingFromFiles();
+
+    if(diceGroupList.length == 0){
+      await diceGroupList.addNewDiceGroup();
+      diceGroupList[0].name = "Стандартная группа";
+      Future<void> addDice(int numberFaces) async{
+        await diceGroupList[0].addStandardDice();
+        diceGroupList[0][diceGroupList[0].length - 1].numberFaces = numberFaces;
+      }
+      await addDice(2);
+      await addDice(6);
+      await addDice(10);
+    }
+
     print("loaded");
 
     return true;

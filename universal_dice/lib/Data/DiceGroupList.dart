@@ -69,8 +69,8 @@ class DiceGroupList {
     });
   }
 
-  Future<DiceGroup> addStandardGroup() {
-    return Directory(_getPathToNewDiceGroup()).create().then((dir) => DiceGroup.creatingStandard(dir).then(
+  Future<DiceGroup> addNewDiceGroup() {
+    return Directory(_getPathToNewDiceGroup()).create().then((dir) => DiceGroup.creatingNewDiceGroup(dir).then(
           (diceGroup) {
             _diceGroupList.add(diceGroup);
             return diceGroup;
@@ -82,7 +82,7 @@ class DiceGroupList {
     index ??= _diceGroupList.length - 1;
     return _diceGroupList[index].directory.delete(recursive: true).then((_) {
       bool res = _diceGroupList[index!].state;
-      _diceGroupList.removeAt(index!);
+      _diceGroupList.removeAt(index);
       return res;
     });
   }

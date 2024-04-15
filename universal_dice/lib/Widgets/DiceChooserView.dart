@@ -23,9 +23,9 @@ class DiceChooserView extends StatefulWidget {
 
   final List<bool> _displayedDictGroup = List<bool>.filled(diceGroupList.length, false, growable: true);
 
-  Future<DiceGroup> addStandardGroup_addDisplayedDictGroup([bool displayedState = true]) {
+  Future<DiceGroup> addNewDiceGroup_addDisplayedDictGroup([bool displayedState = true]) {
     _displayedDictGroup.add(displayedState);
-    return diceGroupList.addStandardGroup();
+    return diceGroupList.addNewDiceGroup();
   }
 
   Future<DiceGroup> duplicateDiceGroup_addDisplayedDictGroup(int index, [bool displayedState = true]) {
@@ -337,7 +337,7 @@ class _DiceChooserView extends State<DiceChooserView> {
           leading: Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
         ),
         onPressed: () {
-          widget.addStandardGroup_addDisplayedDictGroup().then((diceGroup) {
+          widget.addNewDiceGroup_addDisplayedDictGroup().then((diceGroup) {
             setState(() {});
             if (diceGroup.state) {
               widget.whenChangingTheSelected();

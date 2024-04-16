@@ -92,9 +92,9 @@ class DiceGroupList {
     });
   }
 
-  /// TODO кака в DiceGroup
-  String _getPathToNewDiceGroup() {
-    return "${_dirThisDiceGroupList.path}/${_diceGroupList.isEmpty ? "0" : (getNumberFromFileName(_diceGroupList.last.directory.path)! + 1)}";
+  /// Получить путь до группы по индексу
+  String _getPathToNewDiceGroup([int? index]) {
+    return "${_dirThisDiceGroupList.path}/${_diceGroupList.isEmpty ? "0" : ((getNumberFromFileName(_diceGroupList[index ?? length].directory.path) ?? -1) + 1)}";
   }
 
   /// Получить группу

@@ -124,9 +124,9 @@ class DiceGroup {
     return _diceList[index];
   }
 
-  /// Получить путь до кубика по индексу .............................................. FIXME индекс может сместиться в большую сторону
+  /// Получить путь до кубика по индексу
   String _getPathToDice([int? index]) {
-    return "${_dirThisDiceGroup.path}/${index ?? (_diceList.isEmpty ? "0" : (getNumberFromFileName(_diceList.last.directory.path)! + 1))}";
+    return "${_dirThisDiceGroup.path}/${_diceList.isEmpty ? "0" : ((getNumberFromFileName(_diceList[index ?? length].directory.path) ?? -1) + 1)}";
   }
 
   /// Получить директорию этой группы  TODO поменять название

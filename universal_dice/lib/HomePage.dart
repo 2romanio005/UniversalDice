@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 import 'package:universal_dice/Decoration/styles.dart';
 import 'package:universal_dice/Decoration/icons.dart';

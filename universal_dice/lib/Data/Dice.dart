@@ -11,7 +11,7 @@ const String _nameSettingsFile = "settings.txt";        // название фа
 /// Класс - игральная кость (кубик), хранит все грани кубика и позволяет сгенерировать случайную из них при броске
 class Dice {
   /// Приватный конструктор кубика
-  Dice._(Directory directory) : _dirThisDice = directory {
+  Dice._(Directory dirThisDice) : _dirThisDice = dirThisDice {
     _state = false;
     _pathsToImages = List<File?>.empty(growable: true);
 
@@ -39,12 +39,12 @@ class Dice {
 
   /// Конструктор копирования
   static Future<Dice> copy(Dice sampleDice, String newPath){
-    return copyDirectory(sampleDice.directory.path, newPath).then((_) => Dice.creatingFromFiles(Directory(newPath)));
+    return copyDirectory(sampleDice.dirThisDice.path, newPath).then((_) => Dice.creatingFromFiles(Directory(newPath)));
   }
 
   /// Удалить все файлы Dice
   Future<void> delete(){
-    return directory.delete(recursive: true);
+    return dirThisDice.delete(recursive: true);
   }
 
   /// Чтение настроек из файла
@@ -145,7 +145,7 @@ class Dice {
   }
 
   /// Получить директорию с этим кубиком          TODO Изменить название
-  Directory get directory {
+  Directory get dirThisDice {
     return _dirThisDice;
   }
 

@@ -5,14 +5,13 @@ import 'dart:math';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-import 'package:universal_dice/Decoration/icons.dart';
 import 'package:universal_dice/Decoration/styles.dart';
 
 import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroup.dart';
 
 Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int diceIndex) {
-  final Directory tmpDiceDir = Directory("${diceGroup.directory.path}/tmpDice");
+  final Directory tmpDiceDir = Directory("${diceGroup.dirThisDiceGroup.path}/tmpDice");
   if(tmpDiceDir.existsSync()){
     tmpDiceDir.deleteSync(recursive: true);
   }
@@ -181,7 +180,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
           if (status == null || status == false) {
             return functionOFF().then((_) => false);
           }
-          return functionOK().then((_){print("OK finish"); return true;});
+          return functionOK().then((_) => true);
         },
-      ).then((status) => newDice.delete().then((_) { print("tmpDice deleted");return status;})));
+      ).then((status) => newDice.delete().then((_) => status)));
 }

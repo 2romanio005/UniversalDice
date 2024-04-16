@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:universal_dice/Decoration/icons.dart';
 import 'package:universal_dice/Decoration/styles.dart';
 
 import 'package:universal_dice/Data/DiceGroup.dart';

@@ -94,7 +94,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                     child: const Icon(iconButtonModeDiceGroup),
                     itemBuilder: (context) => [
                       _buildingMoreMenuElement(
-                          icon: Icon(iconButtonEditDiceGroup, color: ColorButtonForeground),
+                          icon: Icon(iconButtonEditDiceGroup, color: colorButtonForeground),
                           text: "Редактировать",
                           buttonStyle: buttonStyleDefault,
                           onPressed: () {
@@ -110,7 +110,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                             });
                           }),
                       _buildingMoreMenuElement(
-                        icon: const Icon(iconButtonDuplicateDiceGroup, color: ColorButtonPressedOK),
+                        icon: const Icon(iconButtonDuplicateDiceGroup, color: colorButtonPressedOK),
                         text: "Дублировать",
                         buttonStyle: buttonStyleOK,
                         onPressed: () {
@@ -125,7 +125,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                         },
                       ),
                       _buildingMoreMenuElement(
-                        icon: const Icon(iconButtonDeleteDiceGroup, color: ColorButtonPressedOFF),
+                        icon: const Icon(iconButtonDeleteDiceGroup, color: colorButtonPressedOFF),
                         text: "Удалить",
                         buttonStyle: buttonStyleOFF,
                         onPressed: () {
@@ -226,7 +226,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                     child: const Icon(iconButtonModeDice),
                     itemBuilder: (context) => [
                       _buildingMoreMenuElement(
-                          icon: Icon(iconButtonEditDice, color: ColorButtonForeground),
+                          icon: Icon(iconButtonEditDice, color: colorButtonForeground),
                           text: "Редактировать",
                           buttonStyle: buttonStyleDefault,
                           onPressed: () {
@@ -242,7 +242,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                             });
                           }),
                       _buildingMoreMenuElement(
-                        icon: const Icon(iconButtonDuplicateDice, color: ColorButtonPressedOK),
+                        icon: const Icon(iconButtonDuplicateDice, color: colorButtonPressedOK),
                         text: "Дублировать",
                         buttonStyle: buttonStyleOK,
                         onPressed: () {
@@ -257,7 +257,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                         },
                       ),
                       _buildingMoreMenuElement(
-                        icon: const Icon(iconButtonDeleteDice, color: ColorButtonPressedOFF),
+                        icon: const Icon(iconButtonDeleteDice, color: colorButtonPressedOFF),
                         text: "Удалить",
                         buttonStyle: buttonStyleOFF,
                         onPressed: () {
@@ -312,9 +312,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                       fit: BoxFit.scaleDown,
                       child: Text("Новый кубик", textAlign: TextAlign.center),
                     ),
-                    titleTextStyle: Theme.of(context).textTheme.titleSmall?.merge(TextStyle(color: ColorButtonForeground)),
-                    trailing: Icon(iconButtonAddDice, color: ColorButtonForeground),
-                    leading: Icon(iconButtonAddDice, color: ColorButtonForeground),
+                    titleTextStyle: Theme.of(context).textTheme.titleSmall?.merge(TextStyle(color: colorButtonForeground)),
+                    trailing: Icon(iconButtonAddDice, color: colorButtonForeground),
+                    leading: Icon(iconButtonAddDice, color: colorButtonForeground),
                   ),
                   onPressed: () {
                     diceGroup.addStandardDice().then((dice) {
@@ -351,7 +351,7 @@ class _DiceChooserView extends State<DiceChooserView> {
   Widget _buildingFooter() {
     return Container(
       padding: const EdgeInsets.only(bottom: 5),
-      // color: ColorBackground,
+      // color: colorBackground,
       child: TextButton(
         style: buttonStyleOK.merge(
           IconButton.styleFrom(
@@ -363,9 +363,9 @@ class _DiceChooserView extends State<DiceChooserView> {
             fit: BoxFit.scaleDown,
             child: Text("Новая группа", textAlign: TextAlign.center),
           ),
-          titleTextStyle: Theme.of(context).textTheme.titleSmall?.merge(TextStyle(color: ColorButtonForeground)),
-          trailing: Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
-          leading: Icon(iconButtonAddDiceGroup, color: ColorButtonForeground),
+          titleTextStyle: Theme.of(context).textTheme.titleSmall?.merge(TextStyle(color: colorButtonForeground)),
+          trailing: Icon(iconButtonAddDiceGroup, color: colorButtonForeground),
+          leading: Icon(iconButtonAddDiceGroup, color: colorButtonForeground),
         ),
         onPressed: () {
           widget.addNewDiceGroup_addDisplayedDictGroup().then((diceGroup) {

@@ -18,9 +18,7 @@ class DiceGroupList {
     Directory dirThisDiceGroupList = await getApplicationDocumentsDirectory();
     dirThisDiceGroupList = await Directory("${dirThisDiceGroupList.path}/DiceGroups").create(recursive: true);
 
-    print("1");
     DiceGroupList resultDiceGroupList = DiceGroupList._(dirThisDiceGroupList);
-    print("2");
     return Future.wait([
       resultDiceGroupList._readDiceGroupList(),
     ]).then((_) => resultDiceGroupList);
@@ -38,13 +36,11 @@ class DiceGroupList {
       if (numberFromDirName != null) {
         return DiceGroup.creatingFromFiles(allDirDiceGroup[i]).then(
           (diceGroup) {
-            print("$numberFromDirName ${tmpDiceGroupList.length}");
             if (numberFromDirName >= tmpDiceGroupList.length) {
               tmpDiceGroupList.length = numberFromDirName + 1;
             }
-            print("$numberFromDirName ${tmpDiceGroupList.length}");
             tmpDiceGroupList[numberFromDirName] = diceGroup;
-            print("Read dirDiceGroup: ${allDirDiceGroup[i].path} to $numberFromDirName");
+            // print("Read dirDiceGroup: ${allDirDiceGroup[i].path} to $numberFromDirName");
           },
         );
       }
@@ -53,18 +49,18 @@ class DiceGroupList {
       for (DiceGroup? tmpDiceGroup in tmpDiceGroupList) {
         // копирование списка с убиранием null значений
         if (tmpDiceGroup != null) {
-          print("copy ${tmpDiceGroup.directory.path}");
+          // print("copy ${tmpDiceGroup.dirThisDiceGroup.path}");
           _diceGroupList.add(tmpDiceGroup);
         }
       }
-      print("all Read!");
+      // print("all Read!");
     });
   }
 
   /// Дублирование группы и добавление её в конец списка
   Future<DiceGroup> duplicateDiceGroup(int index) {
     String newPath = _getPathToNewDiceGroup();
-    return copyDirectory(_diceGroupList[index].directory.path, newPath).then((_) {
+    return copyDirectory(_diceGroupList[index].dirThisDiceGroup.path, newPath).then((_) {
       return DiceGroup.creatingFromFiles(Directory(newPath)).then((diceGroup) {
         _diceGroupList.add(diceGroup);
         return diceGroup;
@@ -85,7 +81,7 @@ class DiceGroupList {
   /// Полное удаление группы из списка
   Future<bool> removeDiceGroupAt([int? index]) {
     index ??= _diceGroupList.length - 1;
-    return _diceGroupList[index].directory.delete(recursive: true).then((_) {
+    return _diceGroupList[index].dirThisDiceGroup.delete(recursive: true).then((_) {
       bool res = _diceGroupList[index!].state;
       _diceGroupList.removeAt(index);
       return res;
@@ -94,7 +90,7 @@ class DiceGroupList {
 
   /// Получить путь до группы по индексу
   String _getPathToNewDiceGroup([int? index]) {
-    return "${_dirThisDiceGroupList.path}/${_diceGroupList.isEmpty ? "0" : ((getNumberFromFileName(_diceGroupList[index ?? length].directory.path) ?? -1) + 1)}";
+    return "${_dirThisDiceGroupList.path}/${_diceGroupList.isEmpty ? "0" : ((getNumberFromFileName(_diceGroupList[index ?? length].dirThisDiceGroup.path) ?? -1) + 1)}";
   }
 
   /// Получить группу
@@ -102,7 +98,7 @@ class DiceGroupList {
     return _diceGroupList[index];
   }
 
-  /// Получить список всех выбранных граней в формете удобном для вывода
+  /// Получить список всех выбранных граней в формате удобном для вывода
   List<OneSelectedDiceGroup> get allSelectedDiceGroup {
     List<OneSelectedDiceGroup> resultAllSelectedDiceGroup = List<OneSelectedDiceGroup>.empty(growable: true);
     for (DiceGroup diceGroup in _diceGroupList) {

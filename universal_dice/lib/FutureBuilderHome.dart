@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:universal_dice/HomePage.dart';
 
-import 'package:universal_dice/Decoration/styles.dart';
-
 import 'package:universal_dice/Data/DiceGroupList.dart';
-
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
-import 'dart:io';
 
 class FutureBuilderHome extends StatefulWidget {
   const FutureBuilderHome({super.key});
@@ -19,15 +13,15 @@ class FutureBuilderHome extends StatefulWidget {
 // класс для ожидания загрузки стихов из памяти (можно грузить что угодно до основного экрана)
 class _FutureBuilderHome extends State<FutureBuilderHome> {
   Future<bool> _loading() async {
-    Directory dir = await getApplicationDocumentsDirectory();
+    /*Directory dir = await getApplicationDocumentsDirectory();
     await for (final file in dir.list(recursive: true)) {
       print(file.path);
     }
-    print("===================");
+    print("===================");*/
 
-    diceGroupList = await DiceGroupList.creatingFromFiles();
+    diceGroupList = await DiceGroupList.creatingFromFiles();  // чтение всех данных о кубиках и группах из памяти
 
-    if(diceGroupList.length == 0){
+    if(diceGroupList.length == 0){                            // добавление стандартной группы если ни одного кубика не существует
       await diceGroupList.addNewDiceGroup();
       diceGroupList[0].name = "Стандартная группа";
       Future<void> addDice(int numberFaces) async{
@@ -39,7 +33,7 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
       await addDice(10);
     }
 
-    print("loaded");
+    //print("loaded");
 
     return true;
   }
@@ -70,7 +64,7 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: Text('Ошибка: ${snapshot.error}',
-                        style: TextStyle(color: Colors.red, fontSize: 24.0)),
+                        style: const TextStyle(color: Colors.red, fontSize: 24.0)),
                   ),
                 ],
               ),
@@ -86,7 +80,7 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
                     child: CircularProgressIndicator(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 16),
+                    padding: EdgeInsets.only(top: 16),
                     child: Text('Загрузка кубиков...',
                         style: TextStyle(color: Colors.green)),
                   ),

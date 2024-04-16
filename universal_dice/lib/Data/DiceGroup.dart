@@ -13,21 +13,21 @@ const String _nameSettingsFile = "settings.txt";      // название фай
 /// Класс - группа кубиков, объединяет несколько кубиков одним именем, одной директорией, и позволяет проводить с ними глобальные операции
 class DiceGroup {
   /// Приватный конструктор группы
-  DiceGroup._({required String name, required Directory directory}) : _dirThisDiceGroup = directory {
+  DiceGroup._({required String name, required Directory dirThisDiceGroup}) : _dirThisDiceGroup = dirThisDiceGroup {
     _name = name;
     _diceList = List<Dice>.empty(growable: true);
   }
 
   /// Конструктор стандартной группы
   static Future<DiceGroup> creatingNewDiceGroup(Directory dirThisDiceGroup) {
-    DiceGroup resultDiceGroup = DiceGroup._(name: "Группа ${(getNumberFromFileName(dirThisDiceGroup.path) ?? 0) + 1}", directory: dirThisDiceGroup);
-    //print("1 ${directory.path}");
+    DiceGroup resultDiceGroup = DiceGroup._(name: "Группа ${(getNumberFromFileName(dirThisDiceGroup.path) ?? 0) + 1}", dirThisDiceGroup: dirThisDiceGroup);
+    //print("1 ${dirThisDiceGroup.path}");
     return resultDiceGroup._writeSettings().then((_) => resultDiceGroup);
   }
 
   /// Конструктор читающий данные из памяти
-  static Future<DiceGroup> creatingFromFiles(Directory directory) {
-    DiceGroup resultDiceGroup = DiceGroup._(name: "", directory: directory);
+  static Future<DiceGroup> creatingFromFiles(Directory dirThisDiceGroup) {
+    DiceGroup resultDiceGroup = DiceGroup._(name: "", dirThisDiceGroup: dirThisDiceGroup);
 
     return Future.wait([
       resultDiceGroup._readSettings(),
@@ -126,11 +126,11 @@ class DiceGroup {
 
   /// Получить путь до кубика по индексу
   String _getPathToDice([int? index]) {
-    return "${_dirThisDiceGroup.path}/${_diceList.isEmpty ? "0" : ((getNumberFromFileName(_diceList[index ?? length].directory.path) ?? -1) + 1)}";
+    return "${_dirThisDiceGroup.path}/${_diceList.isEmpty ? "0" : ((getNumberFromFileName(_diceList[index ?? length].dirThisDice.path) ?? -1) + 1)}";
   }
 
   /// Получить директорию этой группы  TODO поменять название
-  Directory get directory {
+  Directory get dirThisDiceGroup {
     return _dirThisDiceGroup;
   }
 

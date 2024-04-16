@@ -18,7 +18,7 @@ class HomePageView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomePageView();
 
-  List<OneSelectedDiceGroup> allSelectedDiceGroup;
+  final List<OneSelectedDiceGroup> allSelectedDiceGroup;
 }
 
 class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {

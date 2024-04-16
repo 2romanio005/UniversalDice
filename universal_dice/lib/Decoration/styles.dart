@@ -44,15 +44,15 @@ TextTheme textTheme = TextTheme(
     fontWeight: FontWeight.w600,
   ),
 
-  /// осоновной текст
-  bodyMedium: TextStyle(
+  /// основной текст
+  bodyMedium: const TextStyle(
     fontFamily: "Consolas",
     //color: ColorFont,
     fontSize: 18,
   ),
 
   /// заголовок всплывающих окон
-  labelLarge: TextStyle(
+  labelLarge: const TextStyle(
     fontFamily: "Oswald",
     //color: ColorHeader,
     fontSize: 24,
@@ -60,14 +60,14 @@ TextTheme textTheme = TextTheme(
   ),
 
   /// текс всплывающих окон
-  labelMedium: TextStyle(
+  labelMedium: const TextStyle(
     fontFamily: "Consolas",
     //color: ColorFont,
     fontSize: 18,
   ),
 
   /// текст на кнопках
-  labelSmall: TextStyle(
+  labelSmall: const TextStyle(
     fontFamily: "Consolas",
     //color: ColorFont,
     fontSize: 18,
@@ -82,47 +82,47 @@ ThemeData mainTheme = ThemeData(
 
 
 // цвета для кнопок
-Color ColorButtonBackground = colorScheme.surface; // задний фон
-//const ColorButtonBackgroundDefault = Color.fromARGB(255, 23, 37, 16);
-Color ColorButtonForeground = colorScheme.onSurfaceVariant; // сама иконка или текс
-const Color ColorButtonBackgroundInverted = Color.fromARGB(255, 39, 59, 29);
+Color colorButtonBackground = colorScheme.surface; // задний фон
+//const colorButtonBackgroundDefault = Color.fromARGB(255, 23, 37, 16);
+Color colorButtonForeground = colorScheme.onSurfaceVariant; // сама иконка или текс
+const Color colorButtonBackgroundInverted = Color.fromARGB(255, 39, 59, 29);
 
-const Color ColorButtonPressedOK = Color.fromARGB(255, 0, 180, 0); // при нажатии на кнопку "да"
-const Color ColorButtonPressedOFF = Color.fromARGB(255, 220, 0, 0); // при нажатии на кнопку "нет"
-Color ColorButtonPressedDefault = colorScheme.surfaceVariant;
+const Color colorButtonPressedOK = Color.fromARGB(255, 0, 180, 0); // при нажатии на кнопку "да"
+const Color colorButtonPressedOFF = Color.fromARGB(255, 220, 0, 0); // при нажатии на кнопку "нет"
+Color colorButtonPressedDefault = colorScheme.surfaceVariant;
 
 
 /// кнопка несогласия (краснеет)
 ButtonStyle buttonStyleOFF = IconButton.styleFrom(
   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-  backgroundColor: ColorButtonBackground,
-  // hoverColor: ColorButtonHover,
-  foregroundColor: ColorButtonForeground,
-  highlightColor: ColorButtonPressedOFF,
+  backgroundColor: colorButtonBackground,
+  // hoverColor: colorButtonHover,
+  foregroundColor: colorButtonForeground,
+  highlightColor: colorButtonPressedOFF,
 );
 
 /// кнопка согласия (зеленеет)
 ButtonStyle buttonStyleOK = IconButton.styleFrom(
-  backgroundColor: ColorButtonBackground,
-  // hoverColor: ColorButtonHover,
-  foregroundColor: ColorButtonForeground,
-  highlightColor: ColorButtonPressedOK,
+  backgroundColor: colorButtonBackground,
+  // hoverColor: colorButtonHover,
+  foregroundColor: colorButtonForeground,
+  highlightColor: colorButtonPressedOK,
 );
 
 /// обычная кнопка
 ButtonStyle buttonStyleDefault = IconButton.styleFrom(
-  backgroundColor: ColorButtonBackground,
-  // hoverColor: ColorButtonHover,
-  foregroundColor: ColorButtonForeground,
-  highlightColor: ColorButtonPressedDefault,
+  backgroundColor: colorButtonBackground,
+  // hoverColor: colorButtonHover,
+  foregroundColor: colorButtonForeground,
+  highlightColor: colorButtonPressedDefault,
 );
 
 /// обычная кнопка с другим задним фоном
 ButtonStyle buttonStyleDefaultInverted = IconButton.styleFrom(
-  backgroundColor: ColorButtonBackgroundInverted,
-  // hoverColor: ColorButtonHover,
-  foregroundColor: ColorButtonForeground,
-  highlightColor: ColorButtonPressedDefault,
+  backgroundColor: colorButtonBackgroundInverted,
+  // hoverColor: colorButtonHover,
+  foregroundColor: colorButtonForeground,
+  highlightColor: colorButtonPressedDefault,
 );
 
 

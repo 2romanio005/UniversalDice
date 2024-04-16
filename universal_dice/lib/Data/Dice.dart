@@ -6,7 +6,7 @@ import 'package:universal_dice/Functions/FileReading.dart';
 
 import 'package:universal_dice/Decoration/styles.dart';
 
-const String _nameSettingsFile = "settings.txt";        // название файла с настройками кубика
+const String _nameSettingsFile = "settings.txt"; // название файла с настройками кубика
 
 /// Класс - игральная кость (кубик), хранит все грани кубика и позволяет сгенерировать случайную из них при броске
 class Dice {
@@ -38,12 +38,12 @@ class Dice {
   }
 
   /// Конструктор копирования
-  static Future<Dice> copy(Dice sampleDice, String newPath){
+  static Future<Dice> copy(Dice sampleDice, String newPath) {
     return copyDirectory(sampleDice.dirThisDice.path, newPath).then((_) => Dice.creatingFromFiles(Directory(newPath)));
   }
 
   /// Удалить все файлы Dice
-  Future<void> delete(){
+  Future<void> delete() {
     return dirThisDice.delete(recursive: true);
   }
 
@@ -189,10 +189,10 @@ class Dice {
     state = !state;
   }
 
-  late List<File?> _pathsToImages;      // список путей к изображениям
-  late bool _state;                     // состояние использования кубика
-  final Directory _dirThisDice;         // директория этого кубика
-  int? lastRandFaceIndex;               // последнее сгенерированное
+  late List<File?> _pathsToImages; // список путей к изображениям
+  late bool _state; // состояние использования кубика
+  final Directory _dirThisDice; // директория этого кубика
+  int? lastRandFaceIndex; // последнее сгенерированное
 }
 
 /// enum соотносящий данные в файле настроек с номером их строки

@@ -90,7 +90,7 @@ class DiceGroupList {
 
   /// Получить путь до группы по индексу
   String _getPathToNewDiceGroup([int? index]) {
-    return "${_dirThisDiceGroupList.path}/${_diceGroupList.isEmpty ? "0" : ((getNumberFromFileName(_diceGroupList[index ?? length].dirThisDiceGroup.path) ?? -1) + 1)}";
+    return "${_dirThisDiceGroupList.path}/${_diceGroupList.isEmpty ? "0" : ((getNumberFromFileName(_diceGroupList[index ?? length - 1].dirThisDiceGroup.path) ?? -1) + 1)}";
   }
 
   /// Получить группу
@@ -118,8 +118,8 @@ class DiceGroupList {
     return _diceGroupList.length;
   }
 
-  late List<DiceGroup> _diceGroupList;      // список всех групп
-  final Directory _dirThisDiceGroupList;    // директория со всеми группами
+  late List<DiceGroup> _diceGroupList; // список всех групп
+  final Directory _dirThisDiceGroupList; // директория со всеми группами
 }
 
 /// Структура - необходимые для отображения данные использованной группы
@@ -130,4 +130,4 @@ class OneSelectedDiceGroup {
   List<Dice> allDice;
 }
 
-late DiceGroupList diceGroupList;           // список всех групп. Единственный и неповторимый
+late DiceGroupList diceGroupList; // список всех групп. Единственный и неповторимый

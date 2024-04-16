@@ -7,7 +7,6 @@ import 'package:universal_dice/FutureBuilderHome.dart';
 
 void main() => runApp(const MyApp());
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

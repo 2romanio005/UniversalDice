@@ -106,21 +106,26 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
     diceFaceDimension -= diceFacePadding;
 
     Widget buildDiceFace(Dice dice, [EdgeInsetsGeometry? padding]) {
-      return AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          //print(_animation.value);
-          return Transform.rotate(
-            angle: _animation.value,
-            child: Container(
-              child: dice.getFace(
-                dimension: diceFaceDimension,
-                index: dice.lastRandFaceIndex,
-                padding: padding ?? EdgeInsets.only(bottom: diceFacePadding),
-              ),
-            ),
-          );
+      return GestureDetector(
+        onDoubleTap: () {
+          dice.generateRandFaceIndex();
+          setState(() {});
         },
+        child: AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return Transform.rotate(
+              angle: _animation.value,
+              child: Container(
+                child: dice.getFace(
+                  dimension: diceFaceDimension,
+                  index: dice.lastRandFaceIndex,
+                  padding: padding ?? EdgeInsets.only(bottom: diceFacePadding),
+                ),
+              ),
+            );
+          },
+        ),
       );
     }
 

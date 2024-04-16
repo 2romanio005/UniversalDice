@@ -19,15 +19,17 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
     }
     print("===================");*/
 
-    diceGroupList = await DiceGroupList.creatingFromFiles();  // чтение всех данных о кубиках и группах из памяти
+    diceGroupList = await DiceGroupList.creatingFromFiles(); // чтение всех данных о кубиках и группах из памяти
 
-    if(diceGroupList.length == 0){                            // добавление стандартной группы если ни одного кубика не существует
+    if (diceGroupList.length == 0) {
+      // добавление стандартной группы если ни одного кубика не существует
       await diceGroupList.addNewDiceGroup();
       diceGroupList[0].name = "Стандартная группа";
-      Future<void> addDice(int numberFaces) async{
+      Future<void> addDice(int numberFaces) async {
         await diceGroupList[0].addStandardDice();
         diceGroupList[0][diceGroupList[0].length - 1].numberFaces = numberFaces;
       }
+
       await addDice(2);
       await addDice(6);
       await addDice(10);
@@ -63,8 +65,7 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
-                    child: Text('Ошибка: ${snapshot.error}',
-                        style: const TextStyle(color: Colors.red, fontSize: 24.0)),
+                    child: Text('Ошибка: ${snapshot.error}', style: const TextStyle(color: Colors.red, fontSize: 24.0)),
                   ),
                 ],
               ),
@@ -81,8 +82,7 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 16),
-                    child: Text('Загрузка кубиков...',
-                        style: TextStyle(color: Colors.green)),
+                    child: Text('Загрузка кубиков...', style: TextStyle(color: Colors.green)),
                   ),
                 ],
               ),

@@ -5,7 +5,6 @@ const IconData iconButtonDrawer = Icons.list;
 const IconData iconRadioButtonChecked = Icons.radio_button_checked;
 const IconData iconRadioButtonUnchecked = Icons.radio_button_unchecked;
 
-
 const IconData iconButtonModeDiceGroup = Icons.more_horiz;
 const IconData iconButtonModeDice = Icons.more_vert;
 
@@ -21,6 +20,5 @@ const IconData iconButtonDeleteDice = Icons.delete_outline;
 
 const IconData iconButtonAddDiceGroup = Icons.add_circle;
 const IconData iconButtonAddDice = Icons.add;
-
 
 const IconData iconButtonChangeNumberDiceFaces = Icons.check_circle;

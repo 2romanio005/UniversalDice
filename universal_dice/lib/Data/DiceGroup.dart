@@ -8,7 +8,7 @@ import 'package:universal_dice/Functions/FileReading.dart';
 
 import 'package:universal_dice/Data/Dice.dart';
 
-const String _nameSettingsFile = "settings.txt";      // название файла с настройками группы
+const String _nameSettingsFile = "settings.txt"; // название файла с настройками группы
 
 /// Класс - группа кубиков, объединяет несколько кубиков одним именем, одной директорией, и позволяет проводить с ними глобальные операции
 class DiceGroup {
@@ -111,12 +111,12 @@ class DiceGroup {
   }
 
   /// Полностью удаляет прошлый кубик и создаёт копию по образце вместо него.  должно быть []= но там нельзя возвращать future
-  Future<void> replaceDiceAt (int index, Dice sampleDice) {
+  Future<void> replaceDiceAt(int index, Dice sampleDice) {
     return _diceList[index].delete().then(
           (_) => Dice.copy(sampleDice, _getPathToDice(index)).then(
             (newDice) => _diceList[index] = newDice,
-      ),
-    );
+          ),
+        );
   }
 
   /// Получить кубик
@@ -126,7 +126,7 @@ class DiceGroup {
 
   /// Получить путь до кубика по индексу
   String _getPathToDice([int? index]) {
-    return "${_dirThisDiceGroup.path}/${_diceList.isEmpty ? "0" : ((getNumberFromFileName(_diceList[index ?? length].dirThisDice.path) ?? -1) + 1)}";
+    return "${_dirThisDiceGroup.path}/${_diceList.isEmpty ? "0" : ((getNumberFromFileName(_diceList[index ?? length - 1].dirThisDice.path) ?? -1) + 1)}";
   }
 
   /// Получить директорию этой группы  TODO поменять название
@@ -194,7 +194,7 @@ class DiceGroup {
     state = !state;
   }
 
-  late List<Dice> _diceList;              // список всех кубиков
-  late String _name;                      // имя группы
-  final Directory _dirThisDiceGroup;      // директория этой группы
+  late List<Dice> _diceList; // список всех кубиков
+  late String _name; // имя группы
+  final Directory _dirThisDiceGroup; // директория этой группы
 }

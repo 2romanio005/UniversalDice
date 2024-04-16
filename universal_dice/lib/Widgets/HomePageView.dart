@@ -109,7 +109,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
       return AnimatedBuilder(
         animation: _animation,
         builder: (context, child) {
-          print(_animation.value);
+          //print(_animation.value);
           return Transform.rotate(
             angle: _animation.value,
             child: Container(

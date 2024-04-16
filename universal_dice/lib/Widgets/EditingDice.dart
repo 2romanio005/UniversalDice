@@ -8,21 +8,27 @@ import 'dart:io';
 import 'package:universal_dice/Decoration/icons.dart';
 import 'package:universal_dice/Decoration/styles.dart';
 
+import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroup.dart';
 
 Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int diceIndex) {
-  late int activeNumberFaces;
+  // TODO удалить папку tmpDice если она есть
 
-  Future<void> functionOK() {
-    diceGroup[diceGroup.length - 1].numberFaces = activeNumberFaces;
-    return diceGroup.removeDiceAt(diceIndex);
-  }
+  late Future<void> Function() functionOK;
+  late Future<void> Function() functionOFF;
 
-  Future<void> functionOFF() => diceGroup.removeDiceAt();
-
-  return diceGroup.duplicateDice(diceIndex).then((newDice) => showDialog<bool?>(
+  return Dice.copy(diceGroup[diceIndex], "${diceGroup.directory.path}/tmpDice").then((newDice) => showDialog<bool?>(
           context: context,
           builder: (BuildContext context) {
+            late int activeNumberFaces;
+
+            functionOK = () {
+              newDice.numberFaces = activeNumberFaces;
+              return diceGroup.replaceDiceAt(diceIndex, newDice);
+            };
+
+            functionOFF = () async {};
+
             activeNumberFaces = newDice.numberFaces;
             final controller = TextEditingController();
             controller.text = activeNumberFaces.toString();
@@ -153,28 +159,26 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                       style: buttonStyleOFF,
                       child: Text("Отмена", style: Theme.of(context).textTheme.titleSmall),
                       onPressed: () {
-                        functionOFF().then((_) => Navigator.pop(context, false));
-                        //functionOFF!();
+                        Navigator.pop(context, false);
                       },
                     ),
                     ElevatedButton(
                       style: buttonStyleOK,
                       child: Text("Сохранить", style: Theme.of(context).textTheme.titleSmall),
                       onPressed: () {
-                        print("OK");
-                        functionOK().then((_) => Navigator.pop(context, true));
-                        //functionOK!();
+                        Navigator.pop(context, true);
                       },
                     ),
                   ],
                 );
               },
             );
-          }).then((status) {
-        if (status == null) {
-          print("error");
-          return functionOFF().then((_) => false);
-        }
-        return status;
-      }));
+          }).then(
+        (status) {
+          if (status == null || status == false) {
+            return functionOFF().then((_) => false);
+          }
+          return functionOK().then((_){print("OK finish"); return true;});
+        },
+      ).then((status) => newDice.delete().then((_) { print("tmpDice deleted");return status;})));
 }

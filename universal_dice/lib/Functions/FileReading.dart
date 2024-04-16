@@ -23,7 +23,7 @@ Future<void> copyDirectory(String from, String to) async {
     final copyTo = join(to, relative(file.path, from: from));
     //print("copyTo $copyTo");
     if (file is Directory) {
-      Directory dir = await Directory(copyTo).create(recursive: true);
+      //Directory dir = await Directory(copyTo).create(recursive: true);
       //print("new dir ${dir.path}");
     } else if (file is File) {
       File(file.path).copy(copyTo).then((value) {/*print("new fil ${fil.path}");*/});

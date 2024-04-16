@@ -38,6 +38,16 @@ class Dice {
     ]).then((_) => resultDice);
   }
 
+  /// коструктор копирования
+  static Future<Dice> copy(Dice sampleDice, String newPath){
+    return copyDirectory(sampleDice.directory.path, newPath).then((_) => Dice.creatingFromFiles(Directory(newPath)));
+  }
+
+  /// удалить все файлы Dice
+  Future<void> delete(){
+    return directory.delete(recursive: true);
+  }
+
   /// чтение настроек из файла
   Future<void> _readSettings() {
     return File("${_dirThisDice.path}/$nameSettingsFile").readAsLines().then((listSettings) {

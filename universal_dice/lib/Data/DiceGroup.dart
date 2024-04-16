@@ -82,15 +82,15 @@ class DiceGroup {
   }
 
   Future<Dice> duplicateDice(int index) {
-    String newPath = _getPathToNewDice();
-    return copyDirectory(_diceList[index].directory.path, newPath).then((_) => Dice.creatingFromFiles(Directory(newPath)).then((dice) {
-          _diceList.add(dice);
-          return _diceList.last;
-        }));
+    String newPath = _getPathToDice();
+    return Dice.copy(_diceList[index], newPath).then((dice) {
+      _diceList.add(dice);
+      return _diceList.last;
+    });
   }
 
   Future<Dice> addStandardDice() {
-    return Directory(_getPathToNewDice()).create().then((dir) => Dice.creatingNewDice(dir).then((dice) {
+    return Directory(_getPathToDice()).create().then((dir) => Dice.creatingNewDice(dir).then((dice) {
           _diceList.add(dice);
           return _diceList.last;
         }));
@@ -98,15 +98,15 @@ class DiceGroup {
 
   Future<bool> removeDiceAt([int? index]) {
     index ??= _diceList.length - 1;
-    return _diceList[index].directory.delete(recursive: true).then((_) {
+    return _diceList[index].delete().then((_) {
       bool res = _diceList[index!].state;
-      _diceList.removeAt(index!);
+      _diceList.removeAt(index);
       return res;
     });
   }
 
-  String _getPathToNewDice() {
-    return "${_dirThisDiceGroup.path}/${_diceList.isEmpty ? "0" : (getNumberFromFileName(_diceList.last.directory.path)! + 1)}";
+  String _getPathToDice([int? index]) {
+    return "${_dirThisDiceGroup.path}/${index ?? (_diceList.isEmpty ? "0" : (getNumberFromFileName(_diceList.last.directory.path)! + 1))}";
   }
 
   Directory get directory {
@@ -115,6 +115,14 @@ class DiceGroup {
 
   Dice operator [](int index) {
     return _diceList[index];
+  }
+
+  Future<void> replaceDiceAt (int index, Dice sampleDice) {
+    return _diceList[index].delete().then(
+          (_) {print("deleted orignal"); return Dice.copy(sampleDice, _getPathToDice(index)).then(
+            (newDice) {print("Dice replaced"); return _diceList[index] = newDice;},
+          );},
+        );
   }
 
   List<Dice> get allSelectedDice {

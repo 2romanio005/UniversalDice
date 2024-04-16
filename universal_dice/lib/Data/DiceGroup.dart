@@ -8,9 +8,11 @@ import 'package:universal_dice/Functions/FileReading.dart';
 
 import 'package:universal_dice/Data/Dice.dart';
 
-const String _nameSettingsFile = "settings.txt";
+const String _nameSettingsFile = "settings.txt";      // название файла с настройками группы
 
+/// класс - группа кубиков, объединяет несколько кубиков одним именем, одной директорией, и позволяет проводить с ними глобальные операции
 class DiceGroup {
+    /// приватный конструктор группы
   DiceGroup._({required String name, required Directory directory}) : _dirThisDiceGroup = directory {
     _name = name;
     _diceList = List<Dice>.empty(growable: true);
@@ -23,7 +25,7 @@ class DiceGroup {
     return resultDiceGroup._writeSettings().then((_) => resultDiceGroup);
   }
 
-  /// конструктор читающиц данные из памяти
+  /// конструктор читающий данные из памяти
   static Future<DiceGroup> creatingFromFiles(Directory directory) {
     DiceGroup resultDiceGroup = DiceGroup._(name: "", directory: directory);
 
@@ -39,9 +41,9 @@ class DiceGroup {
 
     return fileSettings.readAsString().then((str) {
       _name = str;
-      print("GroupName ${_dirThisDiceGroup.path} $str");
+      //print("GroupName ${_dirThisDiceGroup.path} $str");
     }, onError: (err) {
-      print(err);
+      debugPrint(err);
     });
   }
 
@@ -66,7 +68,7 @@ class DiceGroup {
               tmpDiceList.length = numberFromDirName + 1;
             }
             tmpDiceList[numberFromDirName] = dice;
-            print("Read dirDice: ${allDirDice[i].path} to $numberFromDirName");
+            //print("Read dirDice: ${allDirDice[i].path} to $numberFromDirName");
           },
         );
       }
@@ -80,7 +82,8 @@ class DiceGroup {
       }
     });
   }
-  
+
+  /// дублирование кубика и добавление его в конец списка
   Future<Dice> duplicateDice(int index) {
     String newPath = _getPathToDice();
     return Dice.copy(_diceList[index], newPath).then((dice) {
@@ -89,6 +92,7 @@ class DiceGroup {
     });
   }
 
+  /// добавление в конец списка стандартного кубика
   Future<Dice> addStandardDice() {
     return Directory(_getPathToDice()).create().then((dir) => Dice.creatingNewDice(dir).then((dice) {
           _diceList.add(dice);
@@ -96,6 +100,7 @@ class DiceGroup {
         }));
   }
 
+  /// полное удаление кубика из списка
   Future<bool> removeDiceAt([int? index]) {
     index ??= _diceList.length - 1;
     return _diceList[index].delete().then((_) {
@@ -105,26 +110,31 @@ class DiceGroup {
     });
   }
 
-  String _getPathToDice([int? index]) {
-    return "${_dirThisDiceGroup.path}/${index ?? (_diceList.isEmpty ? "0" : (getNumberFromFileName(_diceList.last.directory.path)! + 1))}";
+  /// полностью удаляет прошлый кубик и создаёт копию по образце вместо него.  должно быть []= но там нельзя возвращать future
+  Future<void> replaceDiceAt (int index, Dice sampleDice) {
+    return _diceList[index].delete().then(
+          (_) => Dice.copy(sampleDice, _getPathToDice(index)).then(
+            (newDice) => _diceList[index] = newDice,
+      ),
+    );
   }
 
-  Directory get directory {
-    return _dirThisDiceGroup;
-  }
-
+  /// получить кубик
   Dice operator [](int index) {
     return _diceList[index];
   }
 
-  Future<void> replaceDiceAt (int index, Dice sampleDice) {
-    return _diceList[index].delete().then(
-          (_) {print("deleted orignal"); return Dice.copy(sampleDice, _getPathToDice(index)).then(
-            (newDice) {print("Dice replaced"); return _diceList[index] = newDice;},
-          );},
-        );
+  /// получить путь до кубика по индексу .............................................. FIXME индекс может сместиться в большую сторону
+  String _getPathToDice([int? index]) {
+    return "${_dirThisDiceGroup.path}/${index ?? (_diceList.isEmpty ? "0" : (getNumberFromFileName(_diceList.last.directory.path)! + 1))}";
   }
 
+  /// получить директорию этой группы  TODO поменять название
+  Directory get directory {
+    return _dirThisDiceGroup;
+  }
+
+  /// получить список всех выбранных кубиков
   List<Dice> get allSelectedDice {
     List<Dice> resultAllSelectedDice = List<Dice>.empty(growable: true);
     for (Dice dice in _diceList) {
@@ -135,14 +145,17 @@ class DiceGroup {
     return resultAllSelectedDice;
   }
 
+  /// получить количество кубиков
   int get length {
     return _diceList.length;
   }
 
+  /// получить имя группы
   String get name {
     return _name;
   }
 
+  /// построить простой виджет с именем
   Widget get nameWidget {
     return Text(
       name,
@@ -151,6 +164,7 @@ class DiceGroup {
     );
   }
 
+  /// установить новое имя с записью вв файл
   set name(String newName) {
     if (_name != newName) {
       _name = newName;
@@ -158,6 +172,7 @@ class DiceGroup {
     }
   }
 
+  /// узнать состояние использования группы. Если хоть один выбран то группа считается тоже выбранной
   bool get state {
     for (Dice dice in _diceList) {
       if (dice.state == true) {
@@ -167,17 +182,19 @@ class DiceGroup {
     return false;
   }
 
+  /// изменить состояние использования всех кубиков в группе
   set state(bool newState) {
     for (Dice dice in _diceList) {
       dice.state = newState;
     }
   }
 
+  /// инвертировать состояние всей группы
   void invertState() {
     state = !state;
   }
 
-  late List<Dice> _diceList;
-  late String _name;
-  final Directory _dirThisDiceGroup;
+  late List<Dice> _diceList;              // список всех кубиков
+  late String _name;                      // имя группы
+  final Directory _dirThisDiceGroup;      // директория этой группы
 }

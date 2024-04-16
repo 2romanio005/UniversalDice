@@ -9,9 +9,11 @@ import 'package:universal_dice/Functions/FileReading.dart';
 
 import 'package:universal_dice/Decoration/styles.dart';
 
-const String _nameSettingsFile = "settings.txt";
+const String _nameSettingsFile = "settings.txt";        // название файла с настройками кубика
 
+/// класс - игральная кость (кубик), хранит все грани кубика и позволяет сгенерировать случайную из них при броске
 class Dice {
+  /// приватный конструктор кубика
   Dice._(Directory directory) : _dirThisDice = directory {
     _state = false;
     _pathsToImages = List<File?>.empty(growable: true);
@@ -28,7 +30,7 @@ class Dice {
     return resultDice._writeSettings().then((_) => resultDice);
   }
 
-  /// конструктор читающиц данные из памяти
+  /// конструктор читающий данные из памяти
   static Future<Dice> creatingFromFiles(Directory dirThisDice) {
     Dice resultDice = Dice._(dirThisDice);
 
@@ -38,7 +40,7 @@ class Dice {
     ]).then((_) => resultDice);
   }
 
-  /// коструктор копирования
+  /// конструктор копирования
   static Future<Dice> copy(Dice sampleDice, String newPath){
     return copyDirectory(sampleDice.directory.path, newPath).then((_) => Dice.creatingFromFiles(Directory(newPath)));
   }
@@ -53,9 +55,9 @@ class Dice {
     return File("${_dirThisDice.path}/$_nameSettingsFile").readAsLines().then((listSettings) {
       _pathsToImages.length = int.parse(listSettings[_AccordanceSettings.numberFaces.index]);
       _state = listSettings[_AccordanceSettings.state.index] == '1';
-      print("${_dirThisDice.path} DiceLength ${_pathsToImages.length} state ${_state}");
+      //print("${_dirThisDice.path} DiceLength ${_pathsToImages.length} state $_state");
     }, onError: (err) {
-      print(err);
+      debugPrint("Ошибка чтения настроек кубика $err");
     });
   }
 
@@ -83,45 +85,12 @@ class Dice {
     });
   }
 
-  // Dice shallowCopy(){
-  //   Dice shallowCopy = Dice(_pathsToImages.length);
-  //   // не создавать копии фотографий
-  //   return shallowCopy;
-  // }
-
-/*
-  Future<Dice> copy(Directory dirNewDice) {
-    File("${_dirThisDice.path}/$_nameSettingsFile").copy("${dirNewDice.path}/$_nameSettingsFile");
-    for (File? file in _pathsToImages) {
-      if (file != null) {
-        file.copy("${dirNewDice.path}/${basename(file.path)}");
-      }
-    }
-
-    return Dice.creatingFromFiles(dirNewDice);
-  }
-*/
-
-  Directory get directory {
-    return _dirThisDice;
+  /// проверить загружено ли изображение на эту грань
+  bool isFaceImage(int index) {
+    return _pathsToImages[index] != null;
   }
 
-  Future<void> setFaceFile(int index, [File? sampleFile]) async {
-    if (_pathsToImages[index] != null) {
-      await _pathsToImages[index]!.delete();
-    }
-
-    if (sampleFile == null) {
-      return Future(() => _pathsToImages[index] = null);
-    } else {
-      //FlutterImageCompress.compressAssetImage(sampleFile.path);
-      // image.Image img = image.decodeImage(sampleFile.readAsBytesSync())!;
-      // img = image.copyResize(img, width: 20);
-      // File("${_dirThisDice.path}/$index.${sampleFile.path.split('.').last}").writeAsBytesSync(image.encodePng(img));
-      return sampleFile.copy("${_dirThisDice.path}/$index.${sampleFile.path.split('.').last}").then((file) => _pathsToImages[index] = file);
-    }
-  }
-
+  /// построить изображение грани, нужного размера, возможно с отступами
   Widget getFace({required double dimension, int? index, EdgeInsetsGeometry padding = EdgeInsets.zero}) {
     index ??= numberFaces - 1;
     return Container(
@@ -161,18 +130,39 @@ class Dice {
     );
   }
 
-  bool isFaceImage(int index) {
-    return _pathsToImages[index] != null;
+  /// установить фотографию грани
+  Future<void> setFaceFile(int index, [File? sampleFile]) async {
+    if (_pathsToImages[index] != null) {
+      await _pathsToImages[index]!.delete();
+    }
+
+    if (sampleFile == null) {
+      return Future(() => _pathsToImages[index] = null);
+    } else {
+      //FlutterImageCompress.compressAssetImage(sampleFile.path);
+      // image.Image img = image.decodeImage(sampleFile.readAsBytesSync())!;
+      // img = image.copyResize(img, width: 20);
+      // File("${_dirThisDice.path}/$index.${sampleFile.path.split('.').last}").writeAsBytesSync(image.encodePng(img));
+      return sampleFile.copy("${_dirThisDice.path}/$index.${sampleFile.path.split('.').last}").then((file) => _pathsToImages[index] = file);
+    }
   }
 
+  /// получить директорию с этим кубиком          TODO изменить название
+  Directory get directory {
+    return _dirThisDice;
+  }
+
+  /// сгенерировать случайный индекс грани, которую будем отображать (и сохранить этот индекс до следующей генерации нового)
   void generateRandFaceIndex() {
     lastRandFaceIndex = numberFaces > 0 ? Random().nextInt(numberFaces) : -1;
   }
 
+  /// получить количество граней кубика
   int get numberFaces {
     return _pathsToImages.length;
   }
 
+  /// задать количество граней кубика
   set numberFaces(int newNumberFaces) {
     if (numberFaces != newNumberFaces) {
       for (int i = newNumberFaces; i < _pathsToImages.length; i++) {
@@ -184,10 +174,12 @@ class Dice {
     }
   }
 
+  /// получить состояние использования
   bool get state {
     return _state;
   }
 
+  /// задать состояние использования
   set state(newState) {
     if (_state != newState) {
       _state = newState;
@@ -195,17 +187,18 @@ class Dice {
     }
   }
 
+  /// инвертировать состояние использования кубика
   void invertState() {
     state = !state;
   }
 
-  late List<File?> _pathsToImages;
-  late bool _state;
-  final Directory _dirThisDice;
-
-  int? lastRandFaceIndex;
+  late List<File?> _pathsToImages;      // Список путей к изображениям
+  late bool _state;                     // состояние использования кубика
+  final Directory _dirThisDice;         // директория этого кубика
+  int? lastRandFaceIndex;               // последнее сгенерированное
 }
 
+/// enum соотносящий данные в файле настроек с номером их строки
 enum _AccordanceSettings {
   numberFaces,
   state,

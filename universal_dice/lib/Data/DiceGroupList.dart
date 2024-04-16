@@ -11,7 +11,7 @@ class DiceGroupList {
     _diceGroupList = List<DiceGroup>.empty(growable: true);
   }
 
-  /// конструктор читающиц данные из памяти
+  /// конструктор читающий данные из памяти
   static Future<DiceGroupList> creatingFromFiles() async {
     Directory dirThisDiceGroupList = await getApplicationDocumentsDirectory();
     dirThisDiceGroupList = await Directory("${dirThisDiceGroupList.path}/DiceGroups").create(recursive: true);

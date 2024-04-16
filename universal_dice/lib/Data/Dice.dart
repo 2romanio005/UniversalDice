@@ -9,7 +9,7 @@ import 'package:universal_dice/Functions/FileReading.dart';
 
 import 'package:universal_dice/Decoration/styles.dart';
 
-const String nameSettingsFile = "settings.txt";
+const String _nameSettingsFile = "settings.txt";
 
 class Dice {
   Dice._(Directory directory) : _dirThisDice = directory {
@@ -50,7 +50,7 @@ class Dice {
 
   /// чтение настроек из файла
   Future<void> _readSettings() {
-    return File("${_dirThisDice.path}/$nameSettingsFile").readAsLines().then((listSettings) {
+    return File("${_dirThisDice.path}/$_nameSettingsFile").readAsLines().then((listSettings) {
       _pathsToImages.length = int.parse(listSettings[_AccordanceSettings.numberFaces.index]);
       _state = listSettings[_AccordanceSettings.state.index] == '1';
       print("${_dirThisDice.path} DiceLength ${_pathsToImages.length} state ${_state}");
@@ -64,7 +64,7 @@ class Dice {
     List<String> data = List<String>.filled(_AccordanceSettings.length.index, "", growable: true);
     data[_AccordanceSettings.numberFaces.index] = numberFaces.toString();
     data[_AccordanceSettings.state.index] = _state ? '1' : '0';
-    return File("${_dirThisDice.path}/$nameSettingsFile").writeAsString(data.join('\n'));
+    return File("${_dirThisDice.path}/$_nameSettingsFile").writeAsString(data.join('\n'));
   }
 
   /// Чтение всех граней
@@ -91,7 +91,7 @@ class Dice {
 
 /*
   Future<Dice> copy(Directory dirNewDice) {
-    File("${_dirThisDice.path}/$nameSettingsFile").copy("${dirNewDice.path}/$nameSettingsFile");
+    File("${_dirThisDice.path}/$_nameSettingsFile").copy("${dirNewDice.path}/$_nameSettingsFile");
     for (File? file in _pathsToImages) {
       if (file != null) {
         file.copy("${dirNewDice.path}/${basename(file.path)}");

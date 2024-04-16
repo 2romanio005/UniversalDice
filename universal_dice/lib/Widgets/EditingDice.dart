@@ -12,12 +12,15 @@ import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroup.dart';
 
 Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int diceIndex) {
-  // TODO удалить папку tmpDice если она есть
+  final Directory tmpDiceDir = Directory("${diceGroup.directory.path}/tmpDice");
+  if(tmpDiceDir.existsSync()){
+    tmpDiceDir.deleteSync(recursive: true);
+  }
 
   late Future<void> Function() functionOK;
   late Future<void> Function() functionOFF;
 
-  return Dice.copy(diceGroup[diceIndex], "${diceGroup.directory.path}/tmpDice").then((newDice) => showDialog<bool?>(
+  return Dice.copy(diceGroup[diceIndex], tmpDiceDir.path).then((newDice) => showDialog<bool?>(
           context: context,
           builder: (BuildContext context) {
             late int activeNumberFaces;

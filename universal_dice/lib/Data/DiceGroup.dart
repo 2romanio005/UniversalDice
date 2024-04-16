@@ -8,7 +8,7 @@ import 'package:universal_dice/Functions/FileReading.dart';
 
 import 'package:universal_dice/Data/Dice.dart';
 
-const String nameSettingsFile = "settings.txt";
+const String _nameSettingsFile = "settings.txt";
 
 class DiceGroup {
   DiceGroup._({required String name, required Directory directory}) : _dirThisDiceGroup = directory {
@@ -35,7 +35,7 @@ class DiceGroup {
 
   /// чтение настроек из файла
   Future<void> _readSettings() {
-    File fileSettings = File("${_dirThisDiceGroup.path}/$nameSettingsFile");
+    File fileSettings = File("${_dirThisDiceGroup.path}/$_nameSettingsFile");
 
     return fileSettings.readAsString().then((str) {
       _name = str;
@@ -47,7 +47,7 @@ class DiceGroup {
 
   /// запись настроек в файл
   Future<void> _writeSettings() {
-    return File("${_dirThisDiceGroup.path}/$nameSettingsFile").writeAsString(_name);
+    return File("${_dirThisDiceGroup.path}/$_nameSettingsFile").writeAsString(_name);
   }
 
   /// чтение всех кубиков
@@ -80,7 +80,7 @@ class DiceGroup {
       }
     });
   }
-
+  
   Future<Dice> duplicateDice(int index) {
     String newPath = _getPathToDice();
     return Dice.copy(_diceList[index], newPath).then((dice) {

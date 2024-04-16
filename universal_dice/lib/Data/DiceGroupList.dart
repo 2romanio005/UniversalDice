@@ -6,12 +6,14 @@ import 'package:universal_dice/Functions/FileReading.dart';
 import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroup.dart';
 
+/// Класс - список всех групп
 class DiceGroupList {
+  /// Приватный конструктор
   DiceGroupList._(Directory directory) : _dirThisDiceGroupList = directory {
     _diceGroupList = List<DiceGroup>.empty(growable: true);
   }
 
-  /// конструктор читающий данные из памяти
+  /// Конструктор читающий данные из памяти
   static Future<DiceGroupList> creatingFromFiles() async {
     Directory dirThisDiceGroupList = await getApplicationDocumentsDirectory();
     dirThisDiceGroupList = await Directory("${dirThisDiceGroupList.path}/DiceGroups").create(recursive: true);
@@ -24,7 +26,7 @@ class DiceGroupList {
     ]).then((_) => resultDiceGroupList);
   }
 
-  /// чтение всех групп
+  /// Чтение всех групп
   Future<void> _readDiceGroupList() {
     final List<FileSystemEntity> entities = _dirThisDiceGroupList.listSync(recursive: false).toList();
     final List<Directory> allDirDiceGroup = entities.whereType<Directory>().toList();
@@ -59,6 +61,7 @@ class DiceGroupList {
     });
   }
 
+  /// Дублирование группы и добавление её в конец списка
   Future<DiceGroup> duplicateDiceGroup(int index) {
     String newPath = _getPathToNewDiceGroup();
     return copyDirectory(_diceGroupList[index].directory.path, newPath).then((_) {
@@ -69,6 +72,7 @@ class DiceGroupList {
     });
   }
 
+  /// Добавление в конец списка пустой группы
   Future<DiceGroup> addNewDiceGroup() {
     return Directory(_getPathToNewDiceGroup()).create().then((dir) => DiceGroup.creatingNewDiceGroup(dir).then(
           (diceGroup) {
@@ -78,6 +82,7 @@ class DiceGroupList {
         ));
   }
 
+  /// Полное удаление группы из списка
   Future<bool> removeDiceGroupAt([int? index]) {
     index ??= _diceGroupList.length - 1;
     return _diceGroupList[index].directory.delete(recursive: true).then((_) {
@@ -87,14 +92,17 @@ class DiceGroupList {
     });
   }
 
+  /// TODO кака в DiceGroup
   String _getPathToNewDiceGroup() {
     return "${_dirThisDiceGroupList.path}/${_diceGroupList.isEmpty ? "0" : (getNumberFromFileName(_diceGroupList.last.directory.path)! + 1)}";
   }
 
+  /// Получить группу
   DiceGroup operator [](int index) {
     return _diceGroupList[index];
   }
 
+  /// Получить список всех выбранных граней в формете удобном для вывода
   List<OneSelectedDiceGroup> get allSelectedDiceGroup {
     List<OneSelectedDiceGroup> resultAllSelectedDiceGroup = List<OneSelectedDiceGroup>.empty(growable: true);
     for (DiceGroup diceGroup in _diceGroupList) {
@@ -109,14 +117,16 @@ class DiceGroupList {
     return resultAllSelectedDiceGroup;
   }
 
+  /// Получить количество граней
   int get length {
     return _diceGroupList.length;
   }
 
-  late List<DiceGroup> _diceGroupList;
-  final Directory _dirThisDiceGroupList;
+  late List<DiceGroup> _diceGroupList;      // список всех групп
+  final Directory _dirThisDiceGroupList;    // директория со всеми группами
 }
 
+/// Структура - необходимые для отображения данные использованной группы
 class OneSelectedDiceGroup {
   OneSelectedDiceGroup({required this.diceGroup, required this.allDice});
 
@@ -124,4 +134,4 @@ class OneSelectedDiceGroup {
   List<Dice> allDice;
 }
 
-late DiceGroupList diceGroupList;
+late DiceGroupList diceGroupList;           // список всех групп. Единственный и неповторимый

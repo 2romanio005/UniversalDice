@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:path/path.dart';
 
+/// Получить число из названия файла или директории (всё название должно быть одним числом иначе null)
 int? getNumberFromFileName(String path) {
   int start = path.lastIndexOf('/') + 1;
   int end = path.lastIndexOf('.');
@@ -10,7 +11,7 @@ int? getNumberFromFileName(String path) {
   return int.tryParse(path.substring(start, end));
 }
 
-
+/// Скопировать директорию со всем содержимым в новое место
 Future<void> copyDirectory(String from, String to) async {
   if (from == to) {
     return;

@@ -89,8 +89,13 @@ class DiceGroupList {
   }
 
   /// Получить путь до группы по индексу
-  String _getPathToNewDiceGroup([int? index]) {
-    return "${_dirThisDiceGroupList.path}/${_diceGroupList.isEmpty ? "0" : ((getNumberFromFileName(_diceGroupList[index ?? length - 1].dirThisDiceGroup.path) ?? -1) + 1)}";
+  String _getPathToNewDiceGroup() {
+    return _getPathToDiceGroup(length);
+  }
+
+  String _getPathToDiceGroup(int index){
+    final int fileNumber = _diceGroupList.isEmpty ? 0 : index - length + 1 + getNumberFromFileName(_diceGroupList.last.dirThisDiceGroup.path)!; // получить номер в названии файла
+    return "${_dirThisDiceGroupList.path}/$fileNumber";
   }
 
   /// Получить группу

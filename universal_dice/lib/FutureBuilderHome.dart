@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+// import 'package:path_provider/path_provider.dart';
+// import 'dart:io';
+
 import 'package:universal_dice/HomePage.dart';
 
 import 'package:universal_dice/Data/DiceGroupList.dart';
@@ -13,11 +16,11 @@ class FutureBuilderHome extends StatefulWidget {
 // класс для ожидания загрузки стихов из памяти (можно грузить что угодно до основного экрана)
 class _FutureBuilderHome extends State<FutureBuilderHome> {
   Future<bool> _loading() async {
-    /*Directory dir = await getApplicationDocumentsDirectory();
-    await for (final file in dir.list(recursive: true)) {
-      print(file.path);
-    }
-    print("===================");*/
+    // Directory dir = await getApplicationDocumentsDirectory();
+    // await for (final file in dir.list(recursive: true)) {
+    //   print(file.path);
+    // }
+    // print("===================");
 
     diceGroupList = await DiceGroupList.creatingFromFiles(); // чтение всех данных о кубиках и группах из памяти
 

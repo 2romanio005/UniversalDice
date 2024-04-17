@@ -16,20 +16,17 @@ Future<void> copyDirectory(String from, String to) async {
   if (from == to) {
     return;
   }
-  // print("from $from");
-  // print("to $to");
+  print("from $from");
+  print("to $to");
 
   await Directory(to).create(recursive: true);
   await for (final file in Directory(from).list(recursive: true)) {
     final copyTo = join(to, relative(file.path, from: from));
     //print("copyTo $copyTo");
     if (file is Directory) {
-      //Directory dir = await Directory(copyTo).create(recursive: true);
-      //print("new dir ${dir.path}");
+      await Directory(copyTo).create(recursive: true);
     } else if (file is File) {
-      File(file.path).copy(copyTo).then((value) {
-        /*print("new fil ${fil.path}");*/
-      });
+      await File(file.path).copy(copyTo);
     }
   }
 }

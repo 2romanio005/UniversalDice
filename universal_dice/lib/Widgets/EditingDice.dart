@@ -40,7 +40,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
               builder: (context, redraw) {
                 // controller.addListener(() => print("c"));
                 controller.addListener(() => redraw(() {
-                      activeNumberFaces = int.parse(controller.text);
+                      activeNumberFaces = int.tryParse(controller.text) ?? 0;
                       if (activeNumberFaces > newDice.numberFaces) {
                         newDice.numberFaces = activeNumberFaces;
                       }

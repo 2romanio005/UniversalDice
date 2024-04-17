@@ -63,7 +63,7 @@ class DiceGroup {
       int? numberFromDirName = getNumberFromFileName(allDirDice[i].path);
       if (numberFromDirName != null) {
         return Dice.creatingFromFiles(allDirDice[i]).then(
-          (dice) {
+              (dice) {
             if (numberFromDirName >= tmpDiceList.length) {
               tmpDiceList.length = numberFromDirName + 1;
             }
@@ -85,7 +85,7 @@ class DiceGroup {
 
   /// Дублирование кубика и добавление его в конец списка
   Future<Dice> duplicateDice(int index) {
-    String newPath = _getPathToDice();
+    String newPath = _getPathToNewDice();
     return Dice.copy(_diceList[index], newPath).then((dice) {
       _diceList.add(dice);
       return _diceList.last;
@@ -94,7 +94,8 @@ class DiceGroup {
 
   /// Добавление в конец списка стандартного кубика
   Future<Dice> addStandardDice() {
-    return Directory(_getPathToDice()).create().then((dir) => Dice.creatingNewDice(dir).then((dice) {
+    return Directory(_getPathToNewDice()).create().then((dir) =>
+        Dice.creatingNewDice(dir).then((dice) {
           _diceList.add(dice);
           return _diceList.last;
         }));
@@ -113,10 +114,11 @@ class DiceGroup {
   /// Полностью удаляет прошлый кубик и создаёт копию по образце вместо него.  должно быть []= но там нельзя возвращать future
   Future<void> replaceDiceAt(int index, Dice sampleDice) {
     return _diceList[index].delete().then(
-          (_) => Dice.copy(sampleDice, _getPathToDice(index)).then(
-            (newDice) => _diceList[index] = newDice,
+          (_) =>
+          Dice.copy(sampleDice, _getPathToDice(index)).then(
+                (newDice) => _diceList[index] = newDice,
           ),
-        );
+    );
   }
 
   /// Получить кубик
@@ -125,8 +127,13 @@ class DiceGroup {
   }
 
   /// Получить путь до кубика по индексу
-  String _getPathToDice([int? index]) {
-    return "${_dirThisDiceGroup.path}/${_diceList.isEmpty ? "0" : ((getNumberFromFileName(_diceList[index ?? length - 1].dirThisDice.path) ?? -1) + 1)}";
+  String _getPathToNewDice() {
+    return _getPathToDice(length);
+  }
+
+  String _getPathToDice(int index) {
+    final int fileNumber = _diceList.isEmpty ? 0 : index - length + 1 + getNumberFromFileName(_diceList.last.dirThisDice.path)!; // получить номер в названии файла
+    return "${_dirThisDiceGroup.path}/$fileNumber";
   }
 
   /// Получить директорию этой группы  TODO поменять название

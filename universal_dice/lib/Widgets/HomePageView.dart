@@ -36,6 +36,10 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
               length: widget.allSelectedDiceGroup[index].length,
               vsync: this,
             ));
+
+    for (_DiceGroupAnimations diceGroupAnimations in allDiceGroupAnimations) {
+      diceGroupAnimations.allForward(from: 0);
+    }
   }
 
   @override
@@ -51,11 +55,11 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
     for (int i = 0; i < widget.allSelectedDiceGroup.length; i++) {
       if (i < allDiceGroupAnimations.length) {
         //print("updated $i");
-        // обновление количества контроллеров в остающейся ргуппе
+        // обновление количества контроллеров в остающейся группе
         allDiceGroupAnimations[i].checkTheLengthMatch(widget.allSelectedDiceGroup[i].length);
       } else {
         //print("add $i");
-        // добавление недостающих групп констроллеров
+        // добавление недостающих групп контроллеров
         allDiceGroupAnimations.add(_DiceGroupAnimations(length: widget.allSelectedDiceGroup[i].length, vsync: this));
       }
     }
@@ -79,7 +83,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
         ? const Padding(
             padding: EdgeInsets.fromLTRB(padding, 100, padding, 0),
             child: Text(
-              "Выберите какие кубики кидать, нажав на кнопку в верхнем углу или свапнув вбок.",
+              "Выберите какие кубики кидать, нажав на кнопку в верхнем углу потянув меню сбоку.",
               textAlign: TextAlign.center,
             ),
           )
@@ -189,7 +193,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
   }
 }
 
-/// Класс обёртка для одного контролеера и его анимации
+/// Класс обёртка для одного контролера и его анимации
 class _DiceGroupAnimations {
   _DiceGroupAnimations({required int length, required this.vsync}) {
     allControllers = List<AnimationController>.empty(growable: true);

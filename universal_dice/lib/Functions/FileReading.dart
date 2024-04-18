@@ -16,8 +16,8 @@ Future<void> copyDirectory(String from, String to) async {
   if (from == to) {
     return;
   }
-  print("from $from");
-  print("to $to");
+  // print("from $from");
+  // print("to $to");
 
   await Directory(to).create(recursive: true);
   await for (final file in Directory(from).list(recursive: true)) {

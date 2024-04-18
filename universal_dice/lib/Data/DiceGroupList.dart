@@ -104,12 +104,12 @@ class DiceGroupList {
   }
 
   /// Получить список всех выбранных граней в формате удобном для вывода
-  List<OneSelectedDiceGroup> get allSelectedDiceGroup {
-    List<OneSelectedDiceGroup> resultAllSelectedDiceGroup = List<OneSelectedDiceGroup>.empty(growable: true);
+  List<SelectedDiceGroup> get allSelectedDiceGroup {
+    List<SelectedDiceGroup> resultAllSelectedDiceGroup = List<SelectedDiceGroup>.empty(growable: true);
     for (DiceGroup diceGroup in _diceGroupList) {
       List<Dice> allSelectedDice = diceGroup.allSelectedDice;
       if (allSelectedDice.isNotEmpty) {
-        resultAllSelectedDiceGroup.add(OneSelectedDiceGroup(
+        resultAllSelectedDiceGroup.add(SelectedDiceGroup(
           diceGroup: diceGroup,
           allDice: allSelectedDice,
         ));
@@ -128,8 +128,12 @@ class DiceGroupList {
 }
 
 /// Структура - необходимые для отображения данные использованной группы
-class OneSelectedDiceGroup {
-  OneSelectedDiceGroup({required this.diceGroup, required this.allDice});
+class SelectedDiceGroup {
+  SelectedDiceGroup({required this.diceGroup, required this.allDice});
+
+  int get length{
+    return allDice.length;
+  }
 
   DiceGroup diceGroup;
   List<Dice> allDice;

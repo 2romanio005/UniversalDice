@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import 'package:universal_dice/Decoration/styles.dart';
+import 'package:universal_dice/Decoration/curves.dart';
+import 'package:universal_dice/Decoration/buttonStyle.dart';
 
 import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroupList.dart';
@@ -22,16 +23,16 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
-  late List<DiceGroupAnimations> allDiceGroupAnimations;
+  late List<_DiceGroupAnimations> allDiceGroupAnimations;
 
   @override
   void initState() {
     super.initState();
     //print("Количество выбранных граней ${widget.allSelectedDiceGroup.last.length}");
 
-    allDiceGroupAnimations = List<DiceGroupAnimations>.generate(
+    allDiceGroupAnimations = List<_DiceGroupAnimations>.generate(
         widget.allSelectedDiceGroup.length,
-        (index) => DiceGroupAnimations(
+        (index) => _DiceGroupAnimations(
               length: widget.allSelectedDiceGroup[index].length,
               vsync: this,
             ));
@@ -40,7 +41,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
-    for (DiceGroupAnimations diceGroupAnimations in allDiceGroupAnimations) {
+    for (_DiceGroupAnimations diceGroupAnimations in allDiceGroupAnimations) {
       diceGroupAnimations.dispose();
     }
   }
@@ -55,7 +56,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
       } else {
         //print("add $i");
         // добавление недостающих групп констроллеров
-        allDiceGroupAnimations.add(DiceGroupAnimations(length: widget.allSelectedDiceGroup[i].length, vsync: this));
+        allDiceGroupAnimations.add(_DiceGroupAnimations(length: widget.allSelectedDiceGroup[i].length, vsync: this));
       }
     }
     // удаление лишних групп контроллеров
@@ -98,7 +99,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
                             dice.generateRandFaceIndex();
                           }
                         }
-                        for (DiceGroupAnimations diceGroupAnimations in allDiceGroupAnimations) {
+                        for (_DiceGroupAnimations diceGroupAnimations in allDiceGroupAnimations) {
                           diceGroupAnimations.allForward(from: 0);
                         }
                         setState(() {});
@@ -126,7 +127,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSelectedDiceGroup(SelectedDiceGroup selectedDiceGroup, DiceGroupAnimations diceGroupAnimations) {
+  Widget _buildSelectedDiceGroup(SelectedDiceGroup selectedDiceGroup, _DiceGroupAnimations diceGroupAnimations) {
     return Column(
       children: [
         selectedDiceGroup.diceGroup.nameWidget,
@@ -135,7 +136,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSelectedDiceList(List<Dice> allSelectedDice, DiceGroupAnimations diceGroupAnimations) {
+  Widget _buildSelectedDiceList(List<Dice> allSelectedDice, _DiceGroupAnimations diceGroupAnimations) {
     double diceFaceDimension = MediaQuery.of(context).size.width / 2;
     final double diceFacePadding = diceFaceDimension / 20;
     diceFaceDimension -= diceFacePadding;
@@ -189,8 +190,8 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
 }
 
 /// Класс обёртка для одного контролеера и его анимации
-class DiceGroupAnimations {
-  DiceGroupAnimations({required int length, required this.vsync}) {
+class _DiceGroupAnimations {
+  _DiceGroupAnimations({required int length, required this.vsync}) {
     allControllers = List<AnimationController>.empty(growable: true);
     allAnimations = List<Animation<double>>.empty(growable: true);
     for (int i = 0; i < length; i++) {
@@ -201,15 +202,29 @@ class DiceGroupAnimations {
   void _addOneAnimation() {
     allControllers.add(AnimationController(
       vsync: vsync,
-      duration: Duration(milliseconds: 2000 + Random().nextInt(1000)),
+      //duration: Duration(milliseconds: 2000 + Random().nextInt(1000)),
+      duration: Duration(milliseconds: 1500 + Random().nextInt(1000)),
     ));
-    allAnimations.add(Tween<double>(begin: 0, end: pi * 2).animate(
+
+    Curve curve;
+    switch(Random().nextInt(4)){
+      case 0:
+        curve = CurveCubicBezier(1,1.17,.79,1.24);
+      case 1:
+        curve = CurveCubicBezier(.01,.56,.15,1.28);
+      case 2:
+        curve = CurveCubicBezier(.8,1.19,1,.99);
+      default:
+        curve = Curves.elasticOut;
+    }
+    allAnimations.add(Tween<double>(begin: 0, end: pi * 2 * (1 + Random().nextInt(2))).animate(
       CurvedAnimation(
         parent: allControllers.last,
-        curve: Curves.elasticOut,
+        curve: curve,
       ),
     ));
     //print("added anim $length");
+
   }
 
   void _popOneAnimation() {
@@ -253,3 +268,4 @@ class DiceGroupAnimations {
 
   final TickerProvider vsync;
 }
+

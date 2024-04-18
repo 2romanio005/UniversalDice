@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:universal_dice/Functions/FileReading.dart';
 
 import 'package:universal_dice/Decoration/styles.dart';
+import 'package:universal_dice/Decoration/colors.dart';
 
 const String _nameSettingsFile = "settings.txt"; // название файла с настройками кубика
 
@@ -116,7 +117,7 @@ class Dice {
                   child: Text(
                     (index + 1).toString(),
                     textAlign: TextAlign.center,
-                    style: textTheme.titleSmall?.merge(const TextStyle(
+                    style: mainTheme.textTheme.titleSmall?.merge(const TextStyle(
                       height: 1.0,
                       color: Colors.black,
                     )),
@@ -144,7 +145,7 @@ class Dice {
     }
   }
 
-  /// Получить директорию с этим кубиком          TODO Изменить название
+  /// Получить директорию с этим кубиком
   Directory get dirThisDice {
     return _dirThisDice;
   }

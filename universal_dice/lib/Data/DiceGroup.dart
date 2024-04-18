@@ -136,7 +136,7 @@ class DiceGroup {
     return "${_dirThisDiceGroup.path}/$fileNumber";
   }
 
-  /// Получить директорию этой группы  TODO поменять название
+  /// Получить директорию этой группы
   Directory get dirThisDiceGroup {
     return _dirThisDiceGroup;
   }
@@ -167,7 +167,7 @@ class DiceGroup {
     return Text(
       name,
       textAlign: TextAlign.center,
-      style: textTheme.titleMedium,
+      style: mainTheme.textTheme.titleMedium,
     );
   }
 

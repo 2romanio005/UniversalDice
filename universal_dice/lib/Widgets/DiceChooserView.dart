@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import 'package:universal_dice/Decoration/styles.dart';
+import 'package:universal_dice/Decoration/buttonStyle.dart';
 import 'package:universal_dice/Decoration/icons.dart';
 
 import 'package:universal_dice/Data/Dice.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:universal_dice/Decoration/styles.dart';
+import 'package:universal_dice/Decoration/buttonStyle.dart';
 
 import 'package:universal_dice/Data/DiceGroup.dart';
 

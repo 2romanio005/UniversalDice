@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:universal_dice/Decoration/styles.dart';
+import 'package:universal_dice/Decoration/buttonStyle.dart';
 import 'package:universal_dice/Decoration/icons.dart';
 
 import 'package:universal_dice/Widgets/HomePageView.dart';
@@ -63,7 +63,7 @@ class _HomePage extends State<HomePage> {
             "Универсальные игральные кости",
             style: TextStyle(
               fontFamily: "Oswald",
-              color: colorScheme.primary,
+              color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold,
             ),
           ),

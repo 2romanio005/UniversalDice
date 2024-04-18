@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-import 'package:universal_dice/Decoration/styles.dart';
+import 'package:universal_dice/Decoration/buttonStyle.dart';
 
 import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroup.dart';

@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  bezier:
+    dependency: "direct main"
+    description:
+      name: bezier
+      sha256: "90d2a89d3a3b20522361244bafb51861210e941bd2f307c4122877d3781d1339"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   boolean_selector:
     dependency: transitive
     description:

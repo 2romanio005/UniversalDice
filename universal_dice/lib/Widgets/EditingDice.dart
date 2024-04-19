@@ -73,7 +73,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                   insetPadding: EdgeInsets.zero,
                   // backgroundColor: Theme.of(context).colorScheme.surface,
                   actionsAlignment: MainAxisAlignment.spaceAround,
-                  title: const Text("Редактирование кубика", textAlign: TextAlign.center),
+                  title: const Text("Редактирование игральной кости", textAlign: TextAlign.center),
                   titleTextStyle: Theme.of(context).textTheme.titleLarge,
                   content: Column(
                     children: [

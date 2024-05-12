@@ -21,7 +21,6 @@ class DiceGroup {
   /// Конструктор стандартной группы
   static Future<DiceGroup> creatingNewDiceGroup(Directory dirThisDiceGroup) {
     DiceGroup resultDiceGroup = DiceGroup._(name: "Группа ${(getNumberFromFileName(dirThisDiceGroup.path) ?? 0) + 1}", dirThisDiceGroup: dirThisDiceGroup);
-    //print("1 ${dirThisDiceGroup.path}");
     return resultDiceGroup._writeSettings().then((_) => resultDiceGroup);
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-// import 'package:path_provider/path_provider.dart';
-// import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 import 'package:universal_dice/HomePage.dart';
 
@@ -16,27 +16,14 @@ class FutureBuilderHome extends StatefulWidget {
 // класс для ожидания загрузки стихов из памяти (можно грузить что угодно до основного экрана)
 class _FutureBuilderHome extends State<FutureBuilderHome> {
   Future<bool> _loading() async {
-    // Directory dir = await getApplicationDocumentsDirectory();
-    // await for (final file in dir.list(recursive: true)) {
+    Directory dirDiceGroupList = await getApplicationDocumentsDirectory();
+    // await for (final file in dirDiceGroupList.list(recursive: true)) {
     //   print(file.path);
     // }
     // print("===================");
+    dirDiceGroupList = await Directory("${dirDiceGroupList.path}/DiceGroups").create(recursive: true);
 
-    diceGroupList = await DiceGroupList.creatingFromFiles(); // чтение всех данных о кубиках и группах из памяти
-
-    if (diceGroupList.length == 0) {
-      // добавление стандартной группы если ни одного кубика не существует
-      await diceGroupList.addNewDiceGroup();
-      diceGroupList[0].name = "Стандартная группа";
-      Future<void> addDice(int numberFaces) async {
-        await diceGroupList[0].addStandardDice();
-        diceGroupList[0][diceGroupList[0].length - 1].numberFaces = numberFaces;
-      }
-
-      await addDice(2);
-      await addDice(6);
-      await addDice(10);
-    }
+    diceGroupList = await DiceGroupList.creatingFromFiles(dirDiceGroupList); // чтение всех данных о кубиках и группах из памяти
 
     //print("loaded");
 

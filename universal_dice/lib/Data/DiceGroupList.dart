@@ -9,19 +9,37 @@ import 'package:universal_dice/Data/DiceGroup.dart';
 /// Класс - список всех групп
 class DiceGroupList {
   /// Приватный конструктор
-  DiceGroupList._(Directory directory) : _dirThisDiceGroupList = directory {
+  DiceGroupList._(Directory dirThisDiceGroupList) : _dirThisDiceGroupList = dirThisDiceGroupList {
     _diceGroupList = List<DiceGroup>.empty(growable: true);
   }
 
   /// Конструктор читающий данные из памяти
-  static Future<DiceGroupList> creatingFromFiles() async {
-    Directory dirThisDiceGroupList = await getApplicationDocumentsDirectory();
-    dirThisDiceGroupList = await Directory("${dirThisDiceGroupList.path}/DiceGroups").create(recursive: true);
-
+  static Future<DiceGroupList> creatingFromFiles(Directory dirThisDiceGroupList) async {
     DiceGroupList resultDiceGroupList = DiceGroupList._(dirThisDiceGroupList);
     return Future.wait([
       resultDiceGroupList._readDiceGroupList(),
-    ]).then((_) => resultDiceGroupList);
+    ]).then((_) {
+      if (resultDiceGroupList.length == 0) {
+        // добавление стандартной группы если ни одного кубика не существует
+        print("adding standart");
+        resultDiceGroupList.addNewDiceGroup().then((value) {
+          resultDiceGroupList[0].name = "Стандартная группа";
+          print("added");
+
+          return Future.wait([
+            resultDiceGroupList[0].addStandardDice(),
+            resultDiceGroupList[0].addStandardDice(),
+            resultDiceGroupList[0].addStandardDice(),
+          ]).then((value) {
+            resultDiceGroupList[0][0].numberFaces = 2;
+            resultDiceGroupList[0][2].numberFaces = 10;
+            return resultDiceGroupList;
+          });
+        });
+      }
+
+      return resultDiceGroupList;
+    });
   }
 
   /// Чтение всех групп
@@ -70,6 +88,7 @@ class DiceGroupList {
 
   /// Добавление в конец списка пустой группы
   Future<DiceGroup> addNewDiceGroup() {
+    print("1");
     return Directory(_getPathToNewDiceGroup()).create().then((dir) => DiceGroup.creatingNewDiceGroup(dir).then(
           (diceGroup) {
             _diceGroupList.add(diceGroup);
@@ -93,8 +112,9 @@ class DiceGroupList {
     return _getPathToDiceGroup(length);
   }
 
-  String _getPathToDiceGroup(int index){
+  String _getPathToDiceGroup(int index) {
     final int fileNumber = _diceGroupList.isEmpty ? 0 : index - length + 1 + getNumberFromFileName(_diceGroupList.last.dirThisDiceGroup.path)!; // получить номер в названии файла
+    print("${_dirThisDiceGroupList.path}/$fileNumber");
     return "${_dirThisDiceGroupList.path}/$fileNumber";
   }
 
@@ -131,7 +151,7 @@ class DiceGroupList {
 class SelectedDiceGroup {
   SelectedDiceGroup({required this.diceGroup, required this.allDice});
 
-  int get length{
+  int get length {
     return allDice.length;
   }
 

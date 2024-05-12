@@ -68,7 +68,7 @@ class Dice {
   }
 
   /// Чтение всех граней
-  Future<void> _readFaces() {
+  Future<void> _readFaces()   {
     return _dirThisDice.list(recursive: false).toList().then((entities) {
       final Iterable<File> allImageFiles = entities.whereType<File>();
       for (File imageFile in allImageFiles) {
@@ -150,9 +150,9 @@ class Dice {
     return _dirThisDice;
   }
 
-  /// Сгенерировать случайный индекс грани, которую будем отображать (и сохранить этот индекс до следующей генерации нового)
+  /// Сгенерировать случайный индекс грани, которую будем отображать (и сохранить этот индекс до следующей генерации нового в переменной lastRandFaceIndex)
   void generateRandFaceIndex() {
-    lastRandFaceIndex = numberFaces > 0 ? Random().nextInt(numberFaces) : -1;
+    _lastRandFaceIndex = numberFaces > 0 ? Random().nextInt(numberFaces) : -1;
   }
 
   /// Получить количество граней кубика
@@ -166,6 +166,7 @@ class Dice {
       for (int i = newNumberFaces; i < _pathsToImages.length; i++) {
         _pathsToImages[i]?.delete();
       }
+      resetLastRandFaceIndex();
       _pathsToImages.length = newNumberFaces;
 
       _writeSettings();
@@ -190,15 +191,23 @@ class Dice {
     state = !state;
   }
 
+  int? get lastRandFaceIndex{
+    return _lastRandFaceIndex;
+  }
+
+  void resetLastRandFaceIndex(){
+    _lastRandFaceIndex = null;
+  }
+
   late List<File?> _pathsToImages; // список путей к изображениям
   late bool _state; // состояние использования кубика
   final Directory _dirThisDice; // директория этого кубика
-  int? lastRandFaceIndex; // последнее сгенерированное
+  int? _lastRandFaceIndex; // последнее сгенерированное
 }
 
 /// enum соотносящий данные в файле настроек с номером их строки
 enum _AccordanceSettings {
   numberFaces,
   state,
-  length,
+  length,       // длина enuma
 }

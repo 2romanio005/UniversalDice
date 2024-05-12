@@ -11,7 +11,7 @@ class HomePageView extends StatefulWidget {
   HomePageView({super.key, required this.allSelectedDiceGroup}) {
     for (SelectedDiceGroup selectedDiceGroup in allSelectedDiceGroup) {
       for (Dice dice in selectedDiceGroup.allDice) {
-        dice.lastRandFaceIndex = null;
+        dice.resetLastRandFaceIndex();
       }
     }
   }

@@ -1,4 +1,4 @@
-import '../TestDatabase.dart';
+import '../DatabaseForTests.dart';
 
 
 import 'dart:io';
@@ -27,7 +27,7 @@ void main() async {
     }
   }
 
-  test("создания стандартного кубика creatingNewDice()", () async {
+  test("Создания стандартного кубика creatingNewDice()", () async {
     Database database = await Database.createRand();
     Dice testDice = await createDice(database);
 
@@ -38,7 +38,7 @@ void main() async {
     database.clear();
   });
 
-  test("изменения количества граней numberFaces()", () async {
+  test("Изменения количества граней numberFaces()", () async {
     Database database = await Database.createRand();
     Dice testDice = await createDice(database);
     await testDice.setNumberFaces(10);
@@ -49,7 +49,7 @@ void main() async {
     database.clear();
   });
 
-  test("изменения состояния invertState()", () async {
+  test("Изменения состояния invertState()", () async {
     Database database = await Database.createRand();
     Dice testDice = await createDice(database);
 
@@ -61,7 +61,7 @@ void main() async {
     database.clear();
   });
 
-  test("задать гране изображение setFaceFile()", () async {
+  test("Задать гране изображение setFaceFile()", () async {
     Database database = await Database.createRand();
     Dice testDice = await createDice(database);
 
@@ -76,7 +76,7 @@ void main() async {
     database.clear();
   });
 
-  test("сгенерировать индекс случайной грани generateRandFaceIndex()", () async {
+  test("Сгенерировать индекс случайной грани generateRandFaceIndex()", () async {
     Database database = await Database.createRand();
     Dice testDice = await createDice(database);
     await testDice.setNumberFaces(3);
@@ -100,7 +100,7 @@ void main() async {
     database.clear();
   });
 
-  test("создания кубика из файлов creatingFromFiles()", () async {
+  test("Создания кубика из файлов creatingFromFiles()", () async {
     Database database = await Database.createRand();
     Dice testDice = await creatingModifiedDice(database);
 
@@ -111,7 +111,7 @@ void main() async {
     database.clear();
   });
 
-  test("копирование кубика copy()", () async {
+  test("Копирование кубика copy()", () async {
     Database database = await Database.createRand();
     Dice testDice = await creatingModifiedDice(database);
 

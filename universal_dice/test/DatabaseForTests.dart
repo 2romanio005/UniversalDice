@@ -14,7 +14,7 @@ class Database{
   static Future<Database> create(String name){
     Database database =  Database._(name);
 
-    return database.dir.create().then((_) => database);
+    return database.dir.create(recursive: true).then((_) => database);
   }
 
   static Future<Database> createRand(){

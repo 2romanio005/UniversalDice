@@ -8,6 +8,7 @@ int? getNumberFromFileSystemEntityName(FileSystemEntity entity) {
 }
 
 /// Скопировать директорию со всем содержимым в новое место
+/// TODO функция гадость я хз как её нормально писать
 Future<void> copyDirectory(Directory from, Directory to) async {
   if (from == to) {
     return;
@@ -18,8 +19,10 @@ Future<void> copyDirectory(Directory from, Directory to) async {
   //   print("\t${file.path}");
   // }
 
+  List<FileSystemEntity> filesList = await from.list(recursive: true).toList(); // приходится делать это до создания конечной директории т.к она может быть внутренней
   await to.create(recursive: true);
-  await for (final file in from.list(recursive: true)) {
+
+  for (final FileSystemEntity file in filesList) {
     final copyTo = join(to.path, relative(file.path, from: from.path));
     //print("copyTo $copyTo");
     if (file is Directory) {

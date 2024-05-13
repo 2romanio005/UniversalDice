@@ -50,7 +50,7 @@ class DiceGroupList {
     List<DiceGroup?> tmpDiceGroupList = List<DiceGroup?>.filled(allDirDiceGroup.length, null, growable: true);
 
     return Future.wait(Iterable<Future<void>>.generate(allDirDiceGroup.length, (i) {
-      int? numberFromDirName = getNumberFromFileName(allDirDiceGroup[i].path);
+      int? numberFromDirName = getNumberFromFileSystemEntityName(allDirDiceGroup[i]);
       if (numberFromDirName != null) {
         return DiceGroup.creatingFromFiles(allDirDiceGroup[i]).then(
           (diceGroup) {
@@ -77,9 +77,9 @@ class DiceGroupList {
 
   /// Дублирование группы и добавление её в конец списка
   Future<DiceGroup> duplicateDiceGroup(int index) {
-    String newPath = _getPathToNewDiceGroup();
-    return copyDirectory(_diceGroupList[index].dirThisDiceGroup.path, newPath).then((_) {
-      return DiceGroup.creatingFromFiles(Directory(newPath)).then((diceGroup) {
+    Directory newDir = _getDirNewDiceGroup();
+    return copyDirectory(_diceGroupList[index].dirThisDiceGroup, newDir).then((_) {
+      return DiceGroup.creatingFromFiles(newDir).then((diceGroup) {
         _diceGroupList.add(diceGroup);
         return diceGroup;
       });
@@ -89,7 +89,7 @@ class DiceGroupList {
   /// Добавление в конец списка пустой группы
   Future<DiceGroup> addNewDiceGroup() {
     print("1");
-    return Directory(_getPathToNewDiceGroup()).create().then((dir) => DiceGroup.creatingNewDiceGroup(dir).then(
+    return _getDirNewDiceGroup().create().then((dir) => DiceGroup.creatingNewDiceGroup(dir).then(
           (diceGroup) {
             _diceGroupList.add(diceGroup);
             return diceGroup;
@@ -108,14 +108,13 @@ class DiceGroupList {
   }
 
   /// Получить путь до группы по индексу
-  String _getPathToNewDiceGroup() {
-    return _getPathToDiceGroup(length);
+  Directory _getDirNewDiceGroup() {
+    return _getDirDiceGroup(length);
   }
 
-  String _getPathToDiceGroup(int index) {
-    final int fileNumber = _diceGroupList.isEmpty ? 0 : index - length + 1 + getNumberFromFileName(_diceGroupList.last.dirThisDiceGroup.path)!; // получить номер в названии файла
-    print("${_dirThisDiceGroupList.path}/$fileNumber");
-    return "${_dirThisDiceGroupList.path}/$fileNumber";
+  Directory _getDirDiceGroup(int index) {
+    final int fileNumber = _diceGroupList.isEmpty ? 0 : index - length + 1 + getNumberFromFileSystemEntityName(_diceGroupList.last.dirThisDiceGroup)!; // получить номер в названии файла
+    return Directory("${_dirThisDiceGroupList.path}/$fileNumber");
   }
 
   /// Получить группу

@@ -20,7 +20,7 @@ class DiceGroup {
 
   /// Конструктор стандартной группы
   static Future<DiceGroup> creatingNewDiceGroup(Directory dirThisDiceGroup) {
-    DiceGroup resultDiceGroup = DiceGroup._(name: "Группа ${(getNumberFromFileName(dirThisDiceGroup.path) ?? 0) + 1}", dirThisDiceGroup: dirThisDiceGroup);
+    DiceGroup resultDiceGroup = DiceGroup._(name: "Группа ${(getNumberFromFileSystemEntityName(dirThisDiceGroup) ?? 0) + 1}", dirThisDiceGroup: dirThisDiceGroup);
     return resultDiceGroup._writeSettings().then((_) => resultDiceGroup);
   }
 
@@ -59,7 +59,7 @@ class DiceGroup {
     List<Dice?> tmpDiceList = List<Dice?>.filled(allDirDice.length, null, growable: true);
 
     return Future.wait(Iterable<Future<void>>.generate(allDirDice.length, (i) {
-      int? numberFromDirName = getNumberFromFileName(allDirDice[i].path);
+      int? numberFromDirName = getNumberFromFileSystemEntityName(allDirDice[i]);
       if (numberFromDirName != null) {
         return Dice.creatingFromFiles(allDirDice[i]).then(
               (dice) {
@@ -84,8 +84,7 @@ class DiceGroup {
 
   /// Дублирование кубика и добавление его в конец списка
   Future<Dice> duplicateDice(int index) {
-    String newPath = _getPathToNewDice();
-    return Dice.copy(_diceList[index], newPath).then((dice) {
+    return Dice.copy(_diceList[index], _getDirNewDice()).then((dice) {
       _diceList.add(dice);
       return _diceList.last;
     });
@@ -93,7 +92,7 @@ class DiceGroup {
 
   /// Добавление в конец списка стандартного кубика
   Future<Dice> addStandardDice() {
-    return Directory(_getPathToNewDice()).create().then((dir) =>
+    return _getDirNewDice().create().then((dir) =>
         Dice.creatingNewDice(dir).then((dice) {
           _diceList.add(dice);
           return _diceList.last;
@@ -114,7 +113,7 @@ class DiceGroup {
   Future<void> replaceDiceAt(int index, Dice sampleDice) {
     return _diceList[index].delete().then(
           (_) =>
-          Dice.copy(sampleDice, _getPathToDice(index)).then(
+          Dice.copy(sampleDice, _getDirDice(index)).then(
                 (newDice) => _diceList[index] = newDice,
           ),
     );
@@ -126,13 +125,13 @@ class DiceGroup {
   }
 
   /// Получить путь до кубика по индексу
-  String _getPathToNewDice() {
-    return _getPathToDice(length);
+  Directory _getDirNewDice() {
+    return _getDirDice(length);
   }
 
-  String _getPathToDice(int index) {
-    final int fileNumber = _diceList.isEmpty ? 0 : index - length + 1 + getNumberFromFileName(_diceList.last.dirThisDice.path)!; // получить номер в названии файла
-    return "${_dirThisDiceGroup.path}/$fileNumber";
+  Directory _getDirDice(int index) {
+    final int fileNumber = _diceList.isEmpty ? 0 : index - length + 1 + getNumberFromFileSystemEntityName(_diceList.last.dirThisDice)!; // получить номер в названии файла
+    return Directory("${_dirThisDiceGroup.path}/$fileNumber");
   }
 
   /// Получить директорию этой группы

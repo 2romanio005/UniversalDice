@@ -19,7 +19,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
   late Future<void> Function() functionOK;
   late Future<void> Function() functionOFF;
 
-  return Dice.copy(diceGroup[diceIndex], tmpDiceDir.path).then((newDice) => showDialog<bool?>(
+  return Dice.copy(diceGroup[diceIndex], tmpDiceDir).then((newDice) => showDialog<bool?>(
           context: context,
           builder: (BuildContext context) {
             late int activeNumberFaces;

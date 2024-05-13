@@ -39,8 +39,8 @@ class Dice {
   }
 
   /// Конструктор копирования
-  static Future<Dice> copy(Dice sampleDice, String newPath) {
-    return copyDirectory(sampleDice.dirThisDice.path, newPath).then((_) => Dice.creatingFromFiles(Directory(newPath)));
+  static Future<Dice> copy(Dice sampleDice, Directory newDir) {
+    return copyDirectory(sampleDice.dirThisDice, newDir).then((_) => Dice.creatingFromFiles(newDir));
   }
 
   /// Удалить все файлы Dice
@@ -72,7 +72,8 @@ class Dice {
     return _dirThisDice.list(recursive: false).toList().then((entities) {
       final Iterable<File> allImageFiles = entities.whereType<File>();
       for (File imageFile in allImageFiles) {
-        int? numberFromDirName = getNumberFromFileName(imageFile.path);
+        int? numberFromDirName = getNumberFromFileSystemEntityName(imageFile);
+        print(numberFromDirName);
         if (numberFromDirName != null) {
           if (numberFromDirName >= _pathsToImages.length) {
             _pathsToImages.length = numberFromDirName + 1;

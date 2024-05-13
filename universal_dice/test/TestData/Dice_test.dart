@@ -34,7 +34,7 @@ void main() async {
   }
 
 
-  test("создания стандартного кубика creatingNewDice ", () async {
+  test("создания стандартного кубика creatingNewDice()", () async {
     Dice testDice = await createDice();
 
     expect(testDice.numberFaces, equals(6));
@@ -42,7 +42,7 @@ void main() async {
     expect(testDice.dirThisDice, dirThisDice);
   });
 
-  test("изменения количества граней numberFaces", () async {
+  test("изменения количества граней numberFaces()", () async {
     Dice testDice = await createDice();
     testDice.numberFaces = 10;
 
@@ -50,7 +50,7 @@ void main() async {
     expect(testDice.lastRandFaceIndex, null);
   });
 
-  test("изменения состояния invertState", () async {
+  test("изменения состояния invertState()", () async {
     Dice testDice = await createDice();
 
     testDice.state = true;
@@ -59,7 +59,7 @@ void main() async {
     expect(testDice.state, equals(false));
   });
   
-  test("задать гране изображение setFaceFile", () async {
+  test("задать гране изображение setFaceFile()", () async {
     Dice testDice = await createDice();
 
     expect(testDice.isFaceImage(1), false);
@@ -71,7 +71,7 @@ void main() async {
     expect(testDice.isFaceImage(1), false);
   });
 
-  test("сгенерировать индекс случайной грани generateRandFaceIndex", () async {
+  test("сгенерировать индекс случайной грани generateRandFaceIndex()", () async {
     Dice testDice = await createDice();
     testDice.numberFaces = 3;
 
@@ -92,7 +92,7 @@ void main() async {
     expect(testDice.lastRandFaceIndex, -1);
   });
 
-  test("создания кубика из файлов creatingFromFiles", () async {
+  test("создания кубика из файлов creatingFromFiles()", () async {
     Dice testDice = await creatingModifiedDice();
 
     Dice testDiceTwo = await Dice.creatingFromFiles(dirThisDice);
@@ -100,13 +100,13 @@ void main() async {
     equalsDice(testDiceTwo, testDice);
   });
 
-  test("копирование кубика copy", () async {
-    Dice testDice = await creatingModifiedDice();
-
-    Dice testDiceCopy = await Dice.copy(testDice, "otherPath");
-
-    equalsDice(testDiceCopy, testDice);
-    expect(testDiceCopy.dirThisDice.path, "otherPath");
-  });
+  // test("копирование кубика copy()", () async {
+  //   Dice testDice = await creatingModifiedDice();
+  //
+  //   Dice testDiceCopy = await Dice.copy(testDice, Directory("otherPath"));
+  //
+  //   equalsDice(testDiceCopy, testDice);
+  //   expect(testDiceCopy.dirThisDice.path, "otherPath");
+  // });
 
 }

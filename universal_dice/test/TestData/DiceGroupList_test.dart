@@ -7,10 +7,10 @@ import 'package:universal_dice/Data/DiceGroupList.dart';
 void main() async {
   //TestWidgetsFlutterBinding.ensureInitialized();
 
-  Directory dirDiceGroupList = Directory("path");
-  dirDiceGroupList = await Directory("${dirDiceGroupList.path}/Test").create(recursive: true);
+  // Directory dirDiceGroupList = Directory("path");
+  // dirDiceGroupList = await Directory("${dirDiceGroupList.path}/Test").create(recursive: true);
 
-  test ("Проверка чтения всех групп из памяти когда их нет", () async {
+  //test ("Проверка чтения всех групп из памяти когда их нет", () async {
     // DiceGroupList testDiceGroupList = await DiceGroupList.creatingFromFiles(dirDiceGroupList);
     // print("build");
     //
@@ -24,5 +24,5 @@ void main() async {
     // expect(testDiceGroupList[0][0].numberFaces, equals(2));
     // expect(testDiceGroupList[0][1].numberFaces, equals(6));
     // expect(testDiceGroupList[0][2 ].numberFaces, equals(10));
-  });
+  //});
 }

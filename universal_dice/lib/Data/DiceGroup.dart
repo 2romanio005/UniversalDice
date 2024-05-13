@@ -188,9 +188,10 @@ class DiceGroup {
   }
 
   /// Изменить состояние использования всех кубиков в группе
+  /// FIXME сделать метод Future
   set state(bool newState) {
     for (Dice dice in _diceList) {
-      dice.state = newState;
+      dice.setState(newState);
     }
   }
 

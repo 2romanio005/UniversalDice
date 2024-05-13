@@ -31,9 +31,10 @@ class DiceGroupList {
             resultDiceGroupList[0].addStandardDice(),
             resultDiceGroupList[0].addStandardDice(),
           ]).then((value) {
-            resultDiceGroupList[0][0].numberFaces = 2;
-            resultDiceGroupList[0][2].numberFaces = 10;
-            return resultDiceGroupList;
+            Future.wait([
+              resultDiceGroupList[0][0].setNumberFaces(2),
+              resultDiceGroupList[0][2].setNumberFaces(10),
+            ]).then((value) => resultDiceGroupList);
           });
         });
       }

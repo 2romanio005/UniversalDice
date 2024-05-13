@@ -12,7 +12,7 @@ import 'package:universal_dice/Data/DiceGroup.dart';
 
 Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int diceIndex) {
   final Directory tmpDiceDir = Directory("${diceGroup.dirThisDiceGroup.path}/tmpDice");
-  if(tmpDiceDir.existsSync()){
+  if (tmpDiceDir.existsSync()) {
     tmpDiceDir.deleteSync(recursive: true);
   }
 
@@ -25,8 +25,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
             late int activeNumberFaces;
 
             functionOK = () {
-              newDice.numberFaces = activeNumberFaces;
-              return diceGroup.replaceDiceAt(diceIndex, newDice);
+              return newDice.setNumberFaces(activeNumberFaces).then((value) => diceGroup.replaceDiceAt(diceIndex, newDice));
             };
 
             functionOFF = () async {};
@@ -39,12 +38,13 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
             return StatefulBuilder(
               builder: (context, redraw) {
                 // controller.addListener(() => print("c"));
-                controller.addListener(() => redraw(() {
-                      activeNumberFaces = int.tryParse(controller.text) ?? 0;
-                      if (activeNumberFaces > newDice.numberFaces) {
-                        newDice.numberFaces = activeNumberFaces;
-                      }
-                    }));
+                controller.addListener(() async { // FIXME проверить работает ли
+                  activeNumberFaces = int.tryParse(controller.text) ?? 0;
+                  if (activeNumberFaces > newDice.numberFaces) {
+                    await newDice.setNumberFaces(activeNumberFaces);
+                  }
+                  redraw(() {});
+                });
 
                 final double diceFaceDimension = MediaQuery.of(context).size.width / 2 - 60;
                 final double diceFacePadding = diceFaceDimension / 10;

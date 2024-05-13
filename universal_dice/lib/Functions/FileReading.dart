@@ -3,13 +3,8 @@ import 'package:path/path.dart';
 
 /// Получить число из названия файла или директории (всё название должно быть одним числом иначе null)
 int? getNumberFromFileSystemEntityName(FileSystemEntity entity) {
-  basename(entity.path);
-  int start = entity.path.lastIndexOf('/') + 1;
-  int end = entity.path.lastIndexOf('.');
-  if (end <= start) {
-    end = entity.path.length;
-  }
-  return int.tryParse(entity.path.substring(start, end));
+  String name = basename(entity.path);
+  return int.tryParse(name.substring(0, name.lastIndexOf('.')));
 }
 
 /// Скопировать директорию со всем содержимым в новое место
@@ -17,8 +12,11 @@ Future<void> copyDirectory(Directory from, Directory to) async {
   if (from == to) {
     return;
   }
-  print("from ${from.path}");
-  print("to ${to.path}");
+  // print("===================");
+  // print("from ${from.path}");
+  // await for (final FileSystemEntity file in from.list(recursive: true)) {
+  //   print("\t${file.path}");
+  // }
 
   await to.create(recursive: true);
   await for (final file in from.list(recursive: true)) {
@@ -31,9 +29,10 @@ Future<void> copyDirectory(Directory from, Directory to) async {
     }
   }
 
-  print("===================");
-  await for (final file in to.list(recursive: true)) {
-    print(file.path);
-  }
-  print("===================");
+  // print("to ${to.path}");
+  // await for (final FileSystemEntity file in to.list(recursive: true)) {
+  //   print("\t${file.path}");
+  // }
+  // print("===================");
+
 }

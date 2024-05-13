@@ -6,18 +6,6 @@ import 'package:universal_dice/Functions/FileReading.dart';
 
 void main() async {
   test ("Проверка чтения всех групп из памяти когда их нет", () async {
-    // DiceGroupList testDiceGroupList = await DiceGroupList.creatingFromFiles(dirDiceGroupList);
-    // print("build");
-    //
-    // testDiceGroupList.addNewDiceGroup();
-    // print("add new test");
-    //
-    // expect(testDiceGroupList[0].name, ("Стандартная группа"));
-    //
-    // expect(testDiceGroupList.length, equals(3));
-    //
-    // expect(testDiceGroupList[0][0].numberFaces, equals(2));
-    // expect(testDiceGroupList[0][1].numberFaces, equals(6));
-    // expect(testDiceGroupList[0][2 ].numberFaces, equals(10));
+
   });
 }

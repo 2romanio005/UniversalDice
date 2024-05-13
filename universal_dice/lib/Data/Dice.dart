@@ -68,12 +68,12 @@ class Dice {
   }
 
   /// Чтение всех граней
-  Future<void> _readFaces()   {
+  Future<void> _readFaces() {
     return _dirThisDice.list(recursive: false).toList().then((entities) {
       final Iterable<File> allImageFiles = entities.whereType<File>();
       for (File imageFile in allImageFiles) {
         int? numberFromDirName = getNumberFromFileSystemEntityName(imageFile);
-        print(numberFromDirName);
+        //print(numberFromDirName);
         if (numberFromDirName != null) {
           if (numberFromDirName >= _pathsToImages.length) {
             _pathsToImages.length = numberFromDirName + 1;
@@ -162,7 +162,7 @@ class Dice {
   }
 
   /// Задать количество граней кубика
-  set numberFaces(int newNumberFaces) {
+  Future<void> setNumberFaces(int newNumberFaces) {
     if (numberFaces != newNumberFaces) {
       for (int i = newNumberFaces; i < _pathsToImages.length; i++) {
         _pathsToImages[i]?.delete();
@@ -170,8 +170,9 @@ class Dice {
       resetLastRandFaceIndex();
       _pathsToImages.length = newNumberFaces;
 
-      _writeSettings();
+      return _writeSettings();
     }
+    return Future(() => null);
   }
 
   /// Получить состояние использования
@@ -180,23 +181,24 @@ class Dice {
   }
 
   /// Задать состояние использования
-  set state(newState) {
+  Future<void> setState(newState) {
     if (_state != newState) {
       _state = newState;
-      _writeSettings();
+      return _writeSettings();
     }
+    return Future(() => null);
   }
 
   /// Инвертировать состояние использования кубика
-  void invertState() {
-    state = !state;
+  Future<void> invertState() {
+    return setState(!state);
   }
 
-  int? get lastRandFaceIndex{
+  int? get lastRandFaceIndex {
     return _lastRandFaceIndex;
   }
 
-  void resetLastRandFaceIndex(){
+  void resetLastRandFaceIndex() {
     _lastRandFaceIndex = null;
   }
 
@@ -210,5 +212,5 @@ class Dice {
 enum _AccordanceSettings {
   numberFaces,
   state,
-  length,       // длина enuma
+  length, // длина enuma
 }

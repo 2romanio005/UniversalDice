@@ -27,6 +27,8 @@ void main() async {
     }
   }
 
+  // TODO здесь нет тестов вызывающих ошибки
+
   test("Создания стандартного кубика creatingNewDice()", () async {
     Database database = await Database.createRand();
     Dice testDice = await createDice(database);

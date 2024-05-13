@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'dart:math';
 
-final Directory testDirDevice = Directory("TestDir/device");
-final Directory testDirGallery = Directory("TestDir/gallery");
+/// не забудь удалить директорию и поменять в .gitignore если меняешь эти переменные
+final Directory testDirDevice = Directory("test/_DirForTesting/device");
+final Directory testDirGallery = Directory("test/_DirForTesting/gallery");
 
 class Database{
   Database._(String name) : dir = Directory("${testDirDevice.path}/$name");

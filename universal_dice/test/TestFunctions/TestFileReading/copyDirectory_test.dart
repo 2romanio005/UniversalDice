@@ -41,7 +41,7 @@ void main() async {
     }
   }
 
-  test("Проверка что начальная директория не изменится при копирование не внутрь неё  ${databaseFrom.dir.path}->${databaseTo.dir.path} copyDirectory()", () async {
+  test("Проверка что начальная директория не изменится при копирование не внутрь неё  ${databaseFrom.dir.path}->${databaseTo.dir.path}", () async {
     await fillDatabaseFrom();
 
     List<FileSystemEntity> oldDirFrom = databaseFrom.dir.listSync(recursive: true);
@@ -54,7 +54,7 @@ void main() async {
     databaseFrom.clear();
   });
 
-  test("Обычное копирование директории ${basename(databaseFrom.dir.path)}->${basename(databaseTo.dir.path)} copyDirectory()", () async {
+  test("Обычное копирование директории ${basename(databaseFrom.dir.path)}->${basename(databaseTo.dir.path)}", () async {
     await fillDatabaseFrom();
 
     await copyDirectory(databaseFrom.dir, databaseTo.dir);
@@ -65,7 +65,7 @@ void main() async {
     databaseFrom.clear();
   });
 
-  test("Копирование директории в неё же ${basename(databaseFrom.dir.path)}->${basename(databaseFrom.dir.path)} copyDirectory()", () async {
+  test("Копирование директории в неё же ${basename(databaseFrom.dir.path)}->${basename(databaseFrom.dir.path)}", () async {
     await fillDatabaseFrom();
 
     List<FileSystemEntity> oldDirFrom = databaseFrom.dir.listSync(recursive: true);
@@ -76,7 +76,7 @@ void main() async {
     databaseFrom.clear();
   });
   
-  test("Копирование директории в её поддиректорию ${basename(databaseFrom.dir.path)}->${basename(databaseFrom.dir.path)}/subDir copyDirectory()", () async {
+  test("Копирование директории в её поддиректорию ${basename(databaseFrom.dir.path)}->${basename(databaseFrom.dir.path)}/subDir", () async {
     await fillDatabaseFrom();
 
     List<FileSystemEntity> oldDirFrom = databaseFrom.dir.listSync(recursive: true);

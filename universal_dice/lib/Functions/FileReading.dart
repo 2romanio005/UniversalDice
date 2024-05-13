@@ -4,7 +4,10 @@ import 'package:path/path.dart';
 /// Получить число из названия файла или директории (всё название должно быть одним числом иначе null)
 int? getNumberFromFileSystemEntityName(FileSystemEntity entity) {
   String name = basename(entity.path);
-  return int.tryParse(name.substring(0, name.lastIndexOf('.')));
+  if(entity is File){
+    name = name.substring(0, name.lastIndexOf('.'));
+  }
+  return int.tryParse(name);
 }
 
 /// Скопировать директорию со всем содержимым в новое место

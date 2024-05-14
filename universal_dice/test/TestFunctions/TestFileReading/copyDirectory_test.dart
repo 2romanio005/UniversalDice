@@ -8,9 +8,9 @@ import 'package:universal_dice/Functions/FileReading.dart';
 
 void main() async {
   Database databaseFrom = await Database.create("from");
-  databaseFrom.clear();
+  await databaseFrom.clear();
   Database databaseTo = await Database.create("to");
-  databaseTo.clear();
+  await databaseTo.clear();
 
   Future<void> fillDatabaseFrom() {
     return Database.create("from").then((databaseFrom) {
@@ -49,8 +49,8 @@ void main() async {
 
     equalsDir(databaseFrom.dir.listSync(recursive: true), oldDirFrom);
 
-    databaseTo.clear();
-    databaseFrom.clear();
+    await databaseTo.clear();
+    await databaseFrom.clear();
   });
 
   test("Обычное копирование директории ${basename(databaseFrom.dir.path)}->${basename(databaseTo.dir.path)}", () async {
@@ -60,8 +60,8 @@ void main() async {
 
     equalsDir(databaseTo.dir.listSync(recursive: true), databaseFrom.dir.listSync(recursive: true));
 
-    databaseTo.clear();
-    databaseFrom.clear();
+    await databaseTo.clear();
+    await databaseFrom.clear();
   });
 
   test("Копирование директории в неё же ${basename(databaseFrom.dir.path)}->${basename(databaseFrom.dir.path)}", () async {
@@ -72,7 +72,7 @@ void main() async {
     await copyDirectory(databaseFrom.dir, databaseFrom.dir);
 
     equalsDir(databaseFrom.dir.listSync(recursive: true), oldDirFrom);
-    databaseFrom.clear();
+    await databaseFrom.clear();
   });
   
   test("Копирование директории в её поддиректорию ${basename(databaseFrom.dir.path)}->${basename(databaseFrom.dir.path)}/subDir", () async {
@@ -85,6 +85,6 @@ void main() async {
     await copyDirectory(databaseFrom.dir, subDir);
 
     equalsDir(subDir.listSync(recursive: true), oldDirFrom);
-    databaseFrom.clear();
+    await databaseFrom.clear();
   });
 }

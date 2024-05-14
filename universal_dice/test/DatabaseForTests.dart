@@ -8,8 +8,8 @@ final Directory testDirGallery = Directory("test/_DirForTesting/gallery");
 class Database{
   Database._(String name) : dir = Directory("${testDirDevice.path}/$name");
 
-  void clear() async {
-    dir.delete(recursive: true);
+  Future<void> clear() {
+    return dir.delete(recursive: true);
   }
 
   static Future<Database> create(String name){

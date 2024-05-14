@@ -24,11 +24,8 @@ void main() async {
   }
 
   Future<DiceGroup> createFillDiceGroup(Database database, int length) {
-    return createDiceGroup(database, 2).then((diceGroup) async {
-      for(int i = 0; i < length; i++){
-        await diceGroup.addStandardDice();
-      }
-      return diceGroup;
+    return createDiceGroup(database, 2).then((diceGroup) {
+      return Future.forEach(List<Future<void> Function()>.generate(length, (index) => diceGroup.addStandardDice), (asyncFoo) => asyncFoo()).then((_) => diceGroup);
     });
   }
 
@@ -46,7 +43,7 @@ void main() async {
     Directory diceDir = await createDiceDirByNumber(database, 0);
     expect(diceGroup.dirThisDiceGroup.path, equals(diceDir.path));
 
-    database.clear();
+    await database.clear();
   });
 
   test("Изменение названия на нормальное setName()", () async {
@@ -57,7 +54,7 @@ void main() async {
 
     expect(diceGroup.name, "Новое имя");
 
-    database.clear();
+    await database.clear();
   });
 
   test("Изменение названия на пустое setName()", () async {
@@ -68,7 +65,7 @@ void main() async {
 
     expect(diceGroup.name, "");
 
-    database.clear();
+    await database.clear();
   });
 
   test("Добавление стандартного кубика", () async {
@@ -80,10 +77,9 @@ void main() async {
 
     expect(diceGroup.length, 1, reason: "Стандартный кубик не обавился так как length не измелилсь");
 
-    database.clear();
+    await database.clear();
   });
 
-  /*
   test("Изменение состояния invertState()", () async {
     Database database = await createDatabase();
     int number = 3;
@@ -100,7 +96,7 @@ void main() async {
       expect(diceGroup[i].state, true, reason: "несовпажает state у кубика номер $i после изменения}");
     }
 
-    database.clear();
+    await database.clear();
   });
 
   test("Изменение состояния setState()", () async {
@@ -126,7 +122,7 @@ void main() async {
       expect(diceGroup[i].state, true, reason: "несовпажает state у кубика номер $i после второго изменения}");
     }
 
-    database.clear();
+    await database.clear();
   });
 
   test("Удаление кубиков removeDiceAt()", () async {
@@ -143,7 +139,19 @@ void main() async {
     expect(res, true, reason: "Удалямый кубик остался");
     expect(diceGroup[1].numberFaces, 6, reason: "Удалямый кубик остался");
 
-    database.clear();
+    await database.clear();
+  });
+
+  test("Создание групы из файлов creatingFromFiles()", () async {
+    Database database = await createDatabase();
+    int number = 3;
+    DiceGroup diceGroupOrigin = await createModifiedDiceGroup(database, number);
+
+    DiceGroup diceGroupNew = await DiceGroup.creatingFromFiles(diceGroupOrigin.dirThisDiceGroup);
+
+    equalsDiceGroup(diceGroupNew, diceGroupOrigin);
+
+    await database.clear();
   });
 
   test("Замена кубиков replaceDiceAt()", () async {
@@ -163,23 +171,9 @@ void main() async {
     expect(diceGroup.length, startNumber, reason: "количество кубиков изменилось");
     expect(diceGroup[1].numberFaces, numberFacesNew, reason: "Заменяемый кубик не изменился");
 
-    database.clear();
-    databaseNewDice.clear();
+    await database.clear();
+    await databaseNewDice.clear();
   });
-
-  test("Создание групы из файлов creatingFromFiles()", () async {
-    Database database = await createDatabase();
-    int number = 3;
-    DiceGroup diceGroupOrigin = await createModifiedDiceGroup(database, number);
-
-    DiceGroup diceGroupNew = await DiceGroup.creatingFromFiles(diceGroupOrigin.dirThisDiceGroup);
-
-    equalsDiceGroup(diceGroupNew, diceGroupOrigin);
-
-    database.clear();
-  });
-
-  */
 
   test("Дублирование кубиков duplicateDice()", () async {
     Database database = await createDatabase();
@@ -193,7 +187,6 @@ void main() async {
 
     expect(diceGroup.length, number + 1, reason: "length не изменился");
     expect(diceGroup[diceGroup.length - 1].numberFaces, numberFacesDuplicate, reason: "кубик не такой же как дублируемый");
-
-    database.clear();
+    await database.clear();
   });
 }

@@ -30,7 +30,7 @@ void main() async {
     expect(testDice.state, false);
     expect(testDice.dirThisDice, database.dir);
 
-    database.clear();
+    await database.clear();
   });
 
   test("Изменения количества граней numberFaces()", () async {
@@ -41,7 +41,7 @@ void main() async {
     expect(testDice.numberFaces, equals(10));
     expect(testDice.lastRandFaceIndex, null);
 
-    database.clear();
+    await database.clear();
   });
 
   test("Изменения состояния invertState()", () async {
@@ -53,7 +53,7 @@ void main() async {
     await testDice.invertState();
     expect(testDice.state, equals(false));
 
-    database.clear();
+    await database.clear();
   });
 
   test("Задать гране изображение setFaceFile()", () async {
@@ -68,7 +68,7 @@ void main() async {
     await testDice.setFaceFile(1);
     expect(testDice.isFaceImage(1), false);
 
-    database.clear();
+    await database.clear();
   });
 
   test("Сгенерировать индекс случайной грани generateRandFaceIndex()", () async {
@@ -92,7 +92,7 @@ void main() async {
     testDice.generateRandFaceIndex();
     expect(testDice.lastRandFaceIndex, -1);
 
-    database.clear();
+    await database.clear();
   });
 
   test("Создания кубика из файлов creatingFromFiles()", () async {
@@ -103,18 +103,20 @@ void main() async {
 
     equalsDice(testDiceTwo, testDice);
 
-    database.clear();
+    await database.clear();
   });
 
   test("Копирование кубика copy()", () async {
     Database database = await Database.createRand();
     Dice testDice = await creatingModifiedDice(database);
 
-    Dice testDiceCopy = await Dice.copy(testDice, Directory("otherPath"));
+    Database databaseCopy = await Database.createRand();
+    Dice testDiceCopy = await Dice.copy(testDice, databaseCopy.dir);
 
     equalsDice(testDiceCopy, testDice);
-    expect(testDiceCopy.dirThisDice.path, "otherPath");
+    expect(testDiceCopy.dirThisDice.path, databaseCopy.dir.path);
 
-    database.clear();
+    await database.clear();
+    await databaseCopy.clear();
   });
 }

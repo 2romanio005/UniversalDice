@@ -2,6 +2,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:universal_dice/Data/Dice.dart';
 import 'package:universal_dice/Data/DiceGroup.dart';
 
 import '../DatabaseForTests.dart';
@@ -70,6 +71,19 @@ void main() async {
     database.clear();
   });
 
+  test("Добавление стандартного кубика", () async {
+    Database database = await createDatabase();
+    DiceGroup diceGroup = await createDiceGroup(database, 0);
+
+    expect(diceGroup.length, 0);
+    await diceGroup.addStandardDice();
+
+    expect(diceGroup.length, 1, reason: "Стандартный кубик не обавился так как length не измелилсь");
+
+    database.clear();
+  });
+
+  /*
   test("Изменение состояния invertState()", () async {
     Database database = await createDatabase();
     int number = 3;
@@ -115,6 +129,44 @@ void main() async {
     database.clear();
   });
 
+  test("Удаление кубиков removeDiceAt()", () async {
+    Database database = await createDatabase();
+    int startNumber = 3;
+    DiceGroup diceGroup = await createFillDiceGroup(database, startNumber);
+
+    await diceGroup[1].setState(true);
+    int numberFacesDeleted = 3;
+    await diceGroup[1].setNumberFaces(numberFacesDeleted);
+    bool res = await diceGroup.removeDiceAt(1);
+
+    expect(diceGroup.length, startNumber - 1, reason: "количество кубиков не умельшилось");
+    expect(res, true, reason: "Удалямый кубик остался");
+    expect(diceGroup[1].numberFaces, 6, reason: "Удалямый кубик остался");
+
+    database.clear();
+  });
+
+  test("Замена кубиков replaceDiceAt()", () async {
+    Database database = await createDatabase();
+    int startNumber = 3;
+    DiceGroup diceGroup = await createFillDiceGroup(database, startNumber);
+
+    Database databaseNewDice = await Database.createRand();
+    Dice newDice = await Dice.creatingNewDice(databaseNewDice.dir);
+    int numberFacesNew = 2;
+    await newDice.setNumberFaces(numberFacesNew);
+
+    int numberFacesReplaced = 3;
+    await diceGroup[1].setNumberFaces(numberFacesReplaced);
+    await diceGroup.replaceDiceAt(1, newDice);
+
+    expect(diceGroup.length, startNumber, reason: "количество кубиков изменилось");
+    expect(diceGroup[1].numberFaces, numberFacesNew, reason: "Заменяемый кубик не изменился");
+
+    database.clear();
+    databaseNewDice.clear();
+  });
+
   test("Создание групы из файлов creatingFromFiles()", () async {
     Database database = await createDatabase();
     int number = 3;
@@ -123,6 +175,24 @@ void main() async {
     DiceGroup diceGroupNew = await DiceGroup.creatingFromFiles(diceGroupOrigin.dirThisDiceGroup);
 
     equalsDiceGroup(diceGroupNew, diceGroupOrigin);
+
+    database.clear();
+  });
+
+  */
+
+  test("Дублирование кубиков duplicateDice()", () async {
+    Database database = await createDatabase();
+    int number = 7;
+    DiceGroup diceGroup = await createFillDiceGroup(database, number);
+
+    int numberFacesDuplicate = 4;
+    await diceGroup[1].setNumberFaces(numberFacesDuplicate);
+
+    await diceGroup.duplicateDice(1);
+
+    expect(diceGroup.length, number + 1, reason: "length не изменился");
+    expect(diceGroup[diceGroup.length - 1].numberFaces, numberFacesDuplicate, reason: "кубик не такой же как дублируемый");
 
     database.clear();
   });

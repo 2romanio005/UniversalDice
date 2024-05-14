@@ -9,16 +9,12 @@ import '../DatabaseForTests.dart';
 import 'equalsData.dart';
 
 void main() async {
-  Future<Database> createDatabase() {
-    return Database.createRand();
-  }
-
-  Future<Directory> createDiceDirByNumber(Database database, int number) {
+  Future<Directory> createDiceGroupDirByNumber(Database database, int number) {
     return Directory("${database.dir.path}/$number").create(recursive: true);
   }
 
   Future<DiceGroup> createDiceGroup(Database database, int number) async {
-    Directory diceDir = await createDiceDirByNumber(database, number);
+    Directory diceDir = await createDiceGroupDirByNumber(database, number);
 
     return DiceGroup.creatingNewDiceGroup(diceDir);
   }
@@ -34,20 +30,20 @@ void main() async {
     return createFillDiceGroup(database, length).then((diceGroup) => diceGroup.removeDiceAt(0).then((_) => diceGroup.addStandardDice().then((_) => diceGroup)));
   }
 
-  test("Создание стандартной группы creatingNewDiceGroup()", () async {
-    Database database = await createDatabase();
+  test("Создание стандартной группы DiceGroup.creatingNewDiceGroup()", () async {
+    Database database = await Database.createRand();
     DiceGroup diceGroup = await createDiceGroup(database, 0);
 
     expect(diceGroup.length, 0);
     expect(diceGroup.name, "Группа 1");
-    Directory diceDir = await createDiceDirByNumber(database, 0);
+    Directory diceDir = await createDiceGroupDirByNumber(database, 0);
     expect(diceGroup.dirThisDiceGroup.path, equals(diceDir.path));
 
     await database.clear();
   });
 
-  test("Изменение названия на нормальное setName()", () async {
-    Database database = await createDatabase();
+  test("Изменение названия на нормальное DiceGroup.setName()", () async {
+    Database database = await Database.createRand();
     DiceGroup diceGroup = await createDiceGroup(database, 0);
 
     await diceGroup.setName("Новое имя");
@@ -57,8 +53,8 @@ void main() async {
     await database.clear();
   });
 
-  test("Изменение названия на пустое setName()", () async {
-    Database database = await createDatabase();
+  test("Изменение названия на пустое DiceGroup.setName()", () async {
+    Database database = await Database.createRand();
     DiceGroup diceGroup = await createDiceGroup(database, 0);
 
     await diceGroup.setName("");
@@ -68,8 +64,8 @@ void main() async {
     await database.clear();
   });
 
-  test("Добавление стандартного кубика", () async {
-    Database database = await createDatabase();
+  test("Добавление стандартного кубик DiceGroup.addStandardDice", () async {
+    Database database = await Database.createRand();
     DiceGroup diceGroup = await createDiceGroup(database, 0);
 
     expect(diceGroup.length, 0);
@@ -80,8 +76,8 @@ void main() async {
     await database.clear();
   });
 
-  test("Изменение состояния invertState()", () async {
-    Database database = await createDatabase();
+  test("Изменение состояния DiceGroup.invertState()", () async {
+    Database database = await Database.createRand();
     int number = 3;
     DiceGroup diceGroup = await createFillDiceGroup(database, number);
 
@@ -99,8 +95,8 @@ void main() async {
     await database.clear();
   });
 
-  test("Изменение состояния setState()", () async {
-    Database database = await createDatabase();
+  test("Изменение состояния DiceGroup.setState()", () async {
+    Database database = await Database.createRand();
 
     int number = 3;
     DiceGroup diceGroup = await createFillDiceGroup(database, number);
@@ -125,8 +121,8 @@ void main() async {
     await database.clear();
   });
 
-  test("Удаление кубиков removeDiceAt()", () async {
-    Database database = await createDatabase();
+  test("Удаление кубиков DiceGroup.removeDiceAt()", () async {
+    Database database = await Database.createRand();
     int startNumber = 3;
     DiceGroup diceGroup = await createFillDiceGroup(database, startNumber);
 
@@ -142,8 +138,8 @@ void main() async {
     await database.clear();
   });
 
-  test("Создание групы из файлов creatingFromFiles()", () async {
-    Database database = await createDatabase();
+  test("Создание групы из файлов DiceGroup.creatingFromFiles()", () async {
+    Database database = await Database.createRand();
     int number = 3;
     DiceGroup diceGroupOrigin = await createModifiedDiceGroup(database, number);
 
@@ -154,8 +150,8 @@ void main() async {
     await database.clear();
   });
 
-  test("Замена кубиков replaceDiceAt()", () async {
-    Database database = await createDatabase();
+  test("Замена кубиков DiceGroup.replaceDiceAt()", () async {
+    Database database = await Database.createRand();
     int startNumber = 3;
     DiceGroup diceGroup = await createFillDiceGroup(database, startNumber);
 
@@ -175,8 +171,8 @@ void main() async {
     await databaseNewDice.clear();
   });
 
-  test("Дублирование кубиков duplicateDice()", () async {
-    Database database = await createDatabase();
+  test("Дублирование кубиков DiceGroup.duplicateDice()", () async {
+    Database database = await Database.createRand();
     int number = 7;
     DiceGroup diceGroup = await createFillDiceGroup(database, number);
 
@@ -188,5 +184,33 @@ void main() async {
     expect(diceGroup.length, number + 1, reason: "length не изменился");
     expect(diceGroup[diceGroup.length - 1].numberFaces, numberFacesDuplicate, reason: "кубик не такой же как дублируемый");
     await database.clear();
+  });
+
+  test("Получить список всех активных кубиков get DiceGroup.allSelectedDice", () async {
+    Database database = await Database.createRand();
+    DiceGroup diceGroup = await createModifiedDiceGroup(database, 4);
+
+    int numberTes = 0;
+    Future<void> checkSelectedDice(List<int> list) async {
+      await diceGroup.setState(false);
+      for (int index in list) {
+        await diceGroup[index].setState(true);
+      }
+      List<Dice> selectedDice = diceGroup.allSelectedDice;
+
+      expect(selectedDice.length, list.length, reason: "length не совпадают. Возможно были выбраны не все активные кубики в подтесте номер $numberTes");
+
+      int i = 0;
+      for (int index in list) {
+        expect(selectedDice[i].dirThisDice.path, diceGroup[index].dirThisDice.path, reason: "Выбранны кубики, которые не были активными. Не был активным кубик норме $index в подтесте номер $numberTes");
+        i++;
+      }
+      numberTes++;
+    }
+
+    await checkSelectedDice([0, 1, 3]);
+    await checkSelectedDice([1, 2]);
+
+    database.clear();
   });
 }

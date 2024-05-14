@@ -18,21 +18,20 @@ class DiceGroupList {
     DiceGroupList resultDiceGroupList = DiceGroupList._(dirThisDiceGroupList);
     return Future.wait([
       resultDiceGroupList._readDiceGroupList(),
-    ]).then((_) {
+    ]).then((_) async {
       if (resultDiceGroupList.length == 0) {
         // добавление стандартной группы если ни одного кубика не существует
-        resultDiceGroupList.addNewDiceGroup().then((value) {
-          return resultDiceGroupList[0].setName("Стандартная группа").then((_) => Future.wait([
-                resultDiceGroupList[0].addStandardDice(),
-                resultDiceGroupList[0].addStandardDice(),
-                resultDiceGroupList[0].addStandardDice(),
-              ]).then((value) {
-                Future.wait([
-                  resultDiceGroupList[0][0].setNumberFaces(2),
-                  resultDiceGroupList[0][2].setNumberFaces(10),
-                ]).then((_) => resultDiceGroupList);
-              }));
-        });
+        await resultDiceGroupList.addNewDiceGroup();
+
+        await resultDiceGroupList[0].addStandardDice();
+        await resultDiceGroupList[0].addStandardDice();
+        await resultDiceGroupList[0].addStandardDice();
+
+        return Future.wait([
+          resultDiceGroupList[0].setName("Стандартная группа"),
+          resultDiceGroupList[0][0].setNumberFaces(2),
+          resultDiceGroupList[0][2].setNumberFaces(10),
+        ]).then((value) => resultDiceGroupList);
       }
 
       return resultDiceGroupList;
@@ -85,11 +84,10 @@ class DiceGroupList {
 
   /// Добавление в конец списка пустой группы
   Future<DiceGroup> addNewDiceGroup() {
-    print("1");
     return _getDirNewDiceGroup().create().then((dir) => DiceGroup.creatingNewDiceGroup(dir).then(
           (diceGroup) {
             _diceGroupList.add(diceGroup);
-            return diceGroup;
+            return _diceGroupList.last;
           },
         ));
   }

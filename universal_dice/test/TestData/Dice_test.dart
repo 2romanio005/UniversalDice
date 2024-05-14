@@ -1,10 +1,10 @@
-import '../DatabaseForTests.dart';
-
-
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:universal_dice/Data/Dice.dart';
+
+import '../DatabaseForTests.dart';
+import 'equalsData.dart';
 
 void main() async {
   final File image = File("${testDirGallery.path}/image_1.jpg");
@@ -15,17 +15,10 @@ void main() async {
   }
 
   Future<Dice> creatingModifiedDice(Database database) {
-    return Dice.creatingNewDice(database.dir).then((testDice) => testDice.setNumberFaces(5).then((value) => testDice.setState(true).then((_) => testDice.setFaceFile(1, image).then((_) => testDice))));
+    return createDice(database).then((testDice) => testDice.setNumberFaces(5).then((_) => testDice.setState(true).then((_) => testDice.setFaceFile(1, image).then((_) => testDice))));
   }
 
-  void equalsDice(Dice actual, Dice expected) {
-    expect(actual.numberFaces, expected.numberFaces, reason: "разное numberFaces");
-    expect(actual.state, expected.state, reason: "разные state");
 
-    for (int i = 0; i < actual.numberFaces; i++) {
-      expect(actual.isFaceImage(i), expected.isFaceImage(i), reason: "не совпало isFaceImage($i)");
-    }
-  }
 
   // TODO здесь нет тестов вызывающих ошибки
 

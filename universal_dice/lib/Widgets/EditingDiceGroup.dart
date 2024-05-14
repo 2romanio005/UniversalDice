@@ -8,7 +8,7 @@ Future<bool> showEditingDiceGroup(BuildContext context, DiceGroup diceGroup) {
   final controller = TextEditingController();
   controller.text = diceGroup.name;
 
-  void functionOK() => diceGroup.name = controller.text == "" ? "Пусто" : controller.text;
+  Future<void> functionOK() { return diceGroup.setName(controller.text == "" ? "Пусто" : controller.text);}
   void functionOFF() {}
 
   return showDialog<bool?>(

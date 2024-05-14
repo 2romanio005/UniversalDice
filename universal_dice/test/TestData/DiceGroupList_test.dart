@@ -4,6 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:universal_dice/Data/DiceGroupList.dart';
 
+import '../DatabaseForTests.dart';
+import 'equalsData.dart';
+
 void main() async {
   //TestWidgetsFlutterBinding.ensureInitialized();
 

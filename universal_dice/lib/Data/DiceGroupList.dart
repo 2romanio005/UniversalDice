@@ -21,21 +21,17 @@ class DiceGroupList {
     ]).then((_) {
       if (resultDiceGroupList.length == 0) {
         // добавление стандартной группы если ни одного кубика не существует
-        print("adding standart");
         resultDiceGroupList.addNewDiceGroup().then((value) {
-          resultDiceGroupList[0].name = "Стандартная группа";
-          print("added");
-
-          return Future.wait([
-            resultDiceGroupList[0].addStandardDice(),
-            resultDiceGroupList[0].addStandardDice(),
-            resultDiceGroupList[0].addStandardDice(),
-          ]).then((value) {
-            Future.wait([
-              resultDiceGroupList[0][0].setNumberFaces(2),
-              resultDiceGroupList[0][2].setNumberFaces(10),
-            ]).then((value) => resultDiceGroupList);
-          });
+          return resultDiceGroupList[0].setName("Стандартная группа").then((_) => Future.wait([
+                resultDiceGroupList[0].addStandardDice(),
+                resultDiceGroupList[0].addStandardDice(),
+                resultDiceGroupList[0].addStandardDice(),
+              ]).then((value) {
+                Future.wait([
+                  resultDiceGroupList[0][0].setNumberFaces(2),
+                  resultDiceGroupList[0][2].setNumberFaces(10),
+                ]).then((_) => resultDiceGroupList);
+              }));
         });
       }
 

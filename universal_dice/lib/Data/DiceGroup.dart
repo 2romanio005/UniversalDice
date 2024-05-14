@@ -170,11 +170,12 @@ class DiceGroup {
   }
 
   /// Установить новое имя с записью вв файл
-  set name(String newName) {
+  Future<void> setName(String newName) {
     if (_name != newName) {
       _name = newName;
-      _writeSettings();
+      return _writeSettings();
     }
+    return Future(() => null);
   }
 
   /// Узнать состояние использования группы. Если хоть один выбран то группа считается тоже выбранной
@@ -188,16 +189,13 @@ class DiceGroup {
   }
 
   /// Изменить состояние использования всех кубиков в группе
-  /// FIXME сделать метод Future
-  set state(bool newState) {
-    for (Dice dice in _diceList) {
-      dice.setState(newState);
-    }
+  Future<void> setState(bool newState) {
+    return Future.wait(List<Future<void>>.generate(_diceList.length, (index) => _diceList[index].setState(newState)));
   }
 
   /// Инвертировать состояние всей группы
-  void invertState() {
-    state = !state;
+  Future<void> invertState() {
+    return setState(!state);
   }
 
   late List<Dice> _diceList; // список всех кубиков

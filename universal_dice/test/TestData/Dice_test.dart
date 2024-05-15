@@ -18,8 +18,6 @@ void main() async {
     return createDice(database).then((testDice) => testDice.setNumberFaces(5).then((_) => testDice.setState(true).then((_) => testDice.setFaceFile(1, image).then((_) => testDice))));
   }
 
-
-
   // TODO здесь нет тестов вызывающих ошибки
 
   test("Создания стандартного кубика creatingNewDice()", () async {

@@ -10,25 +10,23 @@ void main() async {
   File fileWindows = File("path\\1.jpg");
   File fileNull = File("path/abc.jpg");
 
-  test ("Получение числа из имени на файле '${file.path}'", () async {
+  test("Получение числа из имени на файле '${file.path}'", () async {
     expect(getNumberFromFileSystemEntityName(file), equals(1));
   });
 
-  test ("Получение числа из имени на файле windows '${fileWindows.path}'", () async {
+  test("Получение числа из имени на файле windows '${fileWindows.path}'", () async {
     expect(getNumberFromFileSystemEntityName(fileWindows), 1);
   });
 
-  test ("Получение числа из имени на файле без цифры '${fileNull.path}'", () async {
+  test("Получение числа из имени на файле без цифры '${fileNull.path}'", () async {
     expect(getNumberFromFileSystemEntityName(fileNull), null);
   });
 
-  test ("Получение числа из имени на директории '${dir.path}'", () async {
+  test("Получение числа из имени на директории '${dir.path}'", () async {
     expect(getNumberFromFileSystemEntityName(dir), 1);
   });
 
-
-  test ("Получение числа из имени на директории без цифры '${dirNull.path}'", () async {
+  test("Получение числа из имени на директории без цифры '${dirNull.path}'", () async {
     expect(getNumberFromFileSystemEntityName(dirNull), null);
   });
 }
-

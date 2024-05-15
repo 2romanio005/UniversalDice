@@ -74,7 +74,7 @@ void main() async {
     equalsDir(databaseFrom.dir.listSync(recursive: true), oldDirFrom);
     await databaseFrom.clear();
   });
-  
+
   test("Копирование директории в её поддиректорию ${basename(databaseFrom.dir.path)}->${basename(databaseFrom.dir.path)}/subDir", () async {
     await fillDatabaseFrom();
 

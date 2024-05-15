@@ -1,11 +1,6 @@
-import 'dart:math';
-
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:universal_dice/Data/Dice.dart';
-import 'package:universal_dice/Data/DiceGroup.dart';
 import 'package:universal_dice/Data/DiceGroupList.dart';
 
 import '../DatabaseForTests.dart';

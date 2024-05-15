@@ -43,6 +43,8 @@ void main() {
     }
 
     await tester.pumpWidget(const MyApp());
+    int numberDiceGroup = 1;
+    int numberDice = 3;
 
     /// тестирование работоспособности экрана загрузки кубиков
     expect(find.text("Загрузка кубиков..."), findsOneWidget, reason: "Надпись 'Загрузка кубиков...' не появилась или загрузка прошла слишком быстро");
@@ -65,10 +67,16 @@ void main() {
 
       /// тестирование взаимодействия с группой
       {
-        await tapButton(find.byIcon(iconButtonModeDiceGroup));
+        /// тестирование добавления новой группы
+        {
+          await tapButton(find.byIcon(iconButtonAddDiceGroup).last);
+          numberDiceGroup++;
+          expect(find.byIcon(iconButtonModeDiceGroup), findsNWidgets(numberDiceGroup), reason: "Не добавилась новая группа");
+        }
 
         /// тестирование кнопки редактировать группу
         {
+          await tapButton(find.byIcon(iconButtonModeDiceGroup).first);
           final buttonEditDiceGroup = find.byIcon(iconButtonEditDiceGroup);
           expect(buttonEditDiceGroup, findsOne, reason: "Не отображается иконка редактирования группы");
 
@@ -117,22 +125,22 @@ void main() {
           }
         }
 
-        await tapButton(find.byIcon(iconButtonModeDiceGroup));
-
         /// тестирование кнопки дублирования группы
         {
+          await tapButton(find.byIcon(iconButtonModeDiceGroup).first);
           final buttonDuplicateDiceGroup = find.byIcon(iconButtonDuplicateDiceGroup);
           expect(buttonDuplicateDiceGroup, findsOne, reason: "Не отображается иконка дублирования группы");
 
           await tapButton(buttonDuplicateDiceGroup);
-          expect(find.text("Название 2"), findsNWidgets(2), reason: "Группа не дублировалась");
+          numberDiceGroup++;
+          expect(find.byIcon(iconButtonModeDiceGroup), findsNWidgets(numberDiceGroup), reason: "Группа не дублировалась");
+          expect(find.text("Название 2"), findsNWidgets(2), reason: "Дублировалась не та группа");
           //expect(find.byIcon(iconButtonModeDice), findsNWidgets(3), reason: "Группа добавилась свёрнутой или iconButtonModeDice не отображаются");
         }
 
-        await tapButton(find.byIcon(iconButtonModeDiceGroup).last);
-
         /// тестирование кнопки удаления группы
         {
+          await tapButton(find.byIcon(iconButtonModeDiceGroup).first);
           final buttonDeleteDiceGroup = find.byIcon(iconButtonDeleteDiceGroup);
           expect(buttonDeleteDiceGroup, findsOne, reason: "Не отображается иконка удаления группы");
 
@@ -150,7 +158,8 @@ void main() {
               expect(buttonCancel, findsOne, reason: "Нет надписи 'Отмена' в окне подтверждения удаления группы");
 
               await tapButton(buttonCancel);
-              expect(find.text("Название 2"), findsNWidgets(2), reason: "Группа удалилась после 'Отмена'");
+              expect(find.byIcon(iconButtonModeDiceGroup), findsNWidgets(numberDiceGroup), reason: "Группа удалилась после 'Отмена'");
+              expect(find.text("Название 2"), findsNWidgets(2), reason: "Что то странное после 'Отмена'");
               expect(buttonDeleteDiceGroup, findsOne, reason: "Окошко с выбором действий для группы пропало после кнопки 'Отмена'");
             }
 
@@ -162,20 +171,17 @@ void main() {
               expect(buttonDelete, findsOne, reason: "Нет надписи 'Удалить группу' в окне подтверждения удаления группы");
 
               await tapButton(buttonDelete);
-              expect(find.text("Название 2"), findsOne, reason: "Группа не удалилась после 'Удалить группу'");
+              numberDiceGroup--;
+              expect(find.byIcon(iconButtonModeDiceGroup), findsNWidgets(numberDiceGroup), reason: "Группа не удалилась после 'Удалить группу'");
+              expect(find.text("Название 2"), findsNWidgets(1), reason: "Удалилась не та группа после 'Удалить группу'");
               expect(buttonDeleteDiceGroup, findsNothing, reason: "Окошко с выбором действий для группы осталось после кнопки 'Удалить группу'");
             }
           }
-        }
 
-        /// тестирование добавления новой группы
-        {
-          await tapButton(find.byIcon(iconButtonAddDiceGroup).last);
-          expect(find.byIcon(iconButtonModeDiceGroup), findsNWidgets(2), reason: "Не добавилась новая группа");
-
-          await tapButton(find.byIcon(iconButtonModeDiceGroup).last);
+          await tapButton(find.byIcon(iconButtonModeDiceGroup).first);
           await tapButton(find.byIcon(iconButtonDeleteDiceGroup));
           await tapButton(find.text("Удалить группу"));
+          numberDiceGroup--;
           expect(find.byIcon(iconButtonModeDiceGroup), findsOne, reason: "Не удалилась добавленная группа");
         }
 
@@ -184,36 +190,43 @@ void main() {
           final oneDiceGroup = find.text("Название 2");
           await tapButton(oneDiceGroup);
           // TODO я не знаю как это протестировать. Виджеты не пропадают при сворачивании их всё ещё можно find даже в закрытом состояние
-          expect(find.byIcon(iconButtonModeDice), findsNWidgets(3), reason: "Группа не развернулась или iconButtonModeDice не отображаются"); // FIXME этот тест проходит всегад
+          expect(find.byIcon(iconButtonModeDice), findsNWidgets(numberDice), reason: "Группа не развернулась или iconButtonModeDice не отображаются"); // FIXME этот тест проходит всегад
 
           await tapButton(oneDiceGroup);
           //expect(find.byIcon(iconButtonModeDice), findsNothing, reason: "Группа не свернулась");      // FIXME этот тест не проходит никогда
-
-          await tapButton(oneDiceGroup);
         }
 
         ///тестирование активирования и деактивирования всей группы
         {
           final buttonActive = find.byIcon(iconRadioButtonChecked);
           final buttonDeactive = find.byIcon(iconRadioButtonUnchecked);
-          expect(buttonDeactive, findsNWidgets(4), reason: "В единственной группе не 3 кубика");
+          expect(buttonDeactive, findsNWidgets(numberDiceGroup + numberDice), reason: "На экране не 4 кнопки активации");
 
           await tapButton(buttonDeactive.first);
-          expect(buttonActive, findsNWidgets(4), reason: "Не активировалась группа");
+          expect(buttonActive, findsNWidgets(numberDiceGroup + numberDice), reason: "Не активировалась группа");
 
           await tapButton(buttonActive.first);
-          expect(buttonDeactive, findsNWidgets(4), reason: "Не деактивировалась группа");
+          expect(buttonDeactive, findsNWidgets(numberDiceGroup + numberDice), reason: "Не деактивировалась группа");
         }
       }
+
+      ///
+      ///
+      ///
+      ///
+      ///
+      ///
+      ///
+      ///
 
       /// тестирование взаимодействия с кубиком
       {
         final buttonModeDice = find.byIcon(iconButtonModeDice);
 
-        await tapButton(buttonModeDice.first);
-
         /// тестирование кнопки редактирования кубика
         {
+          await tapButton(buttonModeDice.first);
+
           final buttonEditDice = find.byIcon(iconButtonEditDice);
           expect(buttonEditDice, findsOne, reason: "Не отображается иконка редактирования кубика");
 
@@ -263,21 +276,21 @@ void main() {
           }
         }
 
-        await tapButton(buttonModeDice.first);
-
         /// тестирование кнопки дублирования кубика
         {
+          await tapButton(buttonModeDice.first);
           final buttonDuplicateDice = find.byIcon(iconButtonDuplicateDice);
           expect(buttonDuplicateDice, findsOne, reason: "Не отображается иконка дублирования кубика");
 
           await tapButton(buttonDuplicateDice);
-          expect(find.text("8"), findsNWidgets(2), reason: "Кубик не дублировался");
+          numberDice++;
+          expect(find.byIcon(iconButtonModeDice), findsNWidgets(numberDice), reason: "Кубик не дублировался");
+          expect(find.text("8"), findsNWidgets(2), reason: "Дублировался другой кубик");
         }
-
-        await tapButton(buttonModeDice.first);
 
         /// тестирование кнопки удаления кубика
         {
+          await tapButton(buttonModeDice.first);
           final buttonDeleteDice = find.byIcon(iconButtonDeleteDice);
           expect(buttonDeleteDice, findsOne, reason: "Не отображается иконка удаления кубика");
 
@@ -293,7 +306,7 @@ void main() {
             expect(buttonCancel, findsOne, reason: "Нет надписи 'Отмена' в окне подтверждения удаления кубика");
 
             await tapButton(buttonCancel);
-            expect(find.text("8"), findsNWidgets(2), reason: "Кубик удалился после 'Отмена'");
+            expect(find.byIcon(iconButtonModeDice), findsNWidgets(numberDice), reason: "Кубик удалился после 'Отмена'");
             expect(buttonDeleteDice, findsOne, reason: "Окошко с выбором действий для кубика пропало после кнопки 'Отмена'");
           }
 
@@ -305,43 +318,46 @@ void main() {
             expect(buttonDelete, findsOne, reason: "Нет надписи 'Удалить кубик' в окне подтверждения удаления кубика");
 
             await tapButton(buttonDelete);
-            expect(find.text("8"), findsOne, reason: "Кубик не удалился после 'Удалить кубик'");
+            numberDice--;
+            expect(find.byIcon(iconButtonModeDice), findsNWidgets(numberDice), reason: "Кубик не удалился после 'Удалить кубик'");
             expect(buttonDeleteDice, findsNothing, reason: "Окошко с выбором действий для кубика осталось после кнопки 'Удалить кубик'");
           }
+
+          await tapButton(find.byIcon(iconButtonModeDice).at(1));
+          await tapButton(find.byIcon(iconButtonDeleteDice));
+          await tapButton(find.text("Удалить кубик"));
+          numberDice--;
+          expect(find.byIcon(iconButtonModeDice), findsNWidgets(numberDice), reason: "Не удалился кубик из центра");
         }
 
         /// тестирование добавления нового кубика
         {
           await tapButton(find.byIcon(iconButtonAddDice).last);
-          expect(find.byIcon(iconButtonModeDice), findsNWidgets(4), reason: "Не добавился новый кубик");
+          numberDice++;
+          expect(find.byIcon(iconButtonModeDice), findsNWidgets(numberDice), reason: "Не добавился новый кубик");
         }
 
         /// тестирование активирования и деактивирования кубика
         {
           final buttonActive = find.byIcon(iconRadioButtonChecked);
           final buttonDeactive = find.byIcon(iconRadioButtonUnchecked);
-          expect(buttonDeactive, findsNWidgets(5), reason: "В единственной группе не 4 кубика");
+          expect(buttonDeactive, findsNWidgets(numberDiceGroup + numberDice), reason: "В единственной группе не 4 кубика");
 
           await tapButton(buttonDeactive.last);
-          expect(buttonActive, findsNWidgets(2), reason: "Не появились активированные кубики 2"); // +1 за группу
-          expect(buttonDeactive, findsNWidgets(3), reason: "Не исчезли деактивированные кубики 3"); // -1 за группу
+          expect(buttonActive, findsNWidgets(numberDiceGroup + 1), reason: "Не появились активированные кубики 2"); // +1 за группу
+          expect(buttonDeactive, findsNWidgets(numberDice - 1), reason: "Не исчезли деактивированные кубики 3"); // -1 за группу
 
           await tapButton(buttonDeactive.last);
-          expect(buttonActive, findsNWidgets(3), reason: "Не появились активированные кубики 3"); // +1 за группу
-          expect(buttonDeactive, findsNWidgets(2), reason: "Не исчезли деактивированные кубики 2"); // -1 за группу
+          expect(buttonActive, findsNWidgets(numberDiceGroup + 2), reason: "Не появились активированные кубики 3"); // +1 за группу
+          expect(buttonDeactive, findsNWidgets(numberDice - 2), reason: "Не исчезли деактивированные кубики 2"); // -1 за группу
 
           await tapButton(buttonActive.first);
-          expect(buttonDeactive, findsNWidgets(5), reason: "Не появились деактивированные кубики 5"); // +1 за группу
+          expect(buttonDeactive, findsNWidgets(numberDiceGroup + numberDice), reason: "Не появились деактивированные кубики 5"); // +1 за группу
           expect(buttonActive, findsNothing, reason: "Не пропали активированные кубики 0");
         }
 
         /// тестирование редактирования граней кубика
         {
-          await tapButton(find.byIcon(iconButtonModeDice).at(1));
-          await tapButton(find.byIcon(iconButtonDeleteDice));
-          await tapButton(find.text("Удалить кубик"));
-          expect(find.byIcon(iconButtonModeDice), findsNWidgets(3), reason: "Не удалился кубик из центра");
-
           await tapButton(find.byIcon(iconButtonModeDice).at(1));
           await tapButton(find.byIcon(iconButtonEditDice));
           await tapButton(find.text("1").last);

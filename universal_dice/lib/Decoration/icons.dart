@@ -8,11 +8,11 @@ const IconData iconRadioButtonUnchecked = Icons.radio_button_unchecked;
 const IconData iconButtonModeDiceGroup = Icons.more_horiz;
 const IconData iconButtonModeDice = Icons.more_vert;
 
-const IconData iconButtonDuplicateDiceGroup = Icons.double_arrow;
-const IconData iconButtonDuplicateDice = Icons.keyboard_double_arrow_down;
-
 const IconData iconButtonEditDiceGroup = Icons.edit;
 const IconData iconButtonEditDice = Icons.edit_outlined;
+
+const IconData iconButtonDuplicateDiceGroup = Icons.double_arrow;
+const IconData iconButtonDuplicateDice = Icons.keyboard_double_arrow_down;
 
 const IconData iconButtonDeleteDiceGroup = Icons.delete;
 const IconData iconButtonDeleteDice = Icons.delete_outline;

@@ -128,7 +128,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                                     canTapOnHeader: true,
                                     isExpanded: displayedFaces,
                                     headerBuilder: (BuildContext context, bool isExpanded) {
-                                      return const Text("Изменить изображения на гранях");
+                                      return const Text("Нажмите на грань, чтобы выбрать для неё изображение");
                                     },
                                     body: Column(
                                       children: List<Widget>.generate(

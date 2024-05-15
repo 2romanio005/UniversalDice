@@ -265,7 +265,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                               context: context,
                               titleText: 'Удалить кубик?',
                               contentText: "Кубик с ${dice.numberFaces} гранями будет удалён.",
-                              textOK: 'Удалить',
+                              textOK: 'Удалить кубик',
                               textOFF: 'Отмена',
                               functionOK: () {
                                 diceGroup.removeDiceAt(index).then((state) {

@@ -79,7 +79,7 @@ class _HomePageView extends State<HomePageView> with TickerProviderStateMixin {
         ? const Padding(
             padding: EdgeInsets.fromLTRB(padding, 100, padding, 0),
             child: Text(
-              "Выберите какие кубики кидать, нажав на кнопку в верхнем углу или свапнув вбок.",
+              "Добро пожаловать! Выберите какие кубики кидать, нажав на кнопку в верхнем углу или свапнув вбок.",
               textAlign: TextAlign.center,
             ),
           )

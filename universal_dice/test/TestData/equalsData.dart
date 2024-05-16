@@ -23,7 +23,7 @@ bool equalsDiceGroup(DiceGroup actual, DiceGroup expected) {
   for (int i = 0; i < actual.length; i++) {
     bool res = equalsDice(actual[i], expected[i]);
     if (res) {
-      expect(res, true, reason: "не совпал кубик номаре $i");
+      expect(res, true, reason: "не совпал кубик номер $i");
       return false;
     }
   }

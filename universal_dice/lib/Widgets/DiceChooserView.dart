@@ -264,7 +264,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                           showConfirmationBox(
                               context: context,
                               titleText: 'Удалить игральную кость?',
-                              contentText: "Игральная кость с ${dice.numberFaces} гранями будет удалёна.",
+                              contentText: "Игральная кость с ${dice.numberFaces} гранями будет удалена.",
                               textOK: 'Удалить игральную кость',
                               textOFF: 'Отмена',
                               functionOK: () {

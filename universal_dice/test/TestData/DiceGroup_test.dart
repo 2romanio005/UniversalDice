@@ -70,7 +70,7 @@ void main() async {
     expect(diceGroup.length, 0);
     await diceGroup.addStandardDice();
 
-    expect(diceGroup.length, 1, reason: "Стандартный кубик не обавился так как length не измелилсь");
+    expect(diceGroup.length, 1, reason: "Стандартный кубик не добавился так как length не изменился");
 
     await database.clear();
   });
@@ -82,13 +82,13 @@ void main() async {
 
     expect(diceGroup.length, number);
     for (int i = 0; i < number; i++) {
-      expect(diceGroup[i].state, false, reason: "несовпажает state у кубика номер $i перед изменением}");
+      expect(diceGroup[i].state, false, reason: "не совпадает state у кубика номер $i перед изменением}");
     }
 
     await diceGroup.invertState();
 
     for (int i = 0; i < number; i++) {
-      expect(diceGroup[i].state, true, reason: "несовпажает state у кубика номер $i после изменения}");
+      expect(diceGroup[i].state, true, reason: "не совпадает state у кубика номер $i после изменения}");
     }
 
     await database.clear();
@@ -102,19 +102,19 @@ void main() async {
 
     expect(diceGroup.length, number);
     for (int i = 0; i < number; i++) {
-      expect(diceGroup[i].state, false, reason: "несовпажает state у кубика номер $i перед изменением}");
+      expect(diceGroup[i].state, false, reason: "не совпадает state у кубика номер $i перед изменением}");
     }
 
     await diceGroup.setState(true);
 
     for (int i = 0; i < number; i++) {
-      expect(diceGroup[i].state, true, reason: "несовпажает state у кубика номер $i после изменения}");
+      expect(diceGroup[i].state, true, reason: "не совпадает state у кубика номер $i после изменения}");
     }
 
     await diceGroup.setState(true);
 
     for (int i = 0; i < number; i++) {
-      expect(diceGroup[i].state, true, reason: "несовпажает state у кубика номер $i после второго изменения}");
+      expect(diceGroup[i].state, true, reason: "не совпадает state у кубика номер $i после второго изменения}");
     }
 
     await database.clear();
@@ -130,14 +130,14 @@ void main() async {
     await diceGroup[1].setNumberFaces(numberFacesDeleted);
     bool res = await diceGroup.removeDiceAt(1);
 
-    expect(diceGroup.length, startNumber - 1, reason: "количество кубиков не умельшилось");
-    expect(res, true, reason: "Удалямый кубик остался");
-    expect(diceGroup[1].numberFaces, 6, reason: "Удалямый кубик остался");
+    expect(diceGroup.length, startNumber - 1, reason: "количество кубиков не уменьшилось");
+    expect(res, true, reason: "Удаляемый кубик остался");
+    expect(diceGroup[1].numberFaces, 6, reason: "Удаляемый кубик остался");
 
     await database.clear();
   });
 
-  test("Создание групы из файлов DiceGroup.creatingFromFiles()", () async {
+  test("Создание группы из файлов DiceGroup.creatingFromFiles()", () async {
     Database database = await Database.createRand();
     int number = 3;
     DiceGroup diceGroupOrigin = await createModifiedDiceGroup(database, number);
@@ -201,7 +201,7 @@ void main() async {
 
       int i = 0;
       for (int index in list) {
-        expect(selectedDice[i].dirThisDice.path, diceGroup[index].dirThisDice.path, reason: "Выбранны кубики, которые не были активными. Не был активным кубик норме $index в подтесте номер $numberTes");
+        expect(selectedDice[i].dirThisDice.path, diceGroup[index].dirThisDice.path, reason: "Выбраны кубики, которые не были активными. Не был активным кубик норме $index в подтесте номер $numberTes");
         i++;
       }
       numberTes++;

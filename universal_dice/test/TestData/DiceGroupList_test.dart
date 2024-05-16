@@ -138,8 +138,8 @@ void main() async {
       int i = 0;
       for (int index in list) {
         expect(selectedDiceGroup[i].diceGroup.dirThisDiceGroup.path, testDiceGroupList[index].dirThisDiceGroup.path,
-            reason: "Выбранны группы, которые не были активными. Не был активным группа норме $index в подтесте номер $numberTes");
-        expect(selectedDiceGroup[i].allDice.length, 1, reason: "В выбранной группе оказалсь не столько же выбранных кубиков сколько активных");
+            reason: "Выбраны группы, которые не были активными. Не был активным группа норме $index в подтесте номер $numberTes");
+        expect(selectedDiceGroup[i].allDice.length, 1, reason: "В выбранной группе оказалось не столько же выбранных кубиков сколько активных");
         i++;
       }
       numberTes++;

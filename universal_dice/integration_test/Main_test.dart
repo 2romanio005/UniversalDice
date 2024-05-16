@@ -1,10 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 import 'package:integration_test/integration_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -53,7 +47,7 @@ void main() {
 
     /// тестирование начального экрана
     expect(find.text("Универсальные игральные кости"), findsOneWidget, reason: "Не отображается название");
-    expect(find.text("Добро пожаловать! Выберите какие кубики кидать, нажав на кнопку в верхнем углу или свапнув вбок."), findsOneWidget,
+    expect(find.text("Добро пожаловать! Выберите какие игральные кости кидать, нажав на кнопку в верхнем углу или свапнув вбок."), findsOneWidget,
         reason: "Не поприветствовали наших пользователей! Не отображается начальная инструкция");
     expect(find.text("Бросить все игральные кости"), findsNothing, reason: "Кнопка броска кубика не пропала хотя кубиков нет");
 
@@ -191,7 +185,7 @@ void main() {
           final oneDiceGroup = find.text("Название 2");
           await tapButton(oneDiceGroup);
           // TODO я не знаю как это протестировать. Виджеты не пропадают при сворачивании их всё ещё можно find даже в закрытом состояние
-          expect(find.byIcon(iconButtonModeDice), findsNWidgets(numberDice), reason: "Группа не развернулась или iconButtonModeDice не отображаются"); // FIXME этот тест проходит всегад
+          expect(find.byIcon(iconButtonModeDice), findsNWidgets(numberDice), reason: "Группа не развернулась или iconButtonModeDice не отображаются"); // FIXME этот тест проходит всегда
 
           await tapButton(oneDiceGroup);
           //expect(find.byIcon(iconButtonModeDice), findsNothing, reason: "Группа не свернулась");      // FIXME этот тест не проходит никогда
@@ -298,7 +292,7 @@ void main() {
           await tapButton(buttonDeleteDice);
 
           expect(find.text("Удалить игральную кость?"), findsOne, reason: "Не отображается заголовок окна подтверждения удаления кубика");
-          expect(find.text("Игральная кость с 8 гранями будет удалёна."), findsOne, reason: "Не отображается основной текст окна подтверждения удаления кубика");
+          expect(find.text("Игральная кость с 8 гранями будет удалена."), findsOne, reason: "Не отображается основной текст окна подтверждения удаления кубика");
           expect(find.byType(ElevatedButton), findsNWidgets(2), reason: "Нет кнопок в нижней части экрана подтверждения удаления кубика");
 
           /// тестирование кнопки 'Отмена' в меню подтверждения удаления кубика

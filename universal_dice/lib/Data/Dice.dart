@@ -212,5 +212,5 @@ class Dice {
 enum _AccordanceSettings {
   numberFaces,
   state,
-  length, // длина enuma
+  length, // длина enum-а
 }

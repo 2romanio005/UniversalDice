@@ -28,6 +28,13 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
 
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+  image_path: "resources/launcher_icons/launcher_icon.jpg"
+  android: "launcher_icon"
+  ios: true
+
 flutter:
   uses-material-design: true
 

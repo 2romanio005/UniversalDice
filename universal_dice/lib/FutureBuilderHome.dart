@@ -72,7 +72,7 @@ class _FutureBuilderHome extends State<FutureBuilderHome> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 16),
-                    child: Text('Загрузка кубиков...', style: TextStyle(color: Colors.green)),
+                    child: Text('Загрузка игральных костей...', style: TextStyle(color: Colors.green)),
                   ),
                 ],
               ),

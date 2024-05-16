@@ -16,6 +16,7 @@ Future<void> copyDirectory(Directory from, Directory to) async {
   if (from == to) {
     return;
   }
+
   // print("===================");
   // print("from ${from.path}");
   // await for (final FileSystemEntity file in from.list(recursive: true)) {

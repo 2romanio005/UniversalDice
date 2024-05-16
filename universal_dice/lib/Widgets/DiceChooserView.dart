@@ -63,7 +63,7 @@ class _DiceChooserView extends State<DiceChooserView> {
       child: FittedBox(
         fit: BoxFit.fitWidth,
         child: Text(
-          "Выберите используемые кубики",
+          "Выберите используемые кости",
           style: Theme.of(context).textTheme.titleLarge,
           textAlign: TextAlign.center,
         ),
@@ -131,7 +131,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                         onPressed: () {
                           showConfirmationBox(
                               context: context,
-                              titleText: 'Удалить группу кубиков?',
+                              titleText: 'Удалить группу с игральными костями?',
                               contentText: "Группа \"${diceGroup.name}\" будет удалена со всем содержимым.",
                               textOK: 'Удалить группу',
                               textOFF: 'Отмена',
@@ -263,9 +263,9 @@ class _DiceChooserView extends State<DiceChooserView> {
                         onPressed: () {
                           showConfirmationBox(
                               context: context,
-                              titleText: 'Удалить кубик?',
-                              contentText: "Кубик с ${dice.numberFaces} гранями будет удалён.",
-                              textOK: 'Удалить кубик',
+                              titleText: 'Удалить игральную кость?',
+                              contentText: "Игральная кость с ${dice.numberFaces} гранями будет удалёна.",
+                              textOK: 'Удалить игральную кость',
                               textOFF: 'Отмена',
                               functionOK: () {
                                 diceGroup.removeDiceAt(index).then((state) {
@@ -310,7 +310,7 @@ class _DiceChooserView extends State<DiceChooserView> {
                   child: ListTile(
                     title: const FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: Text("Новый кубик", textAlign: TextAlign.center),
+                      child: Text("Добавить кость", textAlign: TextAlign.center),
                     ),
                     titleTextStyle: Theme.of(context).textTheme.titleSmall?.merge(TextStyle(color: colorButtonForeground)),
                     trailing: Icon(iconButtonAddDice, color: colorButtonForeground),
@@ -361,7 +361,7 @@ class _DiceChooserView extends State<DiceChooserView> {
         child: ListTile(
           title: const FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text("Новая группа", textAlign: TextAlign.center),
+            child: Text("Добавить группу", textAlign: TextAlign.center),
           ),
           titleTextStyle: Theme.of(context).textTheme.titleSmall?.merge(TextStyle(color: colorButtonForeground)),
           trailing: Icon(iconButtonAddDiceGroup, color: colorButtonForeground),

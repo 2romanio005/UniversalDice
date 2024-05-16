@@ -47,9 +47,9 @@ void main() {
     int numberDice = 3;
 
     /// тестирование работоспособности экрана загрузки кубиков
-    expect(find.text("Загрузка кубиков..."), findsOneWidget, reason: "Надпись 'Загрузка кубиков...' не появилась или загрузка прошла слишком быстро");
-    await tester.pumpAndSettle(const Duration(microseconds: 300)); // дожидаемся загрузки кубиков из памяти   //await tester.pumpAndSettle(const Duration(microseconds: 500));
-    expect(find.text("Загрузка кубиков..."), findsNothing, reason: "Надпись 'Загрузка кубиков...' не пропала или загрузка прошла слишком долго");
+    expect(find.text("Загрузка игральных костей..."), findsOneWidget, reason: "Надпись 'Загрузка игральных костей...' не появилась или загрузка прошла слишком быстро");
+    await tester.pumpAndSettle(); // дожидаемся загрузки кубиков из памяти   //await tester.pumpAndSettle(const Duration(microseconds: 500));
+    expect(find.text("Загрузка игральных костей..."), findsNothing, reason: "Надпись 'Загрузка игральных костей...' не пропала или загрузка прошла слишком долго");
 
     /// тестирование начального экрана
     expect(find.text("Универсальные игральные кости"), findsOneWidget, reason: "Не отображается название");
@@ -63,7 +63,7 @@ void main() {
     /// тестирование Drawer
     {
       await tapButton(buttonDrawer.last);
-      expect(find.text("Выберите используемые кубики"), findsOne, reason: "Не появился заголовок у Drawer, или он целиком не появился");
+      expect(find.text("Выберите используемые кости"), findsOne, reason: "Не появился заголовок у Drawer, или он целиком не появился");
       expect(find.text("Стандартная группа"), findsOne, reason: "Не отображается начальная группа");
 
       /// тестирование взаимодействия с группой
@@ -149,7 +149,7 @@ void main() {
 
           /// тестирование окна подтверждения у группы
           {
-            expect(find.text("Удалить группу кубиков?"), findsOne, reason: "Не отображается заголовок окна подтверждения удаления группы");
+            expect(find.text("Удалить группу с игральными костями?"), findsOne, reason: "Не отображается заголовок окна подтверждения удаления группы");
             expect(find.text("Группа \"Название 2\" будет удалена со всем содержимым."), findsOne, reason: "Не отображается основной текст окна подтверждения удаления группы");
             expect(find.byType(ElevatedButton), findsNWidgets(2), reason: "Нет кнопок в нижней части экрана подтверждения удаления группы");
 
@@ -235,7 +235,7 @@ void main() {
 
           /// тестирование окна редактирования кубика
           {
-            expect(find.text("Редактирование кубика"), findsOne, reason: "Нет заголовка окна редактирования кубика");
+            expect(find.text("Редактирование игральной кости"), findsOne, reason: "Нет заголовка окна редактирования кубика");
             expect(find.text("Количество граней:"), findsOne, reason: "Нет подписи к полю 'количество граней' в окне редактирования кубика");
             expect(find.text("Нажмите на грань, чтобы выбрать для неё изображение"), findsOne, reason: "Нет инструкции к выбору изображения на грань");
             final fieldInputFaceNumber = find.byType(TextField);
@@ -255,7 +255,7 @@ void main() {
               expect(buttonCancel, findsOne, reason: "Нет надписи 'Отмена' в окне редактирования кубика");
 
               await tapButton(buttonCancel);
-              expect(find.text("Редактирование кубика"), findsNothing, reason: "Не пропало окно редактирования кубика после 'Отмена'");
+              expect(find.text("Редактирование игральной кости"), findsNothing, reason: "Не пропало окно редактирования кубика после 'Отмена'");
               expect(find.text("7"), findsNothing, reason: "Количество граней изменилось при 'Отмена'");
               expect(buttonEditDice, findsOne, reason: "Окно с выбором действий для кубика пропало после кнопки 'Отмена'");
             }
@@ -270,7 +270,7 @@ void main() {
               expect(buttonSave, findsOne, reason: "Нет надписи 'Сохранить' в окне редактирования кубика");
 
               await tapButton(buttonSave);
-              expect(find.text("Редактирование кубика"), findsNothing, reason: "Не пропало окно редактирования кубика после 'Сохранить'");
+              expect(find.text("Редактирование игральной кости"), findsNothing, reason: "Не пропало окно редактирования кубика после 'Сохранить'");
               expect(find.text("8"), findsOne, reason: "Количество граней не изменилось после 'Сохранить'");
               expect(buttonEditDice, findsNothing, reason: "Окошко с выбором действий для кубика осталось после кнопки 'Сохранить'");
             }
@@ -297,8 +297,8 @@ void main() {
 
           await tapButton(buttonDeleteDice);
 
-          expect(find.text("Удалить кубик?"), findsOne, reason: "Не отображается заголовок окна подтверждения удаления кубика");
-          expect(find.text("Кубик с 8 гранями будет удалён."), findsOne, reason: "Не отображается основной текст окна подтверждения удаления кубика");
+          expect(find.text("Удалить игральную кость?"), findsOne, reason: "Не отображается заголовок окна подтверждения удаления кубика");
+          expect(find.text("Игральная кость с 8 гранями будет удалёна."), findsOne, reason: "Не отображается основной текст окна подтверждения удаления кубика");
           expect(find.byType(ElevatedButton), findsNWidgets(2), reason: "Нет кнопок в нижней части экрана подтверждения удаления кубика");
 
           /// тестирование кнопки 'Отмена' в меню подтверждения удаления кубика
@@ -313,10 +313,10 @@ void main() {
 
           await tapButton(buttonDeleteDice);
 
-          /// тестирование кнопки 'Удалить кубик' в меню подтверждения удаления кубика
+          /// тестирование кнопки 'Удалить игральную кость' в меню подтверждения удаления кубика
           {
-            final buttonDelete = find.text("Удалить кубик");
-            expect(buttonDelete, findsOne, reason: "Нет надписи 'Удалить кубик' в окне подтверждения удаления кубика");
+            final buttonDelete = find.text("Удалить игральную кость");
+            expect(buttonDelete, findsOne, reason: "Нет надписи 'Удалить игральную кость' в окне подтверждения удаления кубика");
 
             await tapButton(buttonDelete);
             numberDice--;
@@ -326,7 +326,7 @@ void main() {
 
           await tapButton(find.byIcon(iconButtonModeDice).at(1));
           await tapButton(find.byIcon(iconButtonDeleteDice));
-          await tapButton(find.text("Удалить кубик"));
+          await tapButton(find.text("Удалить игральную кость"));
           numberDice--;
           expect(find.byIcon(iconButtonModeDice), findsNWidgets(numberDice), reason: "Не удалился кубик из центра");
         }
@@ -361,7 +361,8 @@ void main() {
 
         /// тестирование бросков кубиков
         {
-          await tapButton(find.byIcon(iconButtonDrawer).first);
+          await tester.tap(find.byIcon(iconButtonDrawer).first, warnIfMissed: false);
+          await tester.pumpAndSettle();
 
           expect(find.byType(SizedBox), findsNWidgets(5), reason: "На экране не 3 кубика"); // два SizedBox от кнопок выбора кубиков
 

@@ -48,13 +48,14 @@ void main() {
 
     /// тестирование работоспособности экрана загрузки кубиков
     expect(find.text("Загрузка кубиков..."), findsOneWidget, reason: "Надпись 'Загрузка кубиков...' не появилась или загрузка прошла слишком быстро");
-    await tester.pumpAndSettle(); // дожидаемся загрузки кубиков из памяти   //await tester.pumpAndSettle(const Duration(microseconds: 500));
+    await tester.pumpAndSettle(const Duration(microseconds: 300)); // дожидаемся загрузки кубиков из памяти   //await tester.pumpAndSettle(const Duration(microseconds: 500));
     expect(find.text("Загрузка кубиков..."), findsNothing, reason: "Надпись 'Загрузка кубиков...' не пропала или загрузка прошла слишком долго");
 
     /// тестирование начального экрана
     expect(find.text("Универсальные игральные кости"), findsOneWidget, reason: "Не отображается название");
     expect(find.text("Добро пожаловать! Выберите какие кубики кидать, нажав на кнопку в верхнем углу или свапнув вбок."), findsOneWidget,
         reason: "Не поприветствовали наших пользователей! Не отображается начальная инструкция");
+    expect(find.text("Бросить все игральные кости"), findsNothing, reason: "Кнопка броска кубика не пропала хотя кубиков нет");
 
     final buttonDrawer = find.byIcon(iconButtonDrawer);
     expect(buttonDrawer, findsNWidgets(2), reason: "Найдено не две кнопки выбора кубиков");
@@ -235,7 +236,7 @@ void main() {
           /// тестирование окна редактирования кубика
           {
             expect(find.text("Редактирование кубика"), findsOne, reason: "Нет заголовка окна редактирования кубика");
-            expect(find.text("Количество граней"), findsOne, reason: "Нет подписи к полю 'количество граней' в окне редактирования кубика");
+            expect(find.text("Количество граней:"), findsOne, reason: "Нет подписи к полю 'количество граней' в окне редактирования кубика");
             expect(find.text("Нажмите на грань, чтобы выбрать для неё изображение"), findsOne, reason: "Нет инструкции к выбору изображения на грань");
             final fieldInputFaceNumber = find.byType(TextField);
             expect(fieldInputFaceNumber, findsOne, reason: "Нет поля изменения количества граней");
@@ -354,10 +355,29 @@ void main() {
           await tapButton(buttonActive.first);
           expect(buttonDeactive, findsNWidgets(numberDiceGroup + numberDice), reason: "Не появились деактивированные кубики 5"); // +1 за группу
           expect(buttonActive, findsNothing, reason: "Не пропали активированные кубики 0");
+
+          await tapButton(buttonDeactive.first);
+        }
+
+        /// тестирование бросков кубиков
+        {
+          await tapButton(find.byIcon(iconButtonDrawer).first);
+
+          expect(find.byType(SizedBox), findsNWidgets(5), reason: "На экране не 3 кубика"); // два SizedBox от кнопок выбора кубиков
+
+          expect(find.text("8"), findsNWidgets(1), reason: "На экране не 1 кубика с 8 гранями");
+          expect(find.text("6"), findsNWidgets(2), reason: "На экране не 2 кубика с 6 гранями");
+
+          await tapButton(find.text("Бросить все игральные кости"));
+          expect(find.byType(SizedBox), findsNWidgets(5), reason: "После броска количество кубиков уменьшилось"); // два SizedBox от кнопок выбора кубиков
+
+          await tester.pumpAndSettle(const Duration(microseconds: 500));
         }
 
         /// тестирование редактирования граней кубика
         {
+          await tapButton(find.byIcon(iconButtonDrawer).first);
+
           await tapButton(find.byIcon(iconButtonModeDice).at(1));
           await tapButton(find.byIcon(iconButtonEditDice));
           await tapButton(find.text("1").last);

@@ -84,7 +84,7 @@ Future<bool> showEditingDice(BuildContext context, DiceGroup diceGroup, int dice
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  const Expanded(flex: 2, child: Text("Количество граней")),
+                                  const Expanded(flex: 2, child: Text("Количество граней:")),
                                   Expanded(
                                     flex: 1,
                                     child: TextField(

@@ -340,7 +340,7 @@ class _DiceChooserView extends State<DiceChooserView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             icon,
-            const SizedBox(width: 10, height: 10),
+            const SizedBox.square(dimension: 10),
             Text(text, style: Theme.of(context).textTheme.titleSmall),
           ],
         ),
